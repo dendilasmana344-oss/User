@@ -32,6 +32,7 @@
             --darker: #050505;
         }
 
+        /* ANIMATIONS */
         @keyframes neonPulse {
             0%, 100% { text-shadow: 0 0 5px var(--neon-cyan), 0 0 10px var(--neon-cyan); }
             50% { text-shadow: 0 0 10px var(--neon-cyan), 0 0 20px var(--neon-cyan), 0 0 30px var(--neon-cyan); }
@@ -104,18 +105,7 @@
                         radial-gradient(circle at 40% 20%, rgba(191, 0, 255, 0.02) 0%, transparent 50%);
         }
 
-        .neon-bg::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(0, 255, 255, 0.02) 40px, rgba(0, 255, 255, 0.02) 80px);
-            pointer-events: none;
-        }
-
-        /* MAINTENANCE PAGE (DIPERBAIKI - AKAN MUNCUL KETIKA ADMIN AKTIFKAN) */
+        /* MAINTENANCE PAGE - NEON DESIGN BARU */
         .maintenance-page {
             position: fixed;
             top: 0;
@@ -143,26 +133,44 @@
             max-width: 500px;
             width: 100%;
             background: linear-gradient(145deg, #0a0a0a, #0f0f0f);
-            border: 2px solid #ff4444;
+            border: 2px solid var(--neon-cyan);
             border-radius: 50px;
             padding: 40px 35px;
             text-align: center;
             animation: fadeIn 0.5s ease;
-            box-shadow: 0 0 60px rgba(255, 68, 68, 0.3);
+            box-shadow: 0 0 60px rgba(0, 255, 255, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .maintenance-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 255, 255, 0.1) 0%, transparent 70%);
+            animation: spin 20s linear infinite;
+            z-index: -1;
         }
 
         .maintenance-icon {
             font-size: 80px;
-            color: #ff4444;
+            color: var(--neon-cyan);
             margin-bottom: 20px;
-            animation: pulse 2s infinite;
+            animation: neonPulse 2s infinite;
         }
 
         .maintenance-title {
             font-family: 'Orbitron', monospace;
             font-size: 32px;
             font-weight: 900;
-            color: #ff4444;
+            background: linear-gradient(135deg, #00ffff, #ff4444, #00ffff);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientShift 3s ease infinite;
             margin-bottom: 15px;
         }
 
@@ -176,9 +184,10 @@
             font-family: monospace;
             font-size: 48px;
             font-weight: bold;
-            color: #ffaa00;
+            color: var(--neon-orange);
             margin: 20px 0;
             letter-spacing: 5px;
+            text-shadow: 0 0 10px var(--neon-orange);
         }
 
         .maintenance-progress {
@@ -187,30 +196,44 @@
             border-radius: 4px;
             overflow: hidden;
             margin: 20px 0;
+            border: 1px solid var(--neon-cyan);
         }
 
         .maintenance-progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, #ff4444, #ff8888);
+            background: linear-gradient(90deg, var(--neon-cyan), #0088ff);
             width: 0%;
             transition: width 0.3s;
+            position: relative;
+        }
+
+        .maintenance-progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 1.5s infinite;
         }
 
         .maintenance-refresh-btn {
-            background: linear-gradient(135deg, #ff4444, #cc0000);
+            background: linear-gradient(135deg, var(--neon-cyan), #0088ff);
             border: none;
             padding: 14px 30px;
             border-radius: 30px;
-            color: white;
+            color: #000;
             font-weight: bold;
             cursor: pointer;
             margin-top: 20px;
             transition: all 0.3s;
+            font-family: 'Orbitron', monospace;
         }
 
         .maintenance-refresh-btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(255, 68, 68, 0.4);
+            box-shadow: 0 10px 25px rgba(0, 255, 255, 0.5);
         }
 
         /* LOGIN PAGE */
@@ -245,20 +268,6 @@
             border: 2px solid var(--neon-cyan);
             box-shadow: 0 0 60px rgba(0, 255, 255, 0.3);
             animation: fadeIn 0.5s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .login-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(0, 255, 255, 0.1) 0%, transparent 70%);
-            animation: spin 25s linear infinite;
-            z-index: -1;
         }
 
         .login-video-container {
@@ -271,7 +280,6 @@
             border: 2px solid var(--neon-cyan);
             box-shadow: 0 0 30px rgba(0, 255, 255, 0.4);
             aspect-ratio: 4 / 3;
-            background: #000;
         }
 
         .login-video {
@@ -297,14 +305,6 @@
             transition: all 0.3s;
             font-size: 16px;
             z-index: 10;
-            backdrop-filter: blur(4px);
-        }
-
-        .video-mute-btn:hover {
-            background: var(--neon-cyan);
-            color: #000;
-            transform: scale(1.1);
-            box-shadow: 0 0 15px var(--neon-cyan);
         }
 
         .login-icon {
@@ -338,7 +338,6 @@
             color: #888;
             font-size: 13px;
             margin-bottom: 28px;
-            letter-spacing: 1px;
         }
 
         .login-tabs {
@@ -503,7 +502,6 @@
             cursor: pointer;
             transition: all 0.3s;
             font-family: 'Orbitron', monospace;
-            letter-spacing: 1px;
         }
 
         .login-btn:hover {
@@ -524,46 +522,6 @@
             text-decoration: none;
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .login-footer a:hover {
-            text-decoration: underline;
-            text-shadow: 0 0 10px var(--neon-cyan);
-        }
-
-        /* FORGOT PIN MODAL */
-        .forgot-pin-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.98);
-            backdrop-filter: blur(20px);
-            z-index: 10000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s;
-        }
-
-        .forgot-pin-modal.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .forgot-pin-content {
-            max-width: 400px;
-            width: 100%;
-            background: linear-gradient(145deg, #0a0a0a, #0f0f0f);
-            border: 2px solid var(--neon-cyan);
-            border-radius: 40px;
-            padding: 35px;
-            text-align: center;
         }
 
         /* NEON MODAL */
@@ -637,11 +595,306 @@
         }
 
         .neon-modal-btn:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 30px rgba(0, 255, 255, 0.5);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 255, 255, 0.4);
         }
 
-        /* UPLOAD PROGRESS NEON */
+        /* NEON PROMPT MODAL (untuk security answer) */
+        .neon-prompt-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.98);
+            backdrop-filter: blur(25px);
+            z-index: 10001;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .neon-prompt-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .neon-prompt-content {
+            max-width: 450px;
+            width: 100%;
+            background: linear-gradient(145deg, #0a0a0a, #0f0f0f);
+            border: 2px solid var(--neon-cyan);
+            border-radius: 45px;
+            padding: 40px 35px;
+            box-shadow: 0 0 60px rgba(0, 255, 255, 0.4);
+            animation: fadeIn 0.3s ease;
+            text-align: center;
+        }
+
+        .neon-prompt-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--neon-cyan);
+            margin-bottom: 20px;
+        }
+
+        .neon-prompt-input {
+            width: 100%;
+            padding: 16px 18px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid var(--neon-cyan);
+            border-radius: 25px;
+            color: white;
+            font-size: 16px;
+            outline: none;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .neon-prompt-input:focus {
+            border-color: #00ffff;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+        }
+
+        .neon-prompt-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .neon-prompt-btn {
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Orbitron', monospace;
+        }
+
+        .neon-prompt-btn-primary {
+            background: linear-gradient(135deg, var(--neon-cyan), #0088ff);
+            color: #000;
+            border: none;
+        }
+
+        .neon-prompt-btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 255, 255, 0.4);
+        }
+
+        .neon-prompt-btn-secondary {
+            background: transparent;
+            border: 2px solid var(--neon-cyan);
+            color: var(--neon-cyan);
+        }
+
+        .neon-prompt-btn-secondary:hover {
+            background: rgba(0, 255, 255, 0.1);
+            transform: translateY(-3px);
+        }
+
+        /* DEPOSIT POPUP */
+        .deposit-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.98);
+            backdrop-filter: blur(25px);
+            z-index: 10001;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .deposit-popup.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .deposit-content {
+            max-width: 500px;
+            width: 100%;
+            background: linear-gradient(145deg, #0a0a0a, #0f0f0f);
+            border: 2px solid var(--neon-cyan);
+            border-radius: 40px;
+            padding: 35px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .deposit-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 28px;
+            color: var(--neon-cyan);
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .payment-method {
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .payment-method:hover {
+            background: rgba(0, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .payment-method.selected {
+            background: linear-gradient(135deg, var(--neon-cyan), #0088ff);
+            color: #000;
+            border-color: white;
+        }
+
+        .destination-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid var(--neon-orange);
+            border-radius: 20px;
+            padding: 12px 15px;
+            margin: 15px 0;
+        }
+
+        .destination-number {
+            flex: 1;
+            font-family: monospace;
+            color: var(--neon-orange);
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .copy-dest-btn {
+            background: var(--neon-orange);
+            border: none;
+            color: #000;
+            padding: 8px 20px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .amount-presets {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .amount-preset {
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid var(--neon-cyan);
+            border-radius: 15px;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .amount-preset:hover {
+            background: rgba(0, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .amount-preset.selected {
+            background: linear-gradient(135deg, var(--neon-cyan), #0088ff);
+            color: #000;
+            border-color: white;
+        }
+
+        /* RESET PIN MODAL */
+        .reset-pin-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.98);
+            backdrop-filter: blur(25px);
+            z-index: 10001;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .reset-pin-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .reset-pin-content {
+            max-width: 400px;
+            width: 100%;
+            background: linear-gradient(145deg, #0a0a0a, #0f0f0f);
+            border: 2px solid var(--neon-cyan);
+            border-radius: 40px;
+            padding: 35px;
+        }
+
+        /* FORGOT PIN MODAL */
+        .forgot-pin-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.98);
+            backdrop-filter: blur(25px);
+            z-index: 10001;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .forgot-pin-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .forgot-pin-content {
+            max-width: 400px;
+            width: 100%;
+            background: linear-gradient(145deg, #0a0a0a, #0f0f0f);
+            border: 2px solid var(--neon-cyan);
+            border-radius: 40px;
+            padding: 35px;
+        }
+
+        /* UPLOAD PROGRESS */
         .upload-progress-neon {
             position: fixed;
             top: 50%;
@@ -652,11 +905,9 @@
             border: 2px solid var(--neon-cyan);
             border-radius: 35px;
             padding: 35px;
-            z-index: 10001;
+            z-index: 20000;
             min-width: 350px;
             text-align: center;
-            box-shadow: 0 0 60px rgba(0, 255, 255, 0.4);
-            animation: fadeIn 0.3s ease;
             display: none;
         }
 
@@ -682,7 +933,6 @@
             color: #fff;
             font-size: 14px;
             margin-bottom: 25px;
-            word-break: break-all;
         }
 
         .upload-progress-bar-container {
@@ -700,18 +950,6 @@
             width: 0%;
             transition: width 0.2s;
             box-shadow: 0 0 12px var(--neon-cyan);
-            position: relative;
-        }
-
-        .upload-progress-fill::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            animation: shimmer 1.5s infinite;
         }
 
         .upload-progress-percent {
@@ -721,7 +959,7 @@
             font-family: 'Orbitron', monospace;
         }
 
-        /* LOADING OVERLAY */
+        /* LOADING */
         .loading-overlay {
             position: fixed;
             top: 0;
@@ -785,55 +1023,12 @@
             font-weight: bold;
             z-index: 10000;
             display: none;
-            animation: slideInUp 0.3s ease;
             font-family: 'Orbitron', monospace;
             white-space: nowrap;
-            box-shadow: 0 0 25px rgba(0, 255, 255, 0.3);
         }
 
         .toast-neon.show {
             display: block;
-        }
-
-        /* NOTIFICATION TOAST */
-        .notification-toast {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            max-width: 350px;
-            background: rgba(10, 10, 10, 0.95);
-            border-left: 4px solid var(--neon-cyan);
-            border-radius: 12px;
-            padding: 15px;
-            z-index: 10001;
-            animation: slideInRight 0.3s ease;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
-        }
-
-        .notification-toast.hide {
-            animation: slideOutRight 0.3s ease forwards;
-        }
-
-        @keyframes slideOutRight {
-            from { transform: translateX(0); opacity: 1; }
-            to { transform: translateX(100%); opacity: 0; }
-        }
-
-        .notification-title {
-            font-weight: bold;
-            color: var(--neon-cyan);
-            margin-bottom: 5px;
-        }
-
-        .notification-message {
-            font-size: 13px;
-            color: #ccc;
-        }
-
-        .notification-time {
-            font-size: 10px;
-            color: #888;
-            margin-top: 8px;
         }
 
         /* MAIN LAYOUT */
@@ -859,20 +1054,6 @@
             padding: 22px;
             margin-bottom: 18px;
             transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(0, 255, 255, 0.05) 0%, transparent 70%);
-            animation: spin 25s linear infinite;
-            z-index: -1;
         }
 
         .card:hover {
@@ -934,12 +1115,6 @@
             transition: all 0.3s;
         }
 
-        .profile-image:hover {
-            transform: scale(1.05);
-            border-color: #00ffff;
-            box-shadow: 0 0 35px rgba(0, 255, 255, 0.8);
-        }
-
         .uid-row {
             display: flex;
             align-items: center;
@@ -956,7 +1131,6 @@
             color: var(--neon-cyan);
             font-family: monospace;
             font-weight: bold;
-            letter-spacing: 1px;
         }
 
         .copy-icon {
@@ -970,13 +1144,6 @@
             cursor: pointer;
             color: var(--neon-cyan);
             transition: all 0.3s;
-        }
-
-        .copy-icon:hover {
-            background: var(--neon-cyan);
-            color: #000;
-            transform: scale(1.1);
-            box-shadow: 0 0 15px var(--neon-cyan);
         }
 
         .status-badge {
@@ -1008,20 +1175,10 @@
             color: #000;
         }
 
-        .btn-neon:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 28px rgba(0, 255, 255, 0.5);
-        }
-
         .btn-neon-outline {
             background: transparent;
             border: 2px solid var(--neon-cyan);
             color: var(--neon-cyan);
-        }
-
-        .btn-neon-outline:hover {
-            background: rgba(0, 255, 255, 0.15);
-            transform: translateY(-4px);
         }
 
         .flip-card {
@@ -1054,7 +1211,6 @@
             padding: 22px;
             background: rgba(10, 10, 10, 0.92);
             border: 2px solid var(--neon-cyan);
-            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.5);
         }
 
         .flip-card-back {
@@ -1066,7 +1222,6 @@
             color: #00ff88;
             font-weight: bold;
             margin: 22px 0;
-            text-shadow: 0 0 10px #00ff88;
         }
 
         .features-grid {
@@ -1083,13 +1238,6 @@
             padding: 14px 5px;
             text-align: center;
             transition: all 0.3s;
-        }
-
-        .feature-item:hover {
-            transform: translateY(-4px);
-            border-color: #00ffff;
-            box-shadow: 0 8px 20px rgba(0, 255, 255, 0.3);
-            background: rgba(0, 255, 255, 0.15);
         }
 
         .feature-icon {
@@ -1171,14 +1319,12 @@
             align-self: flex-end;
             color: #000;
             margin-left: auto;
-            box-shadow: 0 5px 15px rgba(0, 255, 255, 0.3);
         }
 
         .message.admin {
             background: linear-gradient(135deg, #ff4444, #cc0000);
             align-self: flex-start;
             color: #fff;
-            box-shadow: 0 5px 15px rgba(255, 68, 68, 0.3);
         }
 
         .message.system {
@@ -1186,7 +1332,6 @@
             color: #000;
             align-self: center;
             text-align: center;
-            max-width: 95%;
         }
 
         .message-time {
@@ -1235,19 +1380,9 @@
             color: #000;
         }
 
-        .upload-btn:hover {
-            transform: scale(1.1) rotate(15deg);
-            box-shadow: 0 0 15px var(--neon-cyan);
-        }
-
         .send-btn {
             background: linear-gradient(135deg, #00ff88, #00cc66);
             color: #000;
-        }
-
-        .send-btn:hover {
-            transform: scale(1.1) rotate(-5deg);
-            box-shadow: 0 0 15px #00ff88;
         }
 
         .price-grid {
@@ -1266,16 +1401,9 @@
             transition: all 0.3s;
         }
 
-        .price-card:hover {
-            transform: translateY(-5px);
-            border-color: #00ff88;
-            box-shadow: 0 10px 25px rgba(0, 255, 255, 0.3);
-        }
-
         .price-card.selected {
             border-color: #00ff88;
             background: rgba(0, 255, 136, 0.2);
-            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
         }
 
         .price-amount {
@@ -1318,11 +1446,6 @@
             transition: all 0.3s;
         }
 
-        .history-item:hover {
-            transform: translateX(5px);
-            background: rgba(0, 0, 0, 0.5);
-        }
-
         .update-item {
             padding: 16px;
             background: rgba(0, 0, 0, 0.4);
@@ -1330,12 +1453,6 @@
             margin-bottom: 14px;
             border: 1px solid rgba(0, 255, 255, 0.2);
             transition: all 0.3s;
-        }
-
-        .update-item:hover {
-            border-color: var(--neon-cyan);
-            transform: translateX(6px);
-            background: rgba(0, 0, 0, 0.5);
         }
 
         .update-title {
@@ -1363,13 +1480,6 @@
         .update-link {
             color: #00ff88;
             text-decoration: none;
-            word-break: break-all;
-            transition: all 0.3s;
-        }
-
-        .update-link:hover {
-            text-decoration: underline;
-            text-shadow: 0 0 5px #00ff88;
         }
 
         .leaderboard-item {
@@ -1378,12 +1488,6 @@
             align-items: center;
             padding: 14px;
             border-bottom: 1px solid rgba(0, 255, 255, 0.1);
-            transition: all 0.3s;
-        }
-
-        .leaderboard-item:hover {
-            background: rgba(0, 255, 255, 0.05);
-            transform: translateX(5px);
         }
 
         .bottom-nav {
@@ -1398,7 +1502,6 @@
             left: 0;
             right: 0;
             z-index: 100;
-            backdrop-filter: blur(12px);
         }
 
         .nav-item {
@@ -1455,7 +1558,6 @@
         .tab-btn.active {
             background: var(--neon-cyan);
             color: #000;
-            box-shadow: 0 0 15px var(--neon-cyan);
         }
 
         .tab-pane {
@@ -1484,12 +1586,6 @@
                 text-align: center;
                 max-width: 92%;
             }
-            .tab-buttons {
-                flex-wrap: wrap;
-            }
-            .login-card {
-                padding: 35px 25px;
-            }
         }
     </style>
 
@@ -1501,17 +1597,15 @@
 
 <div class="neon-bg"></div>
 
-<!-- MAINTENANCE PAGE -->
+<!-- MAINTENANCE PAGE - NEON DESIGN BARU -->
 <div class="maintenance-page" id="maintenancePage">
     <div class="maintenance-card">
         <div class="maintenance-icon"><i class="fas fa-tools"></i></div>
         <div class="maintenance-title" id="maintenanceTitle">MAINTENANCE MODE</div>
-        <div class="maintenance-message" id="maintenanceMessage">Sistem sedang dalam pemeliharaan. Silakan coba lagi nanti.</div>
+        <div class="maintenance-message" id="maintenanceMessage">Sistem sedang dalam pemeliharaan.</div>
         <div class="maintenance-timer" id="maintenanceTimer">00:00:00</div>
-        <div class="maintenance-progress">
-            <div class="maintenance-progress-fill" id="maintenanceProgressFill"></div>
-        </div>
-        <div style="font-size: 12px; color: #888;" id="maintenanceProgressText">Progress: 0%</div>
+        <div class="maintenance-progress"><div class="maintenance-progress-fill" id="maintenanceProgressFill"></div></div>
+        <div class="maintenance-progress-text" id="maintenanceProgressText" style="font-size: 12px; color: #888; margin-bottom: 10px;">Progress: 0%</div>
         <button class="maintenance-refresh-btn" onclick="checkMaintenance()"><i class="fas fa-sync-alt"></i> Refresh Status</button>
     </div>
 </div>
@@ -1519,19 +1613,15 @@
 <!-- LOGIN WRAPPER -->
 <div class="login-wrapper" id="loginWrapper">
     <div class="login-card">
-        <div class="login-icon">
-            <i class="fas fa-crown"></i>
-        </div>
+        <div class="login-icon"><i class="fas fa-crown"></i></div>
         <div class="login-title">VIP FILES</div>
         <div class="login-subtitle" id="loginSubtitle">Enter your credentials</div>
 
-        <div class="login-video-container" id="loginVideoContainer">
+        <div class="login-video-container">
             <video id="loginVideo" class="login-video" autoplay loop muted playsinline>
                 <source src="" type="video/mp4">
             </video>
-            <div class="video-mute-btn" id="videoMuteBtn" onclick="toggleVideoMute()">
-                <i class="fas fa-volume-mute"></i>
-            </div>
+            <div class="video-mute-btn" onclick="toggleVideoMute()"><i class="fas fa-volume-mute"></i></div>
         </div>
 
         <div class="login-tabs">
@@ -1539,25 +1629,18 @@
             <div class="login-tab" onclick="switchAuthTab('register')">REGISTER</div>
         </div>
 
-        <!-- Login Form -->
         <div id="loginForm">
             <div class="login-field">
                 <div class="login-label"><i class="fas fa-user"></i> USERNAME / UID</div>
                 <input type="text" class="login-input" id="loginUID" placeholder="Username or UID" maxlength="50">
             </div>
-            <div style="display: flex; align-items: center; gap: 12px; margin: 12px 0; color: #aaa;">
-                <input type="checkbox" id="rememberUID" checked>
-                <label for="rememberUID">Remember me</label>
+            <div style="display: flex; align-items: center; gap: 12px; margin: 12px 0;">
+                <input type="checkbox" id="rememberUID" checked><label for="rememberUID">Remember me</label>
             </div>
-
-            <div class="pin-display">
-                <div class="login-label"><i class="fas fa-key"></i> PIN (6 Digit)</div>
-                <div class="pin-preview" id="loginPinPreview">
-                    <span class="pin-char">-</span><span class="pin-char">-</span><span class="pin-char">-</span>
-                    <span class="pin-char">-</span><span class="pin-char">-</span><span class="pin-char">-</span>
-                </div>
+            <div class="pin-preview" id="loginPinPreview">
+                <span class="pin-char">-</span><span class="pin-char">-</span><span class="pin-char">-</span>
+                <span class="pin-char">-</span><span class="pin-char">-</span><span class="pin-char">-</span>
             </div>
-
             <div class="pin-keypad" id="loginKeypad">
                 <div class="pin-key" onclick="addLoginNumber(1)">1</div>
                 <div class="pin-key" onclick="addLoginNumber(2)">2</div>
@@ -1570,28 +1653,21 @@
                 <div class="pin-key" onclick="addLoginNumber(9)">9</div>
                 <div class="pin-key clear" onclick="clearLoginPin()"><i class="fas fa-backspace"></i></div>
                 <div class="pin-key" onclick="addLoginNumber(0)">0</div>
-                <div class="pin-key" onclick="submitLogin()" style="background: linear-gradient(135deg, #00ff88, #00cc66); color: #000;"><i class="fas fa-arrow-right"></i></div>
+                <div class="pin-key" onclick="submitLogin()" style="background: linear-gradient(135deg, #00ff88, #00cc66);"><i class="fas fa-arrow-right"></i></div>
             </div>
-
             <div class="login-message" id="loginMessage"></div>
             <button class="login-btn" onclick="submitLogin()">LOGIN</button>
         </div>
 
-        <!-- Register Form -->
         <div id="registerForm" style="display: none;">
             <div class="login-field">
                 <div class="login-label"><i class="fas fa-user"></i> USERNAME</div>
-                <input type="text" class="login-input" id="registerUID" placeholder="Username (tanpa prefix)" maxlength="50">
+                <input type="text" class="login-input" id="registerUID" placeholder="Username" maxlength="50">
             </div>
-
-            <div class="pin-display">
-                <div class="login-label"><i class="fas fa-key"></i> PIN (6 Digit)</div>
-                <div class="pin-preview" id="registerPinPreview">
-                    <span class="pin-char">-</span><span class="pin-char">-</span><span class="pin-char">-</span>
-                    <span class="pin-char">-</span><span class="pin-char">-</span><span class="pin-char">-</span>
-                </div>
+            <div class="pin-preview" id="registerPinPreview">
+                <span class="pin-char">-</span><span class="pin-char">-</span><span class="pin-char">-</span>
+                <span class="pin-char">-</span><span class="pin-char">-</span><span class="pin-char">-</span>
             </div>
-
             <div class="pin-keypad" id="registerKeypad">
                 <div class="pin-key" onclick="addRegisterNumber(1)">1</div>
                 <div class="pin-key" onclick="addRegisterNumber(2)">2</div>
@@ -1604,9 +1680,8 @@
                 <div class="pin-key" onclick="addRegisterNumber(9)">9</div>
                 <div class="pin-key clear" onclick="clearRegisterPin()"><i class="fas fa-backspace"></i></div>
                 <div class="pin-key" onclick="addRegisterNumber(0)">0</div>
-                <div class="pin-key" onclick="submitRegister()" style="background: linear-gradient(135deg, #00ff88, #00cc66); color: #000;"><i class="fas fa-check"></i></div>
+                <div class="pin-key" onclick="submitRegister()" style="background: linear-gradient(135deg, #00ff88, #00cc66);"><i class="fas fa-check"></i></div>
             </div>
-
             <div class="login-message" id="registerMessage"></div>
             <button class="login-btn" onclick="submitRegister()">REGISTER</button>
         </div>
@@ -1618,29 +1693,14 @@
     </div>
 </div>
 
-<!-- FORGOT PIN MODAL -->
-<div class="forgot-pin-modal" id="forgotPinModal">
-    <div class="forgot-pin-content">
-        <div class="neon-modal-icon"><i class="fas fa-key"></i></div>
-        <div class="neon-modal-title" style="font-size: 24px;">Reset PIN</div>
-        <div class="modal-form-group">
-            <label class="modal-label">UID / Username</label>
-            <input type="text" class="modal-input" id="forgotUID" placeholder="Enter your UID">
-        </div>
-        <div class="modal-form-group">
-            <label class="modal-label">Security Answer</label>
-            <input type="text" class="modal-input" id="securityAnswer" placeholder="Your security answer">
-        </div>
-        <div class="modal-form-group">
-            <label class="modal-label">New PIN (6 digits)</label>
-            <input type="password" class="modal-input" id="newPinForgot" maxlength="6" placeholder="******">
-        </div>
-        <div class="action-buttons" style="margin-top: 20px;">
-            <button class="btn btn-primary" onclick="resetPinWithSecurity()">Reset PIN</button>
-            <button class="btn btn-secondary" onclick="closeForgotPinModal()">Cancel</button>
-        </div>
-        <div style="margin-top: 15px; font-size: 12px; color: #888;">
-            <i class="fas fa-info-circle"></i> Hubungi admin di Telegram untuk mendapatkan security answer
+<!-- NEON PROMPT MODAL (untuk security answer) -->
+<div class="neon-prompt-modal" id="neonPromptModal">
+    <div class="neon-prompt-content">
+        <div class="neon-prompt-title" id="neonPromptTitle">Security Question</div>
+        <input type="text" class="neon-prompt-input" id="neonPromptInput" placeholder="Your answer">
+        <div class="neon-prompt-buttons">
+            <button class="neon-prompt-btn neon-prompt-btn-primary" id="neonPromptConfirm">Confirm</button>
+            <button class="neon-prompt-btn neon-prompt-btn-secondary" id="neonPromptCancel">Cancel</button>
         </div>
     </div>
 </div>
@@ -1651,24 +1711,109 @@
         <div class="neon-modal-icon"><i class="fas fa-info-circle"></i></div>
         <div class="neon-modal-title" id="neonModalTitle">Information</div>
         <div class="neon-modal-message" id="neonModalMessage">Message here</div>
-        <div style="display: flex; gap: 12px; justify-content: center;">
-            <button class="neon-modal-btn" id="neonModalBtn" onclick="closeNeonModal()">OK</button>
+        <button class="neon-modal-btn" onclick="closeNeonModal()">OK</button>
+    </div>
+</div>
+
+<!-- DEPOSIT POPUP -->
+<div class="deposit-popup" id="depositPopup">
+    <div class="deposit-content">
+        <div class="deposit-title">💰 DEPOSIT</div>
+        <p style="color:#aaa; text-align:center; margin-bottom:15px;">Minimal Rp 20.000</p>
+        <input type="text" class="login-input" id="depositNama" placeholder="Nama Pengirim" style="margin-bottom:15px;">
+        <input type="text" class="login-input" id="depositNoEwallet" placeholder="No. E-Wallet" style="margin-bottom:15px;">
+        
+        <div class="payment-methods" id="paymentMethods">
+            <div class="payment-method" onclick="selectPayment('DANA', '0881011076305', this)">DANA</div>
+            <div class="payment-method" onclick="selectPayment('GOPAY', '083126486017', this)">GOPAY</div>
+            <div class="payment-method" onclick="selectPayment('QRIS', 'Hubungi Admin', this)">QRIS</div>
+            <div class="payment-method" onclick="selectPayment('PAYPAL', 'Hubungi Admin', this)">PAYPAL</div>
+        </div>
+        
+        <div class="destination-row" id="destinationRow" style="display:none;">
+            <span class="destination-number" id="destinationNumber">0881011076305</span>
+            <button class="copy-dest-btn" onclick="copyDestinationNumber()">SALIN</button>
+        </div>
+        
+        <div class="amount-presets" id="amountPresets">
+            <div class="amount-preset" onclick="setAmount(20000, this)">20K</div>
+            <div class="amount-preset" onclick="setAmount(50000, this)">50K</div>
+            <div class="amount-preset" onclick="setAmount(100000, this)">100K</div>
+            <div class="amount-preset" onclick="setAmount(200000, this)">200K</div>
+            <div class="amount-preset" onclick="setAmount(500000, this)">500K</div>
+            <div class="amount-preset" onclick="setAmount(1000000, this)">1JT</div>
+        </div>
+        
+        <input type="number" class="login-input" id="depositJumlah" placeholder="Jumlah" style="margin-bottom:15px;">
+        
+        <div style="display: flex; gap: 15px; margin-top: 20px;">
+            <button class="btn-neon" style="flex:1;" onclick="submitDeposit()">KIRIM</button>
+            <button class="btn-neon-outline btn-neon" style="flex:1;" onclick="closeDepositPopup()">BATAL</button>
         </div>
     </div>
 </div>
 
-<!-- UPLOAD PROGRESS NEON -->
+<!-- RESET PIN MODAL -->
+<div class="reset-pin-modal" id="resetPinModal">
+    <div class="reset-pin-content">
+        <div class="neon-modal-icon"><i class="fas fa-key"></i></div>
+        <div class="neon-modal-title" style="font-size:24px;">Reset PIN</div>
+        <div class="login-field">
+            <div class="login-label">PIN Lama</div>
+            <input type="password" class="login-input" id="oldPin" maxlength="6" placeholder="******">
+        </div>
+        <div class="login-field">
+            <div class="login-label">PIN Baru</div>
+            <input type="password" class="login-input" id="newPin" maxlength="6" placeholder="******">
+        </div>
+        <div class="login-field">
+            <div class="login-label">Konfirmasi PIN</div>
+            <input type="password" class="login-input" id="confirmPin" maxlength="6" placeholder="******">
+        </div>
+        <div style="display: flex; gap: 15px; margin-top: 20px;">
+            <button class="btn-neon" style="flex:1;" onclick="resetUserPin()">SIMPAN</button>
+            <button class="btn-neon-outline btn-neon" style="flex:1;" onclick="closeResetPinModal()">BATAL</button>
+        </div>
+    </div>
+</div>
+
+<!-- FORGOT PIN MODAL -->
+<div class="forgot-pin-modal" id="forgotPinModal">
+    <div class="forgot-pin-content">
+        <div class="neon-modal-icon"><i class="fas fa-question-circle"></i></div>
+        <div class="neon-modal-title" style="font-size:24px;">Lupa PIN</div>
+        <div class="login-field">
+            <div class="login-label">UID / Username</div>
+            <input type="text" class="login-input" id="forgotUID" placeholder="UID Anda">
+        </div>
+        <div class="login-field">
+            <div class="login-label">Jawaban Keamanan</div>
+            <input type="text" class="login-input" id="securityAnswer" placeholder="Jawaban saat daftar">
+        </div>
+        <div class="login-field">
+            <div class="login-label">PIN Baru (6 digit)</div>
+            <input type="password" class="login-input" id="newPinForgot" maxlength="6" placeholder="******">
+        </div>
+        <div style="display: flex; gap: 15px; margin-top: 20px;">
+            <button class="btn-neon" style="flex:1;" onclick="resetPinWithSecurity()">RESET</button>
+            <button class="btn-neon-outline btn-neon" style="flex:1;" onclick="closeForgotPinModal()">BATAL</button>
+        </div>
+        <div style="margin-top: 15px; font-size: 12px; color: #888; text-align:center;">
+            <i class="fas fa-info-circle"></i> Hubungi admin di Telegram untuk mendapatkan jawaban keamanan
+        </div>
+    </div>
+</div>
+
+<!-- UPLOAD PROGRESS -->
 <div class="upload-progress-neon" id="uploadProgressNeon">
     <div class="upload-progress-icon"><i class="fas fa-cloud-upload-alt"></i></div>
     <div class="upload-progress-title">UPLOADING...</div>
     <div class="upload-progress-filename" id="uploadNeonFilename">file.jpg</div>
-    <div class="upload-progress-bar-container">
-        <div class="upload-progress-fill" id="uploadNeonFill"></div>
-    </div>
+    <div class="upload-progress-bar-container"><div class="upload-progress-fill" id="uploadNeonFill"></div></div>
     <div class="upload-progress-percent" id="uploadNeonPercent">0%</div>
 </div>
 
-<!-- LOADING OVERLAY -->
+<!-- LOADING -->
 <div class="loading-overlay" id="loadingOverlay">
     <img id="loadingLogo" class="loading-logo" src="" alt="Loading">
     <div class="loading-spinner"></div>
@@ -1678,24 +1823,17 @@
 <!-- TOAST -->
 <div class="toast-neon" id="toastNeon"></div>
 
-<!-- MAIN LAYOUT USER -->
+<!-- MAIN LAYOUT -->
 <div class="main-layout" id="mainLayout" style="display: none;">
     <div class="content-row">
-        <!-- LEFT COLUMN -->
         <div class="left-column">
             <div class="card">
                 <div class="card-title"><i class="fas fa-user-circle"></i> PROFILE</div>
                 <div class="profile-row">
                     <img src="" alt="Profile" class="profile-image" id="profileImage" onclick="changeProfileImage()">
-                    <div style="flex: 1;">
-                        <div class="status-badge" id="statusBadge">Free</div>
-                        <div style="font-size: 11px; color: #aaa; margin-top: 6px;">Click photo to change</div>
-                    </div>
+                    <div><div class="status-badge" id="statusBadge">Free</div><div style="font-size:11px; color:#aaa; margin-top:6px;">Click photo to change</div></div>
                 </div>
-                <div class="uid-row">
-                    <span class="uid-text" id="uidDisplay">UID: -</span>
-                    <div class="copy-icon" onclick="copyUID()"><i class="fas fa-copy"></i></div>
-                </div>
+                <div class="uid-row"><span class="uid-text" id="uidDisplay">UID: -</span><div class="copy-icon" onclick="copyUID()"><i class="fas fa-copy"></i></div></div>
                 <div style="display: flex; gap: 12px; margin-top: 12px; flex-wrap: wrap;">
                     <button class="btn-neon" style="flex:1;" onclick="showDepositPopup()"><i class="fas fa-plus-circle"></i> Deposit</button>
                     <button class="btn-neon-outline btn-neon" style="flex:1;" onclick="cekSaldo()"><i class="fas fa-wallet"></i> Cek Saldo</button>
@@ -1705,66 +1843,29 @@
 
             <div class="flip-card">
                 <div class="flip-card-inner">
-                    <div class="flip-card-front">
-                        <div style="font-size: 14px; color: #aaa;">SALDO</div>
-                        <div class="card-amount" id="cardAmount">Rp 0</div>
-                        <div class="card-number" id="cardNumber">XXXX XXXX XXXX XXXX</div>
-                        <div class="card-name" id="cardName">-</div>
-                    </div>
-                    <div class="flip-card-back">
-                        <div style="font-size: 14px; color: #aaa;">TOTAL DEPOSIT</div>
-                        <div class="card-amount" id="totalDepositAmount">Rp 0</div>
-                        <div class="card-number">**** **** **** ****</div>
-                        <div class="card-name">VIP Files</div>
-                    </div>
+                    <div class="flip-card-front"><div style="font-size:14px; color:#aaa;">SALDO</div><div class="card-amount" id="cardAmount">Rp 0</div><div class="card-number" id="cardNumber">XXXX XXXX XXXX XXXX</div><div class="card-name" id="cardName">-</div></div>
+                    <div class="flip-card-back"><div style="font-size:14px; color:#aaa;">TOTAL DEPOSIT</div><div class="card-amount" id="totalDepositAmount">Rp 0</div><div class="card-number">**** **** **** ****</div><div class="card-name">VIP Files</div></div>
                 </div>
             </div>
 
-            <div class="card" id="vipCounterCard" style="display: none;">
-                <div class="card-title"><i class="fas fa-crown"></i> VIP STATUS</div>
-                <div id="vipCounterContent"></div>
-            </div>
+            <div class="card" id="vipCounterCard" style="display:none;"><div class="card-title"><i class="fas fa-crown"></i> VIP STATUS</div><div id="vipCounterContent"></div></div>
+
+            <div class="card"><div class="card-title"><i class="fas fa-bolt"></i> FEATURES</div><div class="features-grid" id="featuresGrid"></div></div>
 
             <div class="card">
-                <div class="card-title"><i class="fas fa-bolt"></i> FEATURES</div>
-                <div class="features-grid" id="featuresGrid"></div>
-            </div>
-
-            <div class="card">
-                <div class="menu-item" onclick="buyVIP()">
-                    <div class="menu-icon"><i class="fas fa-crown"></i></div>
-                    <span>Buy VIP / Premium</span>
-                </div>
-                <div class="menu-item" onclick="openChatAdmin()">
-                    <div class="menu-icon"><i class="fas fa-headset"></i></div>
-                    <span>Chat Admin</span>
-                </div>
-                <div class="menu-item" onclick="openResetPin()">
-                    <div class="menu-icon"><i class="fas fa-key"></i></div>
-                    <span>Change PIN</span>
-                </div>
-                <div class="menu-item hidden" onclick="showMyIP()">
-                    <div class="menu-icon"><i class="fas fa-network-wired"></i></div>
-                    <span>My IP Info</span>
-                </div>
-                <div class="menu-item" onclick="logout()">
-                    <div class="menu-icon"><i class="fas fa-sign-out-alt"></i></div>
-                    <span>Logout</span>
-                </div>
+                <div class="menu-item" onclick="buyVIP()"><div class="menu-icon"><i class="fas fa-crown"></i></div><span>Buy VIP / Premium</span></div>
+                <div class="menu-item" onclick="openChatAdmin()"><div class="menu-icon"><i class="fas fa-headset"></i></div><span>Chat Admin</span></div>
+                <div class="menu-item" onclick="openResetPin()"><div class="menu-icon"><i class="fas fa-key"></i></div><span>Change PIN</span></div>
+                <div class="menu-item hidden" onclick="showMyIP()"><div class="menu-icon"><i class="fas fa-network-wired"></i></div><span>My IP Info</span></div>
+                <div class="menu-item" onclick="logout()"><div class="menu-icon"><i class="fas fa-sign-out-alt"></i></div><span>Logout</span></div>
             </div>
         </div>
 
-        <!-- RIGHT COLUMN -->
         <div class="right-column">
             <div class="view-container active" id="dashboardView">
                 <div class="card">
-                    <div class="card-title">
-                        <i class="fas fa-comments"></i> PUBLIC CHAT
-                        <span style="color: #00ff88; font-size: 12px; margin-left: auto;" id="publicChatStatus">● Online</span>
-                    </div>
-                    <div class="chat-area" id="allCommentsArea">
-                        <div class="message system">Welcome to public chat!</div>
-                    </div>
+                    <div class="card-title"><i class="fas fa-comments"></i> PUBLIC CHAT <span style="color:#00ff88; font-size:12px; margin-left:auto;" id="publicChatStatus">● Online</span></div>
+                    <div class="chat-area" id="allCommentsArea"><div class="message system">Welcome to public chat!</div></div>
                     <div class="chat-input-row">
                         <input type="text" class="chat-input" id="allCommentsInput" placeholder="Type message...">
                         <button class="upload-btn" id="publicUploadBtn"><i class="fas fa-paperclip"></i></button>
@@ -1772,13 +1873,7 @@
                     </div>
                 </div>
 
-                <div class="card">
-                    <div class="card-title">
-                        <i class="fas fa-trophy"></i> LEADERBOARD
-                        <span style="color: #ffaa00; font-size: 12px; margin-left: auto;">Top 5 Depositors</span>
-                    </div>
-                    <div id="leaderboardList"></div>
-                </div>
+                <div class="card"><div class="card-title"><i class="fas fa-trophy"></i> LEADERBOARD <span style="color:#ffaa00; font-size:12px; margin-left:auto;">Top 5 Depositors</span></div><div id="leaderboardList"></div></div>
 
                 <div class="card" id="premiumPackagesCard">
                     <div class="card-title"><i class="fas fa-crown"></i> PREMIUM PACKAGES</div>
@@ -1790,44 +1885,25 @@
                             <div class="summary-item"><span class="summary-label">Price</span><span class="summary-value" id="summaryPrice">-</span></div>
                             <div class="summary-item"><span class="summary-label">TOTAL</span><span class="summary-value" id="summaryTotal">-</span></div>
                         </div>
-                        <div class="action-buttons" style="margin-top: 18px;">
-                            <button class="btn-neon" style="width:100%;" onclick="buyVIPPackage()"><i class="fas fa-shopping-cart"></i> BUY NOW</button>
-                        </div>
+                        <button class="btn-neon" style="width:100%; margin-top:15px;" onclick="buyVIPPackage()"><i class="fas fa-shopping-cart"></i> BUY NOW</button>
                     </div>
                 </div>
 
-                <!-- UPDATE HISTORY SECTION -->
                 <div class="card">
                     <div class="card-title"><i class="fas fa-history"></i> UPDATE HISTORY</div>
-                    <div class="tab-buttons">
-                        <button class="tab-btn active" onclick="showUpdateTab('free')">📢 FREE UPDATE</button>
-                        <button class="tab-btn" onclick="showUpdateTab('vip')">👑 VIP UPDATE</button>
-                    </div>
-                    <div id="freeUpdateTab" class="tab-pane active">
-                        <div id="freeUpdateList" style="max-height: 320px; overflow-y: auto;"></div>
-                    </div>
-                    <div id="vipUpdateTab" class="tab-pane">
-                        <div id="vipUpdateList" style="max-height: 320px; overflow-y: auto;"></div>
-                    </div>
+                    <div class="tab-buttons"><button class="tab-btn active" onclick="showUpdateTab('free')">📢 FREE UPDATE</button><button class="tab-btn" onclick="showUpdateTab('vip')">👑 VIP UPDATE</button></div>
+                    <div id="freeUpdateTab" class="tab-pane active"><div id="freeUpdateList" style="max-height:320px; overflow-y:auto;"></div></div>
+                    <div id="vipUpdateTab" class="tab-pane"><div id="vipUpdateList" style="max-height:320px; overflow-y:auto;"></div></div>
                 </div>
 
-                <div class="card">
-                    <div class="card-title"><i class="fas fa-history"></i> DEPOSIT HISTORY</div>
-                    <div class="history-list" id="transactionListDeposit" style="max-height: 220px; overflow-y: auto;"></div>
-                </div>
-                <div class="card">
-                    <div class="card-title"><i class="fas fa-crown"></i> VIP PURCHASE HISTORY</div>
-                    <div class="history-list" id="purchaseHistoryList" style="max-height: 220px; overflow-y: auto;"></div>
-                </div>
+                <div class="card"><div class="card-title"><i class="fas fa-history"></i> DEPOSIT HISTORY</div><div class="history-list" id="transactionListDeposit" style="max-height:220px; overflow-y:auto;"></div></div>
+                <div class="card"><div class="card-title"><i class="fas fa-crown"></i> VIP PURCHASE HISTORY</div><div class="history-list" id="purchaseHistoryList" style="max-height:220px; overflow-y:auto;"></div></div>
             </div>
 
             <div class="view-container" id="chatAdminView">
                 <div class="card">
-                    <div class="card-title">
-                        <i class="fas fa-headset"></i> CHAT ADMIN
-                        <span style="color: #00ff88; font-size: 12px; margin-left: auto;" id="chatAdminStatus">🟢 Online</span>
-                    </div>
-                    <div class="chat-area" id="chatMessagesFull" style="height: 420px;"></div>
+                    <div class="card-title"><i class="fas fa-headset"></i> CHAT ADMIN <span style="color:#00ff88; font-size:12px; margin-left:auto;" id="chatAdminStatus">🟢 Online</span></div>
+                    <div class="chat-area" id="chatMessagesFull" style="height:420px;"></div>
                     <div class="chat-input-row">
                         <input type="text" class="chat-input" id="chatInputFull" placeholder="Type message for admin...">
                         <button class="upload-btn" id="chatUploadBtn"><i class="fas fa-paperclip"></i></button>
@@ -1839,24 +1915,15 @@
             <div class="view-container" id="accountView">
                 <div class="card">
                     <div class="card-title"><i class="fas fa-id-card"></i> ACCOUNT DETAILS</div>
-                    <div class="profile-row" style="margin-bottom: 18px;">
-                        <img src="" class="profile-image" style="width: 85px; height: 85px;" id="profileImageAccount">
-                        <div><h3 style="color: var(--neon-cyan);">PROFILE</h3><p style="color: #aaa; font-size: 12px;">Click photo to change</p></div>
-                    </div>
+                    <div class="profile-row"><img src="" class="profile-image" style="width:85px; height:85px;" id="profileImageAccount"><div><h3 style="color:var(--neon-cyan);">PROFILE</h3><p style="color:#aaa; font-size:12px;">Click photo to change</p></div></div>
                     <div class="uid-row"><span class="uid-text" id="uidDisplayRight">-</span><div class="copy-icon" onclick="copyUID()"><i class="fas fa-copy"></i></div></div>
-                    <div style="margin: 18px 0;"><span class="status-badge" id="statusBadgeRight">Free</span></div>
-                    <div class="customer-details" style="margin: 18px 0;">
-                        <div style="display: flex; justify-content: space-between; padding: 12px; background: rgba(0,0,0,0.35); border-radius: 12px; margin-bottom: 10px;">
-                            <span>Saldo</span><span style="color: #00ff88; font-weight: bold;" id="saldoDisplayRight">Rp 0</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; padding: 12px; background: rgba(0,0,0,0.35); border-radius: 12px; margin-bottom: 10px;">
-                            <span>Total Deposit</span><span style="color: #ffaa00; font-weight: bold;" id="totalDepositRight">Rp 0</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; padding: 12px; background: rgba(0,0,0,0.35); border-radius: 12px;">
-                            <span>VIP Status</span><span style="color: #00ffff; font-weight: bold;" id="vipStatusRight">Free</span>
-                        </div>
+                    <div style="margin:15px 0;"><span class="status-badge" id="statusBadgeRight">Free</span></div>
+                    <div class="customer-details" style="margin:15px 0;">
+                        <div style="display:flex; justify-content:space-between; padding:12px; background:rgba(0,0,0,0.35); border-radius:12px; margin-bottom:10px;"><span>Saldo</span><span style="color:#00ff88; font-weight:bold;" id="saldoDisplayRight">Rp 0</span></div>
+                        <div style="display:flex; justify-content:space-between; padding:12px; background:rgba(0,0,0,0.35); border-radius:12px; margin-bottom:10px;"><span>Total Deposit</span><span style="color:#ffaa00; font-weight:bold;" id="totalDepositRight">Rp 0</span></div>
+                        <div style="display:flex; justify-content:space-between; padding:12px; background:rgba(0,0,0,0.35); border-radius:12px;"><span>VIP Status</span><span style="color:#00ffff; font-weight:bold;" id="vipStatusRight">Free</span></div>
                     </div>
-                    <div class="action-buttons" style="display: flex; gap: 12px; flex-wrap: wrap;">
+                    <div class="action-buttons" style="display:flex; gap:12px; flex-wrap:wrap;">
                         <button class="btn-neon" style="flex:1;" onclick="showDepositPopup()"><i class="fas fa-plus-circle"></i> DEPOSIT</button>
                         <button class="btn-neon-outline btn-neon" style="flex:1;" onclick="openResetPin()"><i class="fas fa-key"></i> CHANGE PIN</button>
                         <button class="btn-neon-outline btn-neon" style="flex:1;" onclick="logout()"><i class="fas fa-sign-out-alt"></i> LOGOUT</button>
@@ -1874,7 +1941,7 @@
 </div>
 
 <script>
-    // ==================== FIREBASE CONFIG ====================
+    // Firebase Config
     const firebaseConfig = {
         apiKey: "AIzaSyCT3zQGBGmPNMm00wbU02hGFBA4xO7P6b0",
         authDomain: "project12-8fa5f.firebaseapp.com",
@@ -1884,14 +1951,13 @@
         messagingSenderId: "1089602964561",
         appId: "1:1089602964561:web:0eec336c448603a0c4bc70"
     };
-    
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
 
-    // ==================== IMGBB CONFIG ====================
+    // Imgbb API
     const IMGBB_API_KEY = 'cdb1c90e037e9a74be4bb8d30de5d50f';
 
-    // ==================== GLOBAL VARIABLES ====================
+    // Global Variables
     let currentUID = '';
     let currentSaldo = 0;
     let loginPin = '';
@@ -1901,162 +1967,71 @@
     let selectedPackage = null;
     let loadingLogoUrl = '';
     let activeBackgroundVideo = 1;
-    let maintenanceCheckInterval = null;
     let maintenanceEndTime = null;
-    
-    // Video list (8 videos from assets)
+    let maintenanceInterval = null;
+    let selectedPaymentMethod = '';
+    let selectedPaymentNumber = '';
+    let selectedDepositAmount = 0;
+    let pendingSecurityCallback = null;
+
+    // Video list
     const videoList = [
-        { id: 1, name: 'Video Background 1', file: 'video1.mp4' },
-        { id: 2, name: 'Video Background 2', file: 'video2.mp4' },
-        { id: 3, name: 'Video Background 3', file: 'video3.mp4' },
-        { id: 4, name: 'Video Background 4', file: 'video4.mp4' },
-        { id: 5, name: 'Video Background 5', file: 'video5.mp4' },
-        { id: 6, name: 'Video Background 6', file: 'video6.mp4' },
-        { id: 7, name: 'Video Background 7', file: 'video7.mp4' },
-        { id: 8, name: 'Video Background 8', file: 'video8.mp4' }
+        { id: 1, file: 'video1.mp4' }, { id: 2, file: 'video2.mp4' }, { id: 3, file: 'video3.mp4' },
+        { id: 4, file: 'video4.mp4' }, { id: 5, file: 'video5.mp4' }, { id: 6, file: 'video6.mp4' },
+        { id: 7, file: 'video7.mp4' }, { id: 8, file: 'video8.mp4' }
     ];
 
-    // ==================== MAINTENANCE FUNCTIONS ====================
-    async function checkMaintenance() {
-        try {
-            const snap = await database.ref('maintenance').once('value');
-            const m = snap.val();
-            
-            if (m && m.status === 'active') {
-                const maintenancePage = document.getElementById('maintenancePage');
-                const loginWrapper = document.getElementById('loginWrapper');
-                const mainLayout = document.getElementById('mainLayout');
-                
-                maintenancePage.classList.add('active');
-                if (loginWrapper) loginWrapper.style.display = 'none';
-                if (mainLayout) mainLayout.style.display = 'none';
-                
-                document.getElementById('maintenanceTitle').innerHTML = m.title || 'MAINTENANCE MODE';
-                document.getElementById('maintenanceMessage').innerHTML = m.message || 'Sistem sedang dalam pemeliharaan.';
-                
-                if (m.endTime) {
-                    maintenanceEndTime = new Date(m.endTime).getTime();
-                    updateMaintenanceTimer();
-                    if (maintenanceCheckInterval) clearInterval(maintenanceCheckInterval);
-                    maintenanceCheckInterval = setInterval(updateMaintenanceTimer, 1000);
-                }
-                
-                if (m.totalMinutes) {
-                    const elapsed = m.totalMinutes * 60 * 1000;
-                    // progress dihitung dari startTime
-                }
-            } else {
-                document.getElementById('maintenancePage').classList.remove('active');
-                if (maintenanceCheckInterval) {
-                    clearInterval(maintenanceCheckInterval);
-                    maintenanceCheckInterval = null;
-                }
-            }
-        } catch (error) {
-            console.error('Error checking maintenance:', error);
-        }
-    }
-    
-    function updateMaintenanceTimer() {
-        if (!maintenanceEndTime) return;
-        const now = Date.now();
-        const remaining = Math.max(0, maintenanceEndTime - now);
+    // ==================== NEON PROMPT FUNCTION ====================
+    function showNeonPrompt(title, placeholder, callback) {
+        const modal = document.getElementById('neonPromptModal');
+        const titleEl = document.getElementById('neonPromptTitle');
+        const inputEl = document.getElementById('neonPromptInput');
         
-        if (remaining <= 0) {
-            document.getElementById('maintenanceTimer').innerHTML = '00:00:00';
-            document.getElementById('maintenanceProgressFill').style.width = '100%';
-            document.getElementById('maintenanceProgressText').innerHTML = 'Progress: 100%';
-            if (maintenanceCheckInterval) clearInterval(maintenanceCheckInterval);
-            checkMaintenance();
-            return;
-        }
+        titleEl.textContent = title;
+        inputEl.value = '';
+        inputEl.placeholder = placeholder || 'Enter your answer';
         
-        const hours = Math.floor(remaining / (1000 * 60 * 60));
-        const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
-        document.getElementById('maintenanceTimer').innerHTML = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        const confirmBtn = document.getElementById('neonPromptConfirm');
+        const cancelBtn = document.getElementById('neonPromptCancel');
         
-        // Get total duration from Firebase or estimate
-        const snap = database.ref('maintenance').once('value').then(s => {
-            const m = s.val();
-            if (m && m.totalMinutes) {
-                const totalDuration = m.totalMinutes * 60 * 1000;
-                const elapsed = totalDuration - remaining;
-                const progress = (elapsed / totalDuration) * 100;
-                document.getElementById('maintenanceProgressFill').style.width = `${Math.min(progress, 100)}%`;
-                document.getElementById('maintenanceProgressText').innerHTML = `Progress: ${Math.min(progress, 100).toFixed(1)}%`;
-            }
-        }).catch(() => {});
+        const confirmHandler = () => {
+            const value = inputEl.value.trim();
+            modal.classList.remove('active');
+            confirmBtn.removeEventListener('click', confirmHandler);
+            cancelBtn.removeEventListener('click', cancelHandler);
+            if (callback) callback(value);
+        };
+        
+        const cancelHandler = () => {
+            modal.classList.remove('active');
+            confirmBtn.removeEventListener('click', confirmHandler);
+            cancelBtn.removeEventListener('click', cancelHandler);
+            if (callback) callback(null);
+        };
+        
+        confirmBtn.addEventListener('click', confirmHandler);
+        cancelBtn.addEventListener('click', cancelHandler);
+        
+        modal.classList.add('active');
+        inputEl.focus();
     }
 
     // ==================== HELPER FUNCTIONS ====================
-    function escapeHtml(text) {
-        if (!text) return '';
-        return String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-    }
-    
-    function formatRupiah(num) {
-        if (!num && num !== 0) return '0';
-        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-    }
-    
-    // NEON MODAL
+    function escapeHtml(text) { if (!text) return ''; return String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+    function formatRupiah(num) { if (!num && num !== 0) return '0'; return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'); }
+
     function showNeonModal(title, message, isError = false) {
         const modal = document.getElementById('neonModal');
-        const modalTitle = document.getElementById('neonModalTitle');
-        const modalMessage = document.getElementById('neonModalMessage');
+        document.getElementById('neonModalTitle').textContent = title;
+        document.getElementById('neonModalMessage').innerHTML = message;
         const icon = modal.querySelector('.neon-modal-icon i');
-        
-        modalTitle.textContent = title;
-        modalMessage.innerHTML = message;
-        
-        if (isError) {
-            icon.className = 'fas fa-exclamation-triangle';
-            modalTitle.style.color = '#ff4444';
-        } else {
-            icon.className = 'fas fa-check-circle';
-            modalTitle.style.color = '#00ffff';
-        }
-        
+        icon.className = isError ? 'fas fa-exclamation-triangle' : 'fas fa-check-circle';
+        document.getElementById('neonModalTitle').style.color = isError ? '#ff4444' : '#00ffff';
         modal.classList.add('active');
     }
-    
-    function closeNeonModal() {
-        document.getElementById('neonModal').classList.remove('active');
-    }
-    
-    function showNeonToast(message, duration = 3000) {
-        const toast = document.getElementById('toastNeon');
-        toast.textContent = message;
-        toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), duration);
-    }
-    
-    // NOTIFICATION TOAST (REAL-TIME)
-    function showNotificationToast(title, message, duration = 5000) {
-        const container = document.getElementById('notificationToastContainer') || (() => {
-            const c = document.createElement('div');
-            c.id = 'notificationToastContainer';
-            c.style.cssText = 'position: fixed; top: 20px; right: 20px; z-index: 10001; display: flex; flex-direction: column; gap: 10px;';
-            document.body.appendChild(c);
-            return c;
-        })();
-        
-        const toast = document.createElement('div');
-        toast.className = 'notification-toast';
-        toast.innerHTML = `
-            <div class="notification-title">${title}</div>
-            <div class="notification-message">${message}</div>
-            <div class="notification-time">${new Date().toLocaleTimeString()}</div>
-        `;
-        container.appendChild(toast);
-        setTimeout(() => {
-            toast.classList.add('hide');
-            setTimeout(() => toast.remove(), 400);
-        }, duration);
-    }
-    
-    // UPLOAD PROGRESS (PHOTO ONLY)
+    function closeNeonModal() { document.getElementById('neonModal').classList.remove('active'); }
+    function showNeonToast(msg) { const toast = document.getElementById('toastNeon'); toast.textContent = msg; toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 3000); }
+
     function showUploadProgress(filename) {
         const el = document.getElementById('uploadProgressNeon');
         document.getElementById('uploadNeonFilename').textContent = filename;
@@ -2064,613 +2039,343 @@
         document.getElementById('uploadNeonPercent').textContent = '0%';
         el.classList.add('active');
     }
-    
     function updateUploadProgress(percent) {
         document.getElementById('uploadNeonFill').style.width = percent + '%';
         document.getElementById('uploadNeonPercent').textContent = percent + '%';
     }
-    
-    function hideUploadProgress() {
-        document.getElementById('uploadProgressNeon').classList.remove('active');
-    }
-    
-    // LOADING
-    function showLoading() {
-        const loadingEl = document.getElementById('loadingOverlay');
-        const logoImg = document.getElementById('loadingLogo');
-        if (loadingLogoUrl && logoImg) {
-            logoImg.src = loadingLogoUrl;
-        }
-        loadingEl.classList.add('active');
-    }
-    
-    function hideLoading() {
-        document.getElementById('loadingOverlay').classList.remove('active');
-    }
-    
-    // IMGBB UPLOAD (PHOTO ONLY - NO VIDEO UPLOAD)
+    function hideUploadProgress() { document.getElementById('uploadProgressNeon').classList.remove('active'); }
+    function showLoading() { document.getElementById('loadingOverlay').classList.add('active'); }
+    function hideLoading() { document.getElementById('loadingOverlay').classList.remove('active'); }
+
     function uploadToImgbb(file) {
         return new Promise((resolve, reject) => {
-            if (!file.type.startsWith('image/')) {
-                reject(new Error('Only images are allowed!'));
-                return;
-            }
-            
+            if (!file.type.startsWith('image/')) { reject(new Error('Only images allowed!')); return; }
             showUploadProgress(file.name);
             const formData = new FormData();
             formData.append('key', IMGBB_API_KEY);
             formData.append('image', file);
             const xhr = new XMLHttpRequest();
-            xhr.upload.addEventListener('progress', (e) => {
-                if (e.lengthComputable) updateUploadProgress(Math.round((e.loaded / e.total) * 100));
-            });
+            xhr.upload.onprogress = (e) => { if (e.lengthComputable) updateUploadProgress(Math.round((e.loaded / e.total) * 100)); };
             xhr.onload = () => {
                 if (xhr.status === 200) {
-                    try {
-                        const response = JSON.parse(xhr.responseText);
-                        if (response.success) {
-                            hideUploadProgress();
-                            resolve(response.data.url);
-                        } else {
-                            hideUploadProgress();
-                            reject(new Error('Upload failed'));
-                        }
-                    } catch (e) {
-                        hideUploadProgress();
-                        reject(e);
-                    }
-                } else {
-                    hideUploadProgress();
-                    reject(new Error('Upload failed'));
-                }
+                    try { const resp = JSON.parse(xhr.responseText); if (resp.success) { hideUploadProgress(); resolve(resp.data.url); } else { hideUploadProgress(); reject(new Error('Upload failed')); } }
+                    catch (e) { hideUploadProgress(); reject(e); }
+                } else { hideUploadProgress(); reject(new Error('Upload failed')); }
             };
-            xhr.onerror = () => {
-                hideUploadProgress();
-                reject(new Error('Network error'));
-            };
+            xhr.onerror = () => { hideUploadProgress(); reject(new Error('Network error')); };
             xhr.open('POST', 'https://api.imgbb.com/1/upload');
             xhr.send(formData);
         });
     }
-    
-    // ==================== LOAD BACKGROUND VIDEO FROM ADMIN ====================
+
+    // ==================== MAINTENANCE ====================
+    async function checkMaintenance() {
+        try {
+            const snap = await database.ref('maintenance').once('value');
+            const m = snap.val();
+            if (m && m.status === 'active') {
+                document.getElementById('maintenancePage').classList.add('active');
+                document.getElementById('loginWrapper').style.display = 'none';
+                document.getElementById('mainLayout').style.display = 'none';
+                document.getElementById('maintenanceTitle').innerHTML = m.title || 'MAINTENANCE MODE';
+                document.getElementById('maintenanceMessage').innerHTML = m.message || 'Sistem sedang dalam pemeliharaan.';
+                if (m.endTime) {
+                    maintenanceEndTime = new Date(m.endTime).getTime();
+                    updateMaintenanceTimer();
+                    if (maintenanceInterval) clearInterval(maintenanceInterval);
+                    maintenanceInterval = setInterval(updateMaintenanceTimer, 1000);
+                }
+                if (m.totalMinutes) {
+                    const totalDuration = m.totalMinutes * 60 * 1000;
+                    // Progress akan dihitung di updateMaintenanceTimer
+                }
+            } else {
+                document.getElementById('maintenancePage').classList.remove('active');
+                if (maintenanceInterval) { clearInterval(maintenanceInterval); maintenanceInterval = null; }
+            }
+        } catch (error) { console.error(error); }
+    }
+    function updateMaintenanceTimer() {
+        if (!maintenanceEndTime) return;
+        const remaining = Math.max(0, maintenanceEndTime - Date.now());
+        if (remaining <= 0) { 
+            document.getElementById('maintenanceTimer').innerHTML = '00:00:00';
+            document.getElementById('maintenanceProgressFill').style.width = '100%';
+            document.getElementById('maintenanceProgressText').innerHTML = 'Progress: 100%';
+            checkMaintenance(); 
+            return; 
+        }
+        const hours = Math.floor(remaining / 3600000);
+        const minutes = Math.floor((remaining % 3600000) / 60000);
+        const seconds = Math.floor((remaining % 60000) / 1000);
+        document.getElementById('maintenanceTimer').innerHTML = `${hours.toString().padStart(2,'0')}:${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
+        
+        // Hitung progress dari startTime
+        database.ref('maintenance').once('value').then(snap => {
+            const m = snap.val();
+            if (m && m.startTime && m.endTime) {
+                const start = new Date(m.startTime).getTime();
+                const end = new Date(m.endTime).getTime();
+                const total = end - start;
+                const elapsed = Date.now() - start;
+                const progress = Math.min((elapsed / total) * 100, 100);
+                document.getElementById('maintenanceProgressFill').style.width = `${progress}%`;
+                document.getElementById('maintenanceProgressText').innerHTML = `Progress: ${progress.toFixed(1)}%`;
+            }
+        }).catch(() => {});
+    }
+
+    // ==================== VIDEO BACKGROUND ====================
     function loadBackgroundVideo() {
         database.ref('admin_config/active_background_video').on('value', (snap) => {
             if (snap.exists()) {
                 activeBackgroundVideo = snap.val();
-                const videoEl = document.getElementById('loginVideo');
-                if (videoEl) {
-                    const videoFile = videoList.find(v => v.id === activeBackgroundVideo)?.file || 'video1.mp4';
-                    videoEl.src = videoFile;
-                    videoEl.load();
-                    videoEl.play().catch(e => console.log('Auto-play prevented:', e));
-                }
-            } else {
-                const videoEl = document.getElementById('loginVideo');
-                if (videoEl) {
-                    videoEl.src = 'video1.mp4';
-                    videoEl.load();
-                }
+                const video = document.getElementById('loginVideo');
+                const videoFile = videoList.find(v => v.id === activeBackgroundVideo)?.file || 'video1.mp4';
+                video.src = videoFile;
+                video.load();
             }
         });
     }
-    
-    // ==================== LOAD CONFIG FROM ADMIN ====================
-    function loadAdminConfig() {
-        // Load packages
-        database.ref('admin_config/premium_packages').on('value', (snap) => {
-            if (snap.exists()) {
-                packages = snap.val();
-                renderPackages();
-            }
-        });
-        
-        // Load loading logo
-        database.ref('admin_config/loading_logo_url').on('value', (snap) => {
-            if (snap.exists()) {
-                loadingLogoUrl = snap.val();
-            }
-        });
-        
-        // Load FREE updates
-        database.ref('free_updates/all').orderByChild('timestamp').limitToLast(20).on('value', (snap) => {
-            renderFreeUpdates(snap.val() || {});
-        });
-        
-        // Load VIP updates if user VIP
-        if (isVIP || currentUID) {
-            database.ref('global_updates').orderByChild('created_at').limitToLast(20).on('value', (snap) => {
-                renderVipUpdates(snap.val() || {});
-            });
-        }
-        
-        // Listen for new notifications from admin
-        database.ref('notifications/latest').on('value', (snap) => {
-            const notif = snap.val();
-            if (notif && notif.active && notif.timestamp && (!localStorage.getItem(`notif_${notif.timestamp}`))) {
-                showNotificationToast(notif.title || 'New Notification', notif.message || '');
-                localStorage.setItem(`notif_${notif.timestamp}`, 'true');
-            }
-        });
-        
-        // Listen for deposit status changes
-        if (currentUID) {
-            database.ref('deposits/' + currentUID).on('child_changed', (snap) => {
-                const deposit = snap.val();
-                if (deposit.status === 'approved') {
-                    showNotificationToast('Deposit Approved', `Your deposit of Rp ${formatRupiah(deposit.jumlah)} has been approved!`);
-                } else if (deposit.status === 'rejected') {
-                    showNotificationToast('Deposit Rejected', `Your deposit of Rp ${formatRupiah(deposit.jumlah)} was rejected.`);
-                }
-            });
-            
-            // Listen for VIP purchase status changes
-            database.ref('purchases/' + currentUID).on('child_changed', (snap) => {
-                const purchase = snap.val();
-                if (purchase.status === 'approved') {
-                    showNotificationToast('VIP Approved', `Your VIP package "${purchase.package}" has been approved!`);
-                } else if (purchase.status === 'rejected') {
-                    showNotificationToast('VIP Rejected', `Your VIP purchase was rejected. Balance has been returned.`);
-                }
-            });
-        }
-    }
-    
-    // ==================== RENDER PACKAGES ====================
-    function renderPackages() {
-        const grid = document.getElementById('priceGrid');
-        if (!grid) return;
-        
-        if (!packages || packages.length === 0) {
-            grid.innerHTML = '<div style="color: #aaa; text-align: center; padding: 25px;">No packages available</div>';
-            return;
-        }
-        
-        let html = '<div class="price-grid">';
-        packages.forEach((pkg, idx) => {
-            html += `
-                <div class="price-card" data-idx="${idx}" data-price="${pkg.price}" data-type="${pkg.type}" onclick="selectPackage(${idx})">
-                    <div class="price-amount">Rp ${formatRupiah(pkg.price)}</div>
-                    <div class="price-type">${escapeHtml(pkg.label)}</div>
-                    ${pkg.description ? `<div style="font-size: 11px; color: #aaa; margin-top: 8px;">${escapeHtml(pkg.description)}</div>` : ''}
-                </div>
-            `;
-        });
-        html += '</div>';
-        grid.innerHTML = html;
-    }
-    
-    function selectPackage(idx) {
-        selectedPackage = packages[idx];
-        document.querySelectorAll('.price-card').forEach(card => card.classList.remove('selected'));
-        if (event && event.currentTarget) event.currentTarget.classList.add('selected');
-        document.getElementById('summaryPackageName').textContent = selectedPackage.label;
-        document.getElementById('summaryPrice').textContent = 'Rp ' + formatRupiah(selectedPackage.price);
-        document.getElementById('summaryTotal').textContent = 'Rp ' + formatRupiah(selectedPackage.price);
-    }
-    
-    // ==================== RENDER UPDATE HISTORY ====================
-    function renderFreeUpdates(updates) {
-        const container = document.getElementById('freeUpdateList');
-        if (!container) return;
-        
-        const sorted = Object.keys(updates).map(key => ({ id: key, ...updates[key] })).sort((a,b) => (b.timestamp || 0) - (a.timestamp || 0));
-        
-        if (sorted.length === 0) {
-            container.innerHTML = '<div style="padding: 25px; text-align: center; color: #aaa;">Belum ada update FREE</div>';
-            return;
-        }
-        
-        let html = '';
-        sorted.slice(0, 15).forEach(update => {
-            const date = update.timestamp ? new Date(update.timestamp).toLocaleString('id-ID') : '-';
-            html += `
-                <div class="update-item">
-                    <div class="update-title">📢 ${escapeHtml(update.title || 'Free Update')}</div>
-                    <div class="update-desc">${escapeHtml(update.description || 'Tidak ada deskripsi')}</div>
-                    <div class="update-meta">
-                        <span><i class="fas fa-code-branch"></i> ${update.version || 'v1.0'}</span>
-                        <span><i class="fas fa-calendar"></i> ${date}</span>
-                    </div>
-                    <div style="margin-top: 12px;">
-                        <a href="${update.link || '#'}" target="_blank" class="update-link"><i class="fas fa-download"></i> Download Now</a>
-                    </div>
-                </div>
-            `;
-        });
-        container.innerHTML = html;
-    }
-    
-    function renderVipUpdates(updates) {
-        const container = document.getElementById('vipUpdateList');
-        if (!container) return;
-        
-        if (!isVIP) {
-            container.innerHTML = `
-                <div style="padding: 25px; text-align: center; color: #ffaa00;">
-                    <i class="fas fa-crown" style="font-size: 48px;"></i>
-                    <p style="margin-top: 12px;">Fitur ini hanya untuk member VIP</p>
-                    <button class="btn-neon" style="margin-top: 15px;" onclick="buyVIP()">Upgrade to VIP</button>
-                </div>
-            `;
-            return;
-        }
-        
-        const sorted = Object.keys(updates).map(key => ({ id: key, ...updates[key] })).sort((a,b) => (b.created_at || 0) - (a.created_at || 0));
-        
-        if (sorted.length === 0) {
-            container.innerHTML = '<div style="padding: 25px; text-align: center; color: #aaa;">Belum ada update VIP</div>';
-            return;
-        }
-        
-        let html = '';
-        sorted.slice(0, 15).forEach(update => {
-            const date = update.created_at ? new Date(update.created_at).toLocaleString('id-ID') : '-';
-            html += `
-                <div class="update-item" style="border-color: #ffd700;">
-                    <div class="update-title" style="color: #ffd700;">👑 ${escapeHtml(update.title || 'VIP Update')}</div>
-                    <div class="update-desc">${escapeHtml(update.description || 'Tidak ada deskripsi')}</div>
-                    <div class="update-meta">
-                        <span><i class="fas fa-code-branch"></i> ${update.version || 'v2.0'}</span>
-                        <span><i class="fas fa-calendar"></i> ${date}</span>
-                    </div>
-                    <div style="margin-top: 12px;">
-                        <a href="${update.link || '#'}" target="_blank" class="update-link" style="color: #ffd700;"><i class="fas fa-download"></i> Download Now</a>
-                    </div>
-                </div>
-            `;
-        });
-        container.innerHTML = html;
-    }
-    
-    function showUpdateTab(tab) {
-        const freeTab = document.getElementById('freeUpdateTab');
-        const vipTab = document.getElementById('vipUpdateTab');
-        const btns = document.querySelectorAll('.tab-btn');
-        
-        btns.forEach(btn => btn.classList.remove('active'));
-        
-        if (tab === 'free') {
-            freeTab.classList.add('active');
-            vipTab.classList.remove('active');
-            btns[0].classList.add('active');
-            database.ref('free_updates/all').orderByChild('timestamp').limitToLast(20).once('value', (snap) => {
-                renderFreeUpdates(snap.val() || {});
-            });
-        } else {
-            freeTab.classList.remove('active');
-            vipTab.classList.add('active');
-            btns[1].classList.add('active');
-            if (isVIP) {
-                database.ref('global_updates').orderByChild('created_at').limitToLast(20).once('value', (snap) => {
-                    renderVipUpdates(snap.val() || {});
-                });
-            } else {
-                renderVipUpdates({});
-            }
-        }
-    }
-    
-    // ==================== VIDEO MUTE ====================
-    let isVideoMuted = true;
-    
     function toggleVideoMute() {
         const video = document.getElementById('loginVideo');
-        const muteBtn = document.getElementById('videoMuteBtn');
-        if (video) {
-            video.muted = !video.muted;
-            isVideoMuted = video.muted;
-            muteBtn.innerHTML = video.muted ? '<i class="fas fa-volume-mute"></i>' : '<i class="fas fa-volume-up"></i>';
-        }
+        const btn = document.querySelector('.video-mute-btn i');
+        video.muted = !video.muted;
+        btn.className = video.muted ? 'fas fa-volume-mute' : 'fas fa-volume-up';
     }
-    
-    // ==================== FORGOT PIN ====================
-    function openForgotPinModal() {
-        document.getElementById('forgotPinModal').classList.add('active');
-    }
-    
-    function closeForgotPinModal() {
-        document.getElementById('forgotPinModal').classList.remove('active');
-        document.getElementById('forgotUID').value = '';
-        document.getElementById('securityAnswer').value = '';
-        document.getElementById('newPinForgot').value = '';
-    }
-    
-    async function resetPinWithSecurity() {
-        const uid = document.getElementById('forgotUID').value.trim();
-        const answer = document.getElementById('securityAnswer').value.trim();
-        const newPin = document.getElementById('newPinForgot').value.trim();
-        
-        if (!uid) {
-            showNeonModal('Error', 'Please enter your UID!', true);
-            return;
-        }
-        if (!answer) {
-            showNeonModal('Error', 'Please enter security answer!', true);
-            return;
-        }
-        if (!newPin || newPin.length !== 6) {
-            showNeonModal('Error', 'New PIN must be 6 digits!', true);
-            return;
-        }
-        
-        showLoading();
-        try {
-            const userSnap = await database.ref('users/' + uid).once('value');
-            const user = userSnap.val();
-            if (!user) {
-                showNeonModal('Error', 'User not found!', true);
-                hideLoading();
-                return;
-            }
-            
-            const securitySnap = await database.ref('security_answers/' + uid).once('value');
-            const storedAnswer = securitySnap.val();
-            
-            if (!storedAnswer || storedAnswer.toLowerCase() !== answer.toLowerCase()) {
-                showNeonModal('Error', 'Security answer is incorrect!', true);
-                hideLoading();
-                return;
-            }
-            
-            await database.ref('users/' + uid).update({ pin: newPin });
-            showNeonModal('Success', 'PIN has been reset successfully! Please login with your new PIN.', false);
-            closeForgotPinModal();
-            
-        } catch (error) {
-            showNeonModal('Error', error.message, true);
-        }
-        hideLoading();
-    }
-    
-    // ==================== AUTH FUNCTIONS ====================
+
+    // ==================== AUTH ====================
     function switchAuthTab(tab) {
-        const tabs = document.querySelectorAll('.login-tab');
-        tabs.forEach(t => t.classList.remove('active'));
-        
+        document.querySelectorAll('.login-tab').forEach(t => t.classList.remove('active'));
         if (tab === 'login') {
-            tabs[0].classList.add('active');
+            document.querySelectorAll('.login-tab')[0].classList.add('active');
             document.getElementById('loginForm').style.display = 'block';
             document.getElementById('registerForm').style.display = 'none';
-            document.getElementById('loginSubtitle').textContent = 'Login to your account';
         } else {
-            tabs[1].classList.add('active');
+            document.querySelectorAll('.login-tab')[1].classList.add('active');
             document.getElementById('loginForm').style.display = 'none';
             document.getElementById('registerForm').style.display = 'block';
-            document.getElementById('loginSubtitle').textContent = 'Create new account (no prefix needed)';
         }
-        clearLoginPin();
-        clearRegisterPin();
+        clearLoginPin(); clearRegisterPin();
     }
-    
-    function addLoginNumber(num) {
-        if (loginPin.length < 6) {
-            loginPin += num.toString();
-            updateLoginPinDisplay();
-        }
-    }
-    
-    function clearLoginPin() {
-        loginPin = '';
-        updateLoginPinDisplay();
-        document.getElementById('loginMessage').style.display = 'none';
-        document.getElementById('loginMessage').classList.remove('show');
-    }
-    
-    function updateLoginPinDisplay() {
-        const chars = document.querySelectorAll('#loginPinPreview .pin-char');
-        for (let i = 0; i < 6; i++) {
-            if (i < loginPin.length) {
-                chars[i].innerText = '●';
-                chars[i].classList.add('filled');
-            } else {
-                chars[i].innerText = '-';
-                chars[i].classList.remove('filled');
-            }
-        }
-    }
-    
-    function addRegisterNumber(num) {
-        if (registerPin.length < 6) {
-            registerPin += num.toString();
-            updateRegisterPinDisplay();
-        }
-    }
-    
-    function clearRegisterPin() {
-        registerPin = '';
-        updateRegisterPinDisplay();
-        document.getElementById('registerMessage').style.display = 'none';
-        document.getElementById('registerMessage').classList.remove('show');
-    }
-    
-    function updateRegisterPinDisplay() {
-        const chars = document.querySelectorAll('#registerPinPreview .pin-char');
-        for (let i = 0; i < 6; i++) {
-            if (i < registerPin.length) {
-                chars[i].innerText = '●';
-                chars[i].classList.add('filled');
-            } else {
-                chars[i].innerText = '-';
-                chars[i].classList.remove('filled');
-            }
-        }
-    }
-    
-    function showMessage(element, msg, isError = true) {
-        const el = document.getElementById(element);
-        el.innerHTML = '<i class="fas fa-' + (isError ? 'exclamation-triangle' : 'check-circle') + '"></i> ' + msg;
-        el.classList.add('show');
-        if (!isError) el.classList.add('success');
-        else el.classList.remove('success');
-        setTimeout(() => el.classList.remove('show'), 3500);
-    }
-    
+    function addLoginNumber(n) { if (loginPin.length < 6) { loginPin += n; updateLoginPinDisplay(); } }
+    function clearLoginPin() { loginPin = ''; updateLoginPinDisplay(); document.getElementById('loginMessage').style.display = 'none'; }
+    function updateLoginPinDisplay() { const chars = document.querySelectorAll('#loginPinPreview .pin-char'); for(let i=0;i<6;i++) { if(i<loginPin.length) { chars[i].innerText='●'; chars[i].classList.add('filled'); } else { chars[i].innerText='-'; chars[i].classList.remove('filled'); } } }
+    function addRegisterNumber(n) { if (registerPin.length < 6) { registerPin += n; updateRegisterPinDisplay(); } }
+    function clearRegisterPin() { registerPin = ''; updateRegisterPinDisplay(); document.getElementById('registerMessage').style.display = 'none'; }
+    function updateRegisterPinDisplay() { const chars = document.querySelectorAll('#registerPinPreview .pin-char'); for(let i=0;i<6;i++) { if(i<registerPin.length) { chars[i].innerText='●'; chars[i].classList.add('filled'); } else { chars[i].innerText='-'; chars[i].classList.remove('filled'); } } }
+    function showMessage(el, msg, isError) { const elem = document.getElementById(el); elem.innerHTML = '<i class="fas fa-' + (isError ? 'exclamation-triangle' : 'check-circle') + '"></i> ' + msg; elem.classList.add('show'); if(!isError) elem.classList.add('success'); setTimeout(() => elem.classList.remove('show'), 3000); }
+
     async function submitLogin() {
         const uid = document.getElementById('loginUID').value.trim();
-        if (!uid) {
-            showMessage('loginMessage', 'Enter username/UID!', true);
-            return;
-        }
-        if (loginPin.length < 6) {
-            showMessage('loginMessage', 'PIN must be 6 digits!', true);
-            return;
-        }
-        
+        if (!uid) { showMessage('loginMessage', 'Enter username!', true); return; }
+        if (loginPin.length < 6) { showMessage('loginMessage', 'PIN must be 6 digits!', true); return; }
         showLoading();
-        
         try {
             const userSnap = await database.ref('users/' + uid).once('value');
             const user = userSnap.val();
-            
-            if (!user) {
-                showMessage('loginMessage', 'User not found!', true);
-                clearLoginPin();
-                hideLoading();
-                return;
-            }
-            if (user.pin !== loginPin) {
-                showMessage('loginMessage', 'Wrong PIN!', true);
-                clearLoginPin();
-                hideLoading();
-                return;
-            }
-            
+            if (!user) { showMessage('loginMessage', 'User not found!', true); clearLoginPin(); hideLoading(); return; }
+            if (user.pin !== loginPin) { showMessage('loginMessage', 'Wrong PIN!', true); clearLoginPin(); hideLoading(); return; }
             const bannedSnap = await database.ref('banned_users/' + uid).once('value');
-            if (bannedSnap.exists() && bannedSnap.val().status === 'banned') {
-                showNeonModal('Account Banned', 'Your account has been banned. Contact admin.', true);
-                hideLoading();
-                return;
-            }
-            
+            if (bannedSnap.exists() && bannedSnap.val().status === 'banned') { showNeonModal('Account Banned', 'Your account has been banned.', true); hideLoading(); return; }
             currentUID = uid;
-            if (document.getElementById('rememberUID').checked) {
-                localStorage.setItem('vip_uid', uid);
-            }
+            if (document.getElementById('rememberUID').checked) localStorage.setItem('vip_uid', uid);
             localStorage.setItem('vip_files_uid', uid);
-            
             await database.ref('users/' + uid).update({ status: 'online', lastLogin: new Date().toISOString() });
-            
             await loadUserData();
-            
             document.getElementById('loginWrapper').classList.add('hide');
             document.getElementById('mainLayout').style.display = 'block';
-            
             document.getElementById('uidDisplay').textContent = 'UID: ' + uid;
             document.getElementById('uidDisplayRight').textContent = uid;
-            document.getElementById('cardNumber').textContent = uid.slice(-16).padStart(16, 'X').replace(/(.{4})/g, '$1 ');
+            let cardNum = uid.replace(/[^A-Za-z0-9]/g, '').slice(-16).padStart(16, 'X');
+            document.getElementById('cardNumber').textContent = cardNum.replace(/(.{4})/g, '$1 ');
             document.getElementById('cardName').textContent = uid;
-            
-            // Load all data
-            loadAllComments();
-            loadLeaderboard();
-            loadTransactionHistory();
-            loadPurchaseHistory();
-            setupChatListener();
-            monitorAdminStatus();
-            loadVIPStatus();
-            setupRealtimeListeners();
-            
+            loadAllComments(); loadLeaderboard(); loadTransactionHistory(); loadPurchaseHistory();
+            setupChatListener(); monitorAdminStatus(); loadVIPStatus(); setupRealtimeListeners();
             hideLoading();
-            showNeonToast('Welcome, ' + uid + '!', 3000);
-            
-        } catch (error) {
-            console.error('Login error:', error);
-            hideLoading();
-            showMessage('loginMessage', 'Error: ' + error.message, true);
-        }
+            showNeonToast('Welcome, ' + uid + '!');
+        } catch(error) { console.error(error); hideLoading(); showMessage('loginMessage', 'Error: ' + error.message, true); }
     }
-    
+
     async function submitRegister() {
         let username = document.getElementById('registerUID').value.trim();
-        if (!username) {
-            showMessage('registerMessage', 'Enter username!', true);
-            return;
-        }
-        if (registerPin.length < 6) {
-            showMessage('registerMessage', 'PIN must be 6 digits!', true);
-            return;
-        }
-        
-        const uid = username;
-        
+        if (!username) { showMessage('registerMessage', 'Enter username!', true); return; }
+        if (registerPin.length < 6) { showMessage('registerMessage', 'PIN must be 6 digits!', true); return; }
         showLoading();
-        
         try {
-            const userSnap = await database.ref('users/' + uid).once('value');
-            if (userSnap.exists()) {
-                showMessage('registerMessage', 'Username already taken!', true);
-                clearRegisterPin();
+            const userSnap = await database.ref('users/' + username).once('value');
+            if (userSnap.exists()) { showMessage('registerMessage', 'Username taken!', true); clearRegisterPin(); hideLoading(); return; }
+            await database.ref('users/' + username).set({ uid: username, pin: registerPin, status: 'active', registeredAt: new Date().toISOString() });
+            await database.ref('saldo/' + username).set({ amount: 0, created: Date.now() });
+            
+            // NEON PROMPT untuk security answer
+            showNeonPrompt('Security Question', 'Set your security answer (for PIN reset)', async (answer) => {
+                if (answer && answer.trim()) {
+                    await database.ref('security_answers/' + username).set(answer.toLowerCase().trim());
+                    showNeonModal('Success', 'Registration successful! Please login.', false);
+                    clearRegisterPin();
+                    setTimeout(() => { 
+                        document.getElementById('loginUID').value = username; 
+                        switchAuthTab('login'); 
+                    }, 2000);
+                } else {
+                    // Jika user tidak mengisi, skip security answer
+                    showNeonModal('Info', 'Registration successful! You can set security answer later via admin.', false);
+                    clearRegisterPin();
+                    setTimeout(() => { 
+                        document.getElementById('loginUID').value = username; 
+                        switchAuthTab('login'); 
+                    }, 2000);
+                }
                 hideLoading();
-                return;
-            }
-            
-            await database.ref('users/' + uid).set({
-                uid: uid,
-                pin: registerPin,
-                status: 'active',
-                registeredAt: new Date().toISOString()
             });
-            
-            await database.ref('saldo/' + uid).set({ amount: 0, created: Date.now() });
-            
-            // Set security answer (default untuk forgot pin)
-            const securityAnswer = prompt('Set a security answer (for PIN reset):', '');
-            if (securityAnswer) {
-                await database.ref('security_answers/' + uid).set(securityAnswer.toLowerCase());
-            }
-            
-            showMessage('registerMessage', 'Registration successful! Please login.', false);
-            clearRegisterPin();
-            
-            setTimeout(() => {
-                document.getElementById('loginUID').value = uid;
-                switchAuthTab('login');
-            }, 2000);
-            
-            hideLoading();
-            
-        } catch (error) {
-            console.error('Register error:', error);
-            hideLoading();
-            showMessage('registerMessage', 'Error: ' + error.message, true);
-        }
+        } catch(error) { console.error(error); hideLoading(); showMessage('registerMessage', 'Error: ' + error.message, true); }
     }
-    
-    // ==================== LOAD USER DATA ====================
+
     async function loadUserData() {
         try {
             const saldoSnap = await database.ref('saldo/' + currentUID).once('value');
-            if (saldoSnap.exists()) {
-                currentSaldo = saldoSnap.val().amount || 0;
-                updateSaldoDisplay();
-            }
-            
+            if (saldoSnap.exists()) currentSaldo = saldoSnap.val().amount || 0;
+            else await database.ref('saldo/' + currentUID).set({ amount: 0 });
+            updateSaldoDisplay();
             const profileSnap = await database.ref('profiles/' + currentUID).once('value');
             if (profileSnap.exists() && profileSnap.val().image) {
-                const imgUrl = profileSnap.val().image;
-                document.getElementById('profileImage').src = imgUrl;
-                document.getElementById('profileImageAccount').src = imgUrl;
-                localStorage.setItem('vip_files_profile', imgUrl);
+                document.getElementById('profileImage').src = profileSnap.val().image;
+                document.getElementById('profileImageAccount').src = profileSnap.val().image;
             }
-            
-            await loadVIPStatus();
-            
-        } catch (error) {
-            console.error('Error loading user data:', error);
-        }
+        } catch(error) { console.error(error); }
     }
-    
     function updateSaldoDisplay() {
         document.getElementById('cardAmount').innerHTML = 'Rp ' + formatRupiah(currentSaldo);
         document.getElementById('saldoDisplayRight').innerHTML = 'Rp ' + formatRupiah(currentSaldo);
     }
-    
+
+    // ==================== DEPOSIT POPUP ====================
+    function showDepositPopup() { document.getElementById('depositPopup').classList.add('active'); }
+    function closeDepositPopup() { document.getElementById('depositPopup').classList.remove('active'); resetDepositForm(); }
+    function resetDepositForm() {
+        document.getElementById('depositNama').value = '';
+        document.getElementById('depositNoEwallet').value = '';
+        document.getElementById('depositJumlah').value = '';
+        document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('selected'));
+        document.querySelectorAll('.amount-preset').forEach(a => a.classList.remove('selected'));
+        document.getElementById('destinationRow').style.display = 'none';
+    }
+    function selectPayment(method, number, el) {
+        document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('selected'));
+        el.classList.add('selected');
+        selectedPaymentMethod = method;
+        selectedPaymentNumber = number;
+        if (number !== 'Hubungi Admin') {
+            document.getElementById('destinationNumber').innerText = number;
+            document.getElementById('destinationRow').style.display = 'flex';
+        } else {
+            document.getElementById('destinationRow').style.display = 'none';
+            showNeonModal('Info', 'Silakan hubungi admin untuk metode ' + method, false);
+        }
+    }
+    function setAmount(amount, el) {
+        document.querySelectorAll('.amount-preset').forEach(a => a.classList.remove('selected'));
+        el.classList.add('selected');
+        document.getElementById('depositJumlah').value = amount;
+        selectedDepositAmount = amount;
+    }
+    function copyDestinationNumber() {
+        const num = document.getElementById('destinationNumber').innerText;
+        navigator.clipboard.writeText(num);
+        showNeonToast('Nomor disalin!');
+    }
+    async function submitDeposit() {
+        const nama = document.getElementById('depositNama').value.trim();
+        const noEwallet = document.getElementById('depositNoEwallet').value.trim();
+        const jumlah = parseInt(document.getElementById('depositJumlah').value);
+        if (!nama) { showNeonModal('Error', 'Masukkan nama pengirim!', true); return; }
+        if (!noEwallet) { showNeonModal('Error', 'Masukkan no E-Wallet!', true); return; }
+        if (!selectedPaymentMethod) { showNeonModal('Error', 'Pilih metode pembayaran!', true); return; }
+        if (!jumlah || jumlah < 20000) { showNeonModal('Error', 'Minimal Rp 20.000!', true); return; }
+        showLoading();
+        try {
+            await database.ref('deposits/' + currentUID).push({
+                uid: currentUID, namaPengirim: nama, noEwallet: noEwallet,
+                metodePembayaran: selectedPaymentMethod, jumlah: jumlah, status: 'pending', timestamp: Date.now()
+            });
+            hideLoading();
+            showNeonModal('Success', 'Deposit request sent! Menunggu konfirmasi admin.', false);
+            closeDepositPopup();
+        } catch(error) { hideLoading(); showNeonModal('Error', error.message, true); }
+    }
+
+    // ==================== RESET PIN ====================
+    function openResetPin() { document.getElementById('resetPinModal').classList.add('active'); }
+    function closeResetPinModal() { document.getElementById('resetPinModal').classList.remove('active'); }
+    async function resetUserPin() {
+        const old = document.getElementById('oldPin').value;
+        const newPin = document.getElementById('newPin').value;
+        const confirm = document.getElementById('confirmPin').value;
+        if (!old || old.length !== 6) { showNeonModal('Error', 'PIN lama harus 6 digit!', true); return; }
+        if (!newPin || newPin.length !== 6) { showNeonModal('Error', 'PIN baru harus 6 digit!', true); return; }
+        if (newPin !== confirm) { showNeonModal('Error', 'PIN baru tidak cocok!', true); return; }
+        showLoading();
+        try {
+            const userSnap = await database.ref('users/' + currentUID).once('value');
+            if (userSnap.val().pin !== old) throw new Error('PIN lama salah!');
+            await database.ref('users/' + currentUID).update({ pin: newPin });
+            hideLoading();
+            showNeonModal('Success', 'PIN berhasil diubah!', false);
+            closeResetPinModal();
+        } catch(error) { hideLoading(); showNeonModal('Error', error.message, true); }
+    }
+
+    // ==================== FORGOT PIN ====================
+    function openForgotPinModal() { document.getElementById('forgotPinModal').classList.add('active'); }
+    function closeForgotPinModal() { document.getElementById('forgotPinModal').classList.remove('active'); }
+    async function resetPinWithSecurity() {
+        const uid = document.getElementById('forgotUID').value.trim();
+        const answer = document.getElementById('securityAnswer').value.trim();
+        const newPin = document.getElementById('newPinForgot').value.trim();
+        if (!uid) { showNeonModal('Error', 'Masukkan UID!', true); return; }
+        if (!answer) { showNeonModal('Error', 'Masukkan jawaban keamanan!', true); return; }
+        if (!newPin || newPin.length !== 6) { showNeonModal('Error', 'PIN baru harus 6 digit!', true); return; }
+        showLoading();
+        try {
+            const secSnap = await database.ref('security_answers/' + uid).once('value');
+            if (!secSnap.exists() || secSnap.val() !== answer.toLowerCase()) throw new Error('Jawaban keamanan salah!');
+            await database.ref('users/' + uid).update({ pin: newPin });
+            hideLoading();
+            showNeonModal('Success', 'PIN berhasil direset! Silakan login.', false);
+            closeForgotPinModal();
+        } catch(error) { hideLoading(); showNeonModal('Error', error.message, true); }
+    }
+
+    // ==================== CEK SALDO & DEPOSIT ====================
+    async function cekSaldo() {
+        if (!currentUID) { showNeonModal('Error', 'Login dulu!', true); return; }
+        showLoading();
+        try {
+            const snap = await database.ref('saldo/' + currentUID).once('value');
+            const saldo = snap.val()?.amount || 0;
+            hideLoading();
+            showNeonModal('Saldo Anda', `💰 Rp ${formatRupiah(saldo)}`, false);
+        } catch(error) { hideLoading(); showNeonModal('Error', error.message, true); }
+    }
+    async function cekDeposit() {
+        if (!currentUID) { showNeonModal('Error', 'Login dulu!', true); return; }
+        showLoading();
+        try {
+            const snap = await database.ref('deposits/' + currentUID).once('value');
+            const deposits = snap.val() || {};
+            let pending=0, approved=0, rejected=0, total=0;
+            Object.keys(deposits).forEach(k => { total++; if(deposits[k].status==='pending') pending++; else if(deposits[k].status==='approved') approved++; else if(deposits[k].status==='rejected') rejected++; });
+            hideLoading();
+            showNeonModal('Riwayat Deposit', `📊 Total: ${total}\n✅ Approved: ${approved}\n⏳ Pending: ${pending}\n❌ Rejected: ${rejected}`, false);
+        } catch(error) { hideLoading(); showNeonModal('Error', error.message, true); }
+    }
+
+    // ==================== VIP ====================
     async function loadVIPStatus() {
         try {
             const vipSnap = await database.ref('vip_members/' + currentUID).once('value');
             const vip = vipSnap.val();
-            
             if (vip && vip.status === 'active') {
                 isVIP = true;
                 document.getElementById('statusBadge').textContent = 'Premium';
@@ -2678,337 +2383,67 @@
                 document.getElementById('vipStatusRight').textContent = 'Premium';
                 document.getElementById('statusBadge').classList.add('status-premium');
                 document.getElementById('statusBadgeRight').classList.add('status-premium');
-                
-                const counterCard = document.getElementById('vipCounterCard');
+                const counter = document.getElementById('vipCounterCard');
                 const content = document.getElementById('vipCounterContent');
-                if (counterCard && content) {
-                    counterCard.style.display = 'block';
-                    
-                    if (vip.isPermanent) {
-                        content.innerHTML = `
-                            <div style="text-align: center; padding: 12px;">
-                                <i class="fas fa-infinity" style="font-size: 45px; color: #ffd700;"></i>
-                                <div style="margin-top: 12px; font-weight: bold; color: #ffd700;">VIP PERMANENT</div>
-                                <div style="font-size: 12px; color: #aaa;">Unlimited updates - Lifetime access</div>
-                            </div>
-                        `;
-                    } else if (vip.updateType === 'quota') {
-                        const used = vip.updatesUsed || 0;
-                        const total = vip.updateQuota || 0;
-                        const remaining = total - used;
-                        const percent = total > 0 ? (used / total) * 100 : 0;
-                        content.innerHTML = `
-                            <div style="margin-bottom: 12px;">Updates Used: <strong style="color:#00ff88;">${used}/${total}</strong></div>
-                            <div class="progress-bar-container" style="background: #1a1a1a; border-radius: 10px; height: 8px; overflow: hidden;">
-                                <div class="progress-fill" style="width: ${percent}%; height: 100%; background: linear-gradient(90deg, #00ffff, #00ff88);"></div>
-                            </div>
-                            <div style="margin-top: 12px; color: ${remaining <= 2 ? '#ff4444' : '#00ff88'}">Remaining: <strong>${remaining}</strong> updates</div>
-                        `;
+                if (counter && content) {
+                    counter.style.display = 'block';
+                    if (vip.isPermanent) content.innerHTML = '<div style="text-align:center;"><i class="fas fa-infinity" style="font-size:45px; color:#ffd700;"></i><div style="margin-top:12px; font-weight:bold; color:#ffd700;">VIP PERMANENT</div><div style="font-size:12px;">Unlimited updates</div></div>';
+                    else if (vip.updateType === 'quota') {
+                        const used = vip.updatesUsed || 0, total = vip.updateQuota || 0, rem = total - used, percent = total>0 ? (used/total)*100 : 0;
+                        content.innerHTML = `<div>Updates: ${used}/${total}</div><div class="progress-bar" style="background:#333; border-radius:10px; height:8px;"><div style="width:${percent}%; height:100%; background:linear-gradient(90deg,#00ffff,#00ff88); border-radius:10px;"></div></div><div>Remaining: ${rem} updates</div>`;
                     } else if (vip.expiryDate) {
-                        const expiry = new Date(vip.expiryDate);
-                        const now = new Date();
-                        const daysLeft = Math.ceil((expiry - now) / (1000 * 60 * 60 * 24));
-                        content.innerHTML = `
-                            <div style="text-align: center;">
-                                <i class="fas fa-calendar-alt" style="font-size: 35px; color: #00ffff;"></i>
-                                <div style="margin-top: 12px;">Expires: <strong>${expiry.toLocaleDateString()}</strong></div>
-                                <div style="color: ${daysLeft <= 7 ? '#ff4444' : '#00ff88'}; margin-top: 8px;">${daysLeft} days remaining</div>
-                            </div>
-                        `;
+                        const expiry = new Date(vip.expiryDate), days = Math.ceil((expiry - new Date())/86400000);
+                        content.innerHTML = `<div style="text-align:center;"><i class="fas fa-calendar-alt" style="font-size:35px;"></i><div>Expires: ${expiry.toLocaleDateString()}</div><div style="color:${days<=7?'#ff4444':'#00ff88'}">${days} days left</div></div>`;
                     }
                 }
-                
-                // Refresh VIP updates
-                database.ref('global_updates').orderByChild('created_at').limitToLast(20).once('value', (snap) => {
-                    renderVipUpdates(snap.val() || {});
-                });
-                
+                database.ref('global_updates').orderByChild('created_at').limitToLast(20).once('value', snap => renderVipUpdates(snap.val() || {}));
             } else {
                 isVIP = false;
                 document.getElementById('statusBadge').textContent = 'Free';
                 document.getElementById('statusBadgeRight').textContent = 'Free';
                 document.getElementById('vipStatusRight').textContent = 'Free';
-                document.getElementById('statusBadge').classList.remove('status-premium');
-                document.getElementById('statusBadgeRight').classList.remove('status-premium');
-                
-                const counterCard = document.getElementById('vipCounterCard');
-                if (counterCard) counterCard.style.display = 'none';
+                document.getElementById('vipCounterCard').style.display = 'none';
             }
-        } catch (error) {
-            console.error('Error loading VIP status:', error);
-        }
+        } catch(error) { console.error(error); }
     }
-    
-    // ==================== BUY VIP ====================
-    function buyVIP() {
-        navigateWithLoading('dashboard');
-        const packagesCard = document.getElementById('premiumPackagesCard');
-        if (packagesCard) packagesCard.scrollIntoView({ behavior: 'smooth' });
-    }
-    
+    function buyVIP() { navigateWithLoading('dashboard'); document.getElementById('premiumPackagesCard').scrollIntoView({ behavior: 'smooth' }); }
     async function buyVIPPackage() {
-        if (!selectedPackage) {
-            showNeonModal('No Package Selected', 'Please select a premium package first!', true);
-            return;
-        }
-        
-        if (currentSaldo < selectedPackage.price) {
-            showNeonModal('Insufficient Balance', `Your balance: Rp ${formatRupiah(currentSaldo)}\nRequired: Rp ${formatRupiah(selectedPackage.price)}`, true);
-            showDepositPopup();
-            return;
-        }
-        
+        if (!selectedPackage) { showNeonModal('Error', 'Pilih paket dulu!', true); return; }
+        if (currentSaldo < selectedPackage.price) { showNeonModal('Saldo Tidak Cukup', `Saldo: Rp ${formatRupiah(currentSaldo)}\nRequired: Rp ${formatRupiah(selectedPackage.price)}`, true); showDepositPopup(); return; }
         showLoading();
-        
         try {
-            const newSaldo = currentSaldo - selectedPackage.price;
-            await database.ref('saldo/' + currentUID).set({ amount: newSaldo, last_updated: Date.now() });
-            currentSaldo = newSaldo;
+            await database.ref('saldo/' + currentUID).set({ amount: currentSaldo - selectedPackage.price, last_updated: Date.now() });
+            currentSaldo -= selectedPackage.price;
             updateSaldoDisplay();
-            
-            await database.ref('purchases/' + currentUID).push({
-                uid: currentUID,
-                price: selectedPackage.price,
-                package: selectedPackage.label,
-                packageType: selectedPackage.type,
-                status: 'pending',
-                timestamp: Date.now()
-            });
-            
-            await database.ref('chats/' + currentUID).push({
-                sender: 'system',
-                text: `✅ VIP Purchase Request Sent!\nPackage: ${selectedPackage.label}\nAmount: Rp ${formatRupiah(selectedPackage.price)}\nWaiting for admin approval.`,
-                timestamp: Date.now()
-            });
-            
+            await database.ref('purchases/' + currentUID).push({ uid: currentUID, price: selectedPackage.price, package: selectedPackage.label, packageType: selectedPackage.type, status: 'pending', timestamp: Date.now() });
+            await database.ref('chats/' + currentUID).push({ sender: 'system', text: `✅ VIP Purchase Request Sent!\nPackage: ${selectedPackage.label}\nAmount: Rp ${formatRupiah(selectedPackage.price)}`, timestamp: Date.now() });
             hideLoading();
-            showNeonModal('Purchase Request Sent', `Your request for ${selectedPackage.label} has been sent to admin.`, false);
-            
-        } catch (error) {
-            hideLoading();
-            showNeonModal('Error', error.message, true);
-        }
+            showNeonModal('Success', 'Request sent! Menunggu persetujuan admin.', false);
+        } catch(error) { hideLoading(); showNeonModal('Error', error.message, true); }
     }
-    
-    // ==================== DEPOSIT ====================
-    function showDepositPopup() {
-        const amount = prompt('Enter deposit amount (min Rp 20,000):', '50000');
-        if (amount) {
-            const numAmount = parseInt(amount);
-            if (numAmount >= 20000) {
-                submitDeposit(numAmount);
-            } else {
-                showNeonModal('Invalid Amount', 'Minimum deposit is Rp 20,000', true);
-            }
-        }
-    }
-    
-    async function submitDeposit(amount) {
-        const nama = prompt('Enter your name:');
-        if (!nama) return;
-        
-        const noEwallet = prompt('Enter your e-wallet number:');
-        if (!noEwallet) return;
-        
-        showLoading();
-        
-        try {
-            await database.ref('deposits/' + currentUID).push({
-                uid: currentUID,
-                namaPengirim: nama,
-                noEwallet: noEwallet,
-                jumlah: amount,
-                status: 'pending',
-                timestamp: Date.now()
-            });
-            
-            await database.ref('chats/' + currentUID).push({
-                sender: 'system',
-                text: `💰 Deposit Request Sent!\nAmount: Rp ${formatRupiah(amount)}\nWaiting for admin confirmation.`,
-                timestamp: Date.now()
-            });
-            
-            hideLoading();
-            showNeonModal('Deposit Request Sent', `Your deposit of Rp ${formatRupiah(amount)} has been sent.`, false);
-            
-        } catch (error) {
-            hideLoading();
-            showNeonModal('Error', error.message, true);
-        }
-    }
-    
-    // CEK SALDO
-    async function cekSaldo() {
-        if (!currentUID) {
-            showNeonModal('Not Logged In', 'Please login first.', true);
-            return;
-        }
-        
-        showLoading();
-        try {
-            const snap = await database.ref('saldo/' + currentUID).once('value');
-            const saldo = snap.val()?.amount || 0;
-            hideLoading();
-            showNeonModal('Current Balance', `💰 Your balance: Rp ${formatRupiah(saldo)}`, false);
-        } catch (error) {
-            hideLoading();
-            showNeonModal('Error', error.message, true);
-        }
-    }
-    
-    // CEK DEPOSIT
-    async function cekDeposit() {
-        if (!currentUID) {
-            showNeonModal('Not Logged In', 'Please login first.', true);
-            return;
-        }
-        
-        showLoading();
-        try {
-            const snap = await database.ref('deposits/' + currentUID).once('value');
-            const deposits = snap.val() || {};
-            
-            let pending = 0, approved = 0, rejected = 0, total = 0;
-            
-            Object.keys(deposits).forEach(key => {
-                const d = deposits[key];
-                total++;
-                if (d.status === 'pending') pending++;
-                else if (d.status === 'approved') approved++;
-                else if (d.status === 'rejected') rejected++;
-            });
-            
-            hideLoading();
-            showNeonModal('Deposit History', `📊 Total Deposits: ${total}\n\n✅ Approved: ${approved}\n⏳ Pending: ${pending}\n❌ Rejected: ${rejected}`, false);
-        } catch (error) {
-            hideLoading();
-            showNeonModal('Error', error.message, true);
-        }
-    }
-    
-    // ==================== RESET PIN ====================
-    function openResetPin() {
-        const oldPin = prompt('Enter current PIN (6 digits):');
-        if (!oldPin || oldPin.length !== 6) {
-            showNeonModal('Invalid PIN', 'PIN must be 6 digits', true);
-            return;
-        }
-        
-        const newPin = prompt('Enter new PIN (6 digits):');
-        if (!newPin || newPin.length !== 6) {
-            showNeonModal('Invalid PIN', 'New PIN must be 6 digits', true);
-            return;
-        }
-        
-        const confirmPin = prompt('Confirm new PIN:');
-        if (newPin !== confirmPin) {
-            showNeonModal('PIN Mismatch', 'New PIN and confirmation do not match', true);
-            return;
-        }
-        
-        showLoading();
-        
-        database.ref('users/' + currentUID).once('value').then(snap => {
-            const user = snap.val();
-            if (user.pin !== oldPin) throw new Error('Current PIN is incorrect');
-            return database.ref('users/' + currentUID).update({ pin: newPin });
-        }).then(() => {
-            hideLoading();
-            showNeonModal('PIN Changed', 'Your PIN has been successfully changed!', false);
-        }).catch(error => {
-            hideLoading();
-            showNeonModal('Error', error.message, true);
-        });
-    }
-    
-    // ==================== LOGOUT ====================
-    function logout() {
-        if (confirm('Are you sure you want to logout?')) {
-            showLoading();
-            if (currentUID) database.ref('users/' + currentUID + '/status').set('offline');
-            localStorage.removeItem('vip_files_uid');
-            localStorage.removeItem('vip_uid');
-            currentUID = '';
-            document.getElementById('mainLayout').style.display = 'none';
-            document.getElementById('loginWrapper').classList.remove('hide');
-            clearLoginPin();
-            clearRegisterPin();
-            hideLoading();
-        }
-    }
-    
-    // ==================== COPY UID ====================
-    function copyUID() {
-        if (!currentUID) return;
-        navigator.clipboard.writeText(currentUID).then(() => {
-            showNeonToast('UID copied!', 2000);
-        }).catch(() => showNeonToast('Failed to copy', 2000));
-    }
-    
-    // ==================== CHANGE PROFILE IMAGE ====================
-    function changeProfileImage() {
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.accept = 'image/*';
-        input.onchange = async (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                showLoading();
-                try {
-                    const imageUrl = await uploadToImgbb(file);
-                    document.getElementById('profileImage').src = imageUrl;
-                    document.getElementById('profileImageAccount').src = imageUrl;
-                    await database.ref('profiles/' + currentUID).set({ image: imageUrl, timestamp: Date.now() });
-                    localStorage.setItem('vip_files_profile', imageUrl);
-                    hideLoading();
-                    showNeonToast('Profile picture updated!', 3000);
-                } catch (error) {
-                    hideLoading();
-                    showNeonModal('Upload Failed', error.message, true);
-                }
-            }
-        };
-        input.click();
-    }
-    
-    // ==================== PUBLIC CHAT ====================
-    function loadAllComments() {
-        database.ref('all_comments').limitToLast(50).on('child_added', (snapshot) => {
-            const comment = snapshot.val();
-            displayAllComment(comment);
-        });
-    }
-    
-    function displayAllComment(comment) {
+
+    // ==================== CHAT ====================
+    function loadAllComments() { database.ref('all_comments').limitToLast(50).on('child_added', s => displayAllComment(s.val())); }
+    function displayAllComment(c) {
         const area = document.getElementById('allCommentsArea');
         const div = document.createElement('div');
-        let senderClass = 'admin';
-        if (comment.uid === currentUID) senderClass = 'customer';
-        else if (comment.uid === 'ADMIN') senderClass = 'admin';
-        div.className = `message ${senderClass}`;
-        let content = `<b>${escapeHtml(comment.uid)}:</b> ${escapeHtml(comment.text || '')}`;
-        if (comment.fileUrl) {
-            if (comment.fileType && comment.fileType.startsWith('image/')) {
-                content += `<div style="margin-top: 10px;"><img src="${comment.fileUrl}" style="max-width: 180px; max-height: 180px; border-radius: 12px; cursor: pointer;" onclick="window.open('${comment.fileUrl}')"></div>`;
-            } else {
-                content += `<div style="margin-top: 10px;"><a href="${comment.fileUrl}" target="_blank" style="color: #00ffff;">📎 ${escapeHtml(comment.fileName || 'File')}</a></div>`;
-            }
-        }
-        content += `<div class="message-time">${comment.timestamp ? new Date(comment.timestamp).toLocaleTimeString() : '-'}</div>`;
+        let cls = 'admin';
+        if (c.uid === currentUID) cls = 'customer';
+        else if (c.uid === 'ADMIN') cls = 'admin';
+        div.className = `message ${cls}`;
+        let content = `<b>${escapeHtml(c.uid)}:</b> ${escapeHtml(c.text || '')}`;
+        if (c.fileUrl) content += `<div><img src="${c.fileUrl}" style="max-width:150px; border-radius:10px; cursor:pointer;" onclick="window.open('${c.fileUrl}')"></div>`;
+        content += `<div class="message-time">${c.timestamp ? new Date(c.timestamp).toLocaleTimeString() : '-'}</div>`;
         div.innerHTML = content;
         area.appendChild(div);
         area.scrollTop = area.scrollHeight;
     }
-    
     async function sendAllComment() {
-        const input = document.getElementById('allCommentsInput');
-        const text = input.value.trim();
-        if (!text) return;
-        await database.ref('all_comments').push({ uid: currentUID, text: text, timestamp: Date.now() });
-        input.value = '';
+        const txt = document.getElementById('allCommentsInput').value.trim();
+        if (!txt) return;
+        await database.ref('all_comments').push({ uid: currentUID, text: txt, timestamp: Date.now() });
+        document.getElementById('allCommentsInput').value = '';
     }
-    
-    // Upload button (PHOTO ONLY)
     document.getElementById('publicUploadBtn')?.addEventListener('click', () => {
         const input = document.createElement('input');
         input.type = 'file';
@@ -3018,26 +2453,15 @@
             if (file) {
                 showLoading();
                 try {
-                    const imageUrl = await uploadToImgbb(file);
-                    await database.ref('all_comments').push({
-                        uid: currentUID,
-                        text: `📎 Sent image: ${file.name}`,
-                        fileUrl: imageUrl,
-                        fileName: file.name,
-                        fileType: file.type,
-                        timestamp: Date.now()
-                    });
+                    const url = await uploadToImgbb(file);
+                    await database.ref('all_comments').push({ uid: currentUID, text: `📎 Sent image: ${file.name}`, fileUrl: url, fileName: file.name, fileType: file.type, timestamp: Date.now() });
                     hideLoading();
-                    showNeonToast('Image sent!', 2000);
-                } catch (error) {
-                    hideLoading();
-                    showNeonModal('Upload Failed', error.message, true);
-                }
+                    showNeonToast('Image sent!');
+                } catch(err) { hideLoading(); showNeonModal('Error', err.message, true); }
             }
         };
         input.click();
     });
-    
     document.getElementById('chatUploadBtn')?.addEventListener('click', () => {
         const input = document.createElement('input');
         input.type = 'file';
@@ -3047,141 +2471,85 @@
             if (file) {
                 showLoading();
                 try {
-                    const imageUrl = await uploadToImgbb(file);
-                    await database.ref('chats/' + currentUID).push({
-                        sender: 'customer',
-                        text: `📎 Sent image: ${file.name}`,
-                        fileUrl: imageUrl,
-                        fileName: file.name,
-                        fileType: file.type,
-                        timestamp: Date.now()
-                    });
+                    const url = await uploadToImgbb(file);
+                    await database.ref('chats/' + currentUID).push({ sender: 'customer', text: `📎 Sent image: ${file.name}`, fileUrl: url, fileName: file.name, fileType: file.type, timestamp: Date.now() });
                     hideLoading();
-                    showNeonToast('Image sent to admin!', 2000);
-                } catch (error) {
-                    hideLoading();
-                    showNeonModal('Upload Failed', error.message, true);
-                }
+                    showNeonToast('Image sent to admin!');
+                } catch(err) { hideLoading(); showNeonModal('Error', err.message, true); }
             }
         };
         input.click();
     });
-    
-    // ==================== CHAT ADMIN ====================
-    function setupChatListener() {
-        database.ref('chats/' + currentUID).limitToLast(50).on('child_added', (snapshot) => {
-            const msg = snapshot.val();
-            displayChatMessage(msg);
-        });
-    }
-    
-    function displayChatMessage(msg) {
-        const chatBox = document.getElementById('chatMessagesFull');
-        if (!chatBox) return;
+
+    function setupChatListener() { database.ref('chats/' + currentUID).limitToLast(50).on('child_added', s => displayChatMessage(s.val())); }
+    function displayChatMessage(m) {
+        const box = document.getElementById('chatMessagesFull');
         const div = document.createElement('div');
-        let senderClass = 'system';
-        if (msg.sender === 'customer') senderClass = 'customer';
-        else if (msg.sender === 'admin') senderClass = 'admin';
-        div.className = `message ${senderClass}`;
-        let content = '';
-        if (msg.sender) content += `<div class="message-sender">${msg.sender === 'customer' ? '👤 You' : msg.sender === 'admin' ? '👑 Admin' : '📢 System'}</div>`;
-        content += escapeHtml(msg.text || '');
-        if (msg.fileUrl) {
-            if (msg.fileType && msg.fileType.startsWith('image/')) {
-                content += `<div style="margin-top: 10px;"><img src="${msg.fileUrl}" style="max-width: 180px; max-height: 180px; border-radius: 12px; cursor: pointer;" onclick="window.open('${msg.fileUrl}')"></div>`;
-            } else {
-                content += `<div style="margin-top: 10px;"><a href="${msg.fileUrl}" target="_blank" style="color: #00ffff;">📎 ${escapeHtml(msg.fileName || 'File')}</a></div>`;
-            }
-        }
-        content += `<div class="message-time">${msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString() : '-'}</div>`;
+        let cls = 'system';
+        if (m.sender === 'customer') cls = 'customer';
+        else if (m.sender === 'admin') cls = 'admin';
+        div.className = `message ${cls}`;
+        let content = m.sender ? `<div class="message-sender">${m.sender === 'customer' ? '👤 You' : m.sender === 'admin' ? '👑 Admin' : '📢 System'}</div>` : '';
+        content += escapeHtml(m.text || '');
+        if (m.fileUrl) content += `<div><img src="${m.fileUrl}" style="max-width:150px; border-radius:10px; cursor:pointer;" onclick="window.open('${m.fileUrl}')"></div>`;
+        content += `<div class="message-time">${m.timestamp ? new Date(m.timestamp).toLocaleTimeString() : '-'}</div>`;
         div.innerHTML = content;
-        chatBox.appendChild(div);
-        chatBox.scrollTop = chatBox.scrollHeight;
+        box.appendChild(div);
+        box.scrollTop = box.scrollHeight;
     }
-    
     function sendMessageFull() {
-        const input = document.getElementById('chatInputFull');
-        const text = input.value.trim();
-        if (!text) return;
-        database.ref('chats/' + currentUID).push({ sender: 'customer', text: text, timestamp: Date.now() });
-        input.value = '';
+        const txt = document.getElementById('chatInputFull').value.trim();
+        if (!txt) return;
+        database.ref('chats/' + currentUID).push({ sender: 'customer', text: txt, timestamp: Date.now() });
+        document.getElementById('chatInputFull').value = '';
     }
-    
-    function openChatAdmin() {
-        navigateWithLoading('chat');
-    }
-    
+    function openChatAdmin() { navigateWithLoading('chat'); }
+
     // ==================== LEADERBOARD ====================
     async function loadLeaderboard() {
         try {
-            const depositsSnap = await database.ref('deposits').once('value');
-            const allDeposits = depositsSnap.val() || {};
-            let userTotals = {};
-            
-            Object.keys(allDeposits).forEach(uid => {
-                let total = 0;
-                Object.keys(allDeposits[uid]).forEach(key => {
-                    const deposit = allDeposits[uid][key];
-                    if (deposit.status === 'approved') total += deposit.jumlah || 0;
-                });
-                if (total > 0) userTotals[uid] = total;
-            });
-            
-            const leaderboard = Object.keys(userTotals).map(uid => ({ uid, total: userTotals[uid] })).sort((a,b) => b.total - a.total).slice(0,5);
-            const vipSnap = await database.ref('vip_members').once('value');
-            const vipMembers = vipSnap.val() || {};
-            
+            const deposits = (await database.ref('deposits').once('value')).val() || {};
+            let totals = {};
+            Object.keys(deposits).forEach(uid => { let t=0; Object.keys(deposits[uid]).forEach(k => { if(deposits[uid][k].status==='approved') t+=deposits[uid][k].jumlah||0; }); if(t>0) totals[uid]=t; });
+            const sorted = Object.keys(totals).map(uid=>({uid,total:totals[uid]})).sort((a,b)=>b.total-a.total).slice(0,5);
+            const vip = (await database.ref('vip_members').once('value')).val() || {};
             let html = '';
-            leaderboard.forEach((item, idx) => {
-                const isVip = !!(vipMembers[item.uid] && vipMembers[item.uid].status === 'active');
-                const rankIcon = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : (idx+1) + '.';
-                html += `<div class="leaderboard-item"><span style="width:45px; color:#ffaa00; font-weight:bold;">${rankIcon}</span><span style="flex:1; font-family:monospace;">${escapeHtml(item.uid)} ${isVip ? '<i class="fas fa-crown" style="color:#ffd700; margin-left:5px;"></i>' : ''}</span><span style="color:#00ff88; font-weight:bold;">Rp ${formatRupiah(item.total)}</span></div>`;
+            sorted.forEach((item,i) => {
+                const isVip = !!(vip[item.uid] && vip[item.uid].status==='active');
+                const rank = i===0?'🥇':i===1?'🥈':i===2?'🥉':(i+1)+'.';
+                html += `<div class="leaderboard-item"><span style="width:45px; color:#ffaa00;">${rank}</span><span style="flex:1; font-family:monospace;">${escapeHtml(item.uid)} ${isVip?'<i class="fas fa-crown" style="color:#ffd700;"></i>':''}</span><span style="color:#00ff88;">Rp ${formatRupiah(item.total)}</span></div>`;
             });
-            document.getElementById('leaderboardList').innerHTML = html || '<div style="padding:25px; text-align:center; color:#aaa;">No data yet</div>';
-        } catch (error) {
-            console.error('Error loading leaderboard:', error);
-        }
+            document.getElementById('leaderboardList').innerHTML = html || '<div style="padding:25px; text-align:center;">No data</div>';
+        } catch(e) { console.error(e); }
     }
-    
+
     // ==================== HISTORY ====================
     async function loadTransactionHistory() {
         try {
-            const depositsSnap = await database.ref('deposits/' + currentUID).once('value');
-            const deposits = depositsSnap.val() || {};
-            let html = '', totalDeposit = 0;
-            const items = Object.keys(deposits).map(key => ({ id: key, ...deposits[key] })).sort((a,b) => (b.timestamp || 0) - (a.timestamp || 0));
-            items.slice(0, 10).forEach(d => {
-                if (d.status === 'approved') totalDeposit += d.jumlah || 0;
-                html += `<div class="history-item" style="border-left-color: ${d.status === 'approved' ? '#00ff88' : d.status === 'pending' ? '#ffaa00' : '#ff4444'}"><div style="display:flex; justify-content:space-between;"><span>Rp ${formatRupiah(d.jumlah || 0)}</span><span style="font-size:11px; color:${d.status === 'approved' ? '#00ff88' : d.status === 'pending' ? '#ffaa00' : '#ff4444'}">${d.status}</span></div><div style="font-size:11px; color:#aaa; margin-top:6px;">${d.timestamp ? new Date(d.timestamp).toLocaleDateString() : '-'}</div></div>`;
-            });
-            document.getElementById('transactionListDeposit').innerHTML = html || '<div style="padding:25px; text-align:center; color:#aaa;">No deposit history</div>';
-            document.getElementById('totalDepositAmount').innerHTML = 'Rp ' + formatRupiah(totalDeposit);
-            document.getElementById('totalDepositRight').innerHTML = 'Rp ' + formatRupiah(totalDeposit);
-        } catch (error) {
-            console.error('Error loading transaction history:', error);
-        }
+            const deposits = (await database.ref('deposits/' + currentUID).once('value')).val() || {};
+            let html = '', total=0;
+            const items = Object.keys(deposits).map(k=>({...deposits[k]})).sort((a,b)=>(b.timestamp||0)-(a.timestamp||0));
+            items.slice(0,10).forEach(d => { if(d.status==='approved') total+=d.jumlah||0; html += `<div class="history-item" style="border-left-color:${d.status==='approved'?'#00ff88':d.status==='pending'?'#ffaa00':'#ff4444'}"><div style="display:flex; justify-content:space-between;"><span>Rp ${formatRupiah(d.jumlah||0)}</span><span style="color:${d.status==='approved'?'#00ff88':d.status==='pending'?'#ffaa00':'#ff4444'}">${d.status}</span></div><div style="font-size:11px;">${d.timestamp?new Date(d.timestamp).toLocaleDateString():'-'}</div></div>`; });
+            document.getElementById('transactionListDeposit').innerHTML = html || '<div style="padding:25px; text-align:center;">No history</div>';
+            document.getElementById('totalDepositAmount').innerHTML = 'Rp ' + formatRupiah(total);
+            document.getElementById('totalDepositRight').innerHTML = 'Rp ' + formatRupiah(total);
+        } catch(e) { console.error(e); }
     }
-    
     async function loadPurchaseHistory() {
         try {
-            const purchasesSnap = await database.ref('purchases/' + currentUID).once('value');
-            const purchases = purchasesSnap.val() || {};
+            const purchases = (await database.ref('purchases/' + currentUID).once('value')).val() || {};
             let html = '';
-            const items = Object.keys(purchases).map(key => ({ id: key, ...purchases[key] })).sort((a,b) => (b.timestamp || 0) - (a.timestamp || 0));
-            items.slice(0, 10).forEach(p => {
-                html += `<div class="history-item" style="border-left-color: ${p.status === 'approved' ? '#00ff88' : p.status === 'pending' ? '#ffaa00' : '#ff4444'}"><div style="display:flex; justify-content:space-between;"><span>${escapeHtml(p.package || 'Package')}</span><span>Rp ${formatRupiah(p.price || 0)}</span></div><div style="display:flex; justify-content:space-between; margin-top:6px; font-size:11px;"><span>${p.status}</span><span>${p.timestamp ? new Date(p.timestamp).toLocaleDateString() : '-'}</span></div></div>`;
-            });
-            document.getElementById('purchaseHistoryList').innerHTML = html || '<div style="padding:25px; text-align:center; color:#aaa;">No purchase history</div>';
-        } catch (error) {
-            console.error('Error loading purchase history:', error);
-        }
+            const items = Object.keys(purchases).map(k=>({...purchases[k]})).sort((a,b)=>(b.timestamp||0)-(a.timestamp||0));
+            items.slice(0,10).forEach(p => { html += `<div class="history-item" style="border-left-color:${p.status==='approved'?'#00ff88':p.status==='pending'?'#ffaa00':'#ff4444'}"><div style="display:flex; justify-content:space-between;"><span>${escapeHtml(p.package||'Package')}</span><span>Rp ${formatRupiah(p.price||0)}</span></div><div style="display:flex; justify-content:space-between; font-size:11px;"><span>${p.status}</span><span>${p.timestamp?new Date(p.timestamp).toLocaleDateString():'-'}</span></div></div>`; });
+            document.getElementById('purchaseHistoryList').innerHTML = html || '<div style="padding:25px; text-align:center;">No history</div>';
+        } catch(e) { console.error(e); }
     }
-    
+
     // ==================== ADMIN STATUS ====================
     function monitorAdminStatus() {
-        database.ref('admin_status').on('value', (snapshot) => {
-            const status = snapshot.val();
-            if (status && status.status === 'online' && (Date.now() - (status.last_seen || 0) < 300000)) {
+        database.ref('admin_status').on('value', s => {
+            const st = s.val();
+            if (st && st.status === 'online' && (Date.now() - (st.last_seen||0) < 300000)) {
                 document.getElementById('chatAdminStatus').innerHTML = '🟢 Online';
                 document.getElementById('publicChatStatus').innerHTML = '● Online';
             } else {
@@ -3190,76 +2558,137 @@
             }
         });
     }
-    
+
     // ==================== NAVIGATION ====================
     function navigateWithLoading(view) {
         document.querySelectorAll('.view-container').forEach(v => v.classList.remove('active'));
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        
-        if (view === 'dashboard') {
-            document.getElementById('dashboardView').classList.add('active');
-            document.querySelectorAll('.nav-item')[0].classList.add('active');
-        } else if (view === 'account') {
-            document.getElementById('accountView').classList.add('active');
-            document.querySelectorAll('.nav-item')[1].classList.add('active');
-        } else if (view === 'chat') {
-            document.getElementById('chatAdminView').classList.add('active');
-            document.querySelectorAll('.nav-item')[2].classList.add('active');
-        }
+        if (view === 'dashboard') { document.getElementById('dashboardView').classList.add('active'); document.querySelectorAll('.nav-item')[0].classList.add('active'); }
+        else if (view === 'account') { document.getElementById('accountView').classList.add('active'); document.querySelectorAll('.nav-item')[1].classList.add('active'); }
+        else if (view === 'chat') { document.getElementById('chatAdminView').classList.add('active'); document.querySelectorAll('.nav-item')[2].classList.add('active'); }
     }
-    
-    // ==================== IP INFO (HIDDEN) ====================
-    function showMyIP() {
-        // Hidden feature
-        console.log('IP info feature is hidden');
+
+    // ==================== UPDATE HISTORY ====================
+    function renderFreeUpdates(updates) {
+        const cont = document.getElementById('freeUpdateList');
+        if (!cont) return;
+        const sorted = Object.keys(updates).map(k=>({...updates[k]})).sort((a,b)=>(b.timestamp||0)-(a.timestamp||0));
+        if(sorted.length===0) { cont.innerHTML='<div style="padding:25px; text-align:center;">No updates</div>'; return; }
+        let html='';
+        sorted.slice(0,15).forEach(u => { html+=`<div class="update-item"><div class="update-title">📢 ${escapeHtml(u.title||'Free Update')}</div><div class="update-desc">${escapeHtml(u.description||'')}</div><div class="update-meta"><span>${u.version||'v1.0'}</span><span>${u.timestamp?new Date(u.timestamp).toLocaleString():'-'}</span></div><div><a href="${u.link||'#'}" target="_blank" class="update-link">Download</a></div></div>`; });
+        cont.innerHTML=html;
     }
-    
+    function renderVipUpdates(updates) {
+        const cont = document.getElementById('vipUpdateList');
+        if (!cont) return;
+        if(!isVIP) { cont.innerHTML=`<div style="padding:25px; text-align:center; color:#ffaa00;"><i class="fas fa-crown" style="font-size:48px;"></i><p>VIP only feature</p><button class="btn-neon" onclick="buyVIP()">Upgrade to VIP</button></div>`; return; }
+        const sorted = Object.keys(updates).map(k=>({...updates[k]})).sort((a,b)=>(b.created_at||0)-(a.created_at||0));
+        if(sorted.length===0) { cont.innerHTML='<div style="padding:25px; text-align:center;">No VIP updates</div>'; return; }
+        let html='';
+        sorted.slice(0,15).forEach(u => { html+=`<div class="update-item" style="border-color:#ffd700;"><div class="update-title" style="color:#ffd700;">👑 ${escapeHtml(u.title||'VIP Update')}</div><div class="update-desc">${escapeHtml(u.description||'')}</div><div class="update-meta"><span>${u.version||'v2.0'}</span><span>${u.created_at?new Date(u.created_at).toLocaleString():'-'}</span></div><div><a href="${u.link||'#'}" target="_blank" class="update-link" style="color:#ffd700;">Download</a></div></div>`; });
+        cont.innerHTML=html;
+    }
+    function showUpdateTab(tab) {
+        const freeTab = document.getElementById('freeUpdateTab'), vipTab = document.getElementById('vipUpdateTab'), btns = document.querySelectorAll('.tab-btn');
+        btns.forEach(b=>b.classList.remove('active'));
+        if(tab==='free') { freeTab.classList.add('active'); vipTab.classList.remove('active'); btns[0].classList.add('active'); database.ref('free_updates/all').orderByChild('timestamp').limitToLast(20).once('value',s=>renderFreeUpdates(s.val()||{})); }
+        else { freeTab.classList.remove('active'); vipTab.classList.add('active'); btns[1].classList.add('active'); if(isVIP) database.ref('global_updates').orderByChild('created_at').limitToLast(20).once('value',s=>renderVipUpdates(s.val()||{})); else renderVipUpdates({}); }
+    }
+
+    // ==================== PACKAGES ====================
+    function loadAdminConfig() {
+        database.ref('admin_config/premium_packages').on('value', s => { if(s.exists()) { packages = s.val(); renderPackages(); } });
+        database.ref('admin_config/loading_logo_url').on('value', s => { if(s.exists()) loadingLogoUrl = s.val(); });
+        database.ref('free_updates/all').orderByChild('timestamp').limitToLast(20).on('value', s => renderFreeUpdates(s.val() || {}));
+        if (isVIP || currentUID) database.ref('global_updates').orderByChild('created_at').limitToLast(20).on('value', s => renderVipUpdates(s.val() || {}));
+    }
+    function renderPackages() {
+        const grid = document.getElementById('priceGrid');
+        if(!grid) return;
+        if(!packages || packages.length===0) { grid.innerHTML='<div style="padding:25px; text-align:center;">No packages</div>'; return; }
+        let html='<div class="price-grid">';
+        packages.forEach((pkg,idx) => { html+=`<div class="price-card" onclick="selectPackage(${idx})"><div class="price-amount">Rp ${formatRupiah(pkg.price)}</div><div class="price-type">${escapeHtml(pkg.label)}</div>${pkg.description?`<div style="font-size:11px; margin-top:8px;">${escapeHtml(pkg.description)}</div>`:''}</div>`; });
+        html+='</div>';
+        grid.innerHTML=html;
+    }
+    function selectPackage(idx) {
+        selectedPackage = packages[idx];
+        document.querySelectorAll('.price-card').forEach(c=>c.classList.remove('selected'));
+        if(event?.currentTarget) event.currentTarget.classList.add('selected');
+        document.getElementById('summaryPackageName').textContent = selectedPackage.label;
+        document.getElementById('summaryPrice').textContent = 'Rp ' + formatRupiah(selectedPackage.price);
+        document.getElementById('summaryTotal').textContent = 'Rp ' + formatRupiah(selectedPackage.price);
+    }
+
     // ==================== REALTIME LISTENERS ====================
     function setupRealtimeListeners() {
-        if (!currentUID) return;
-        database.ref('saldo/' + currentUID).on('value', (snap) => {
-            if (snap.exists()) {
-                currentSaldo = snap.val().amount || 0;
-                updateSaldoDisplay();
-            }
-        });
+        if(!currentUID) return;
+        database.ref('saldo/' + currentUID).on('value', s => { if(s.exists()) { currentSaldo = s.val().amount || 0; updateSaldoDisplay(); } });
         database.ref('vip_members/' + currentUID).on('value', () => loadVIPStatus());
         database.ref('deposits/' + currentUID).on('child_added', () => loadTransactionHistory());
         database.ref('purchases/' + currentUID).on('child_added', () => loadPurchaseHistory());
     }
-    
+
+    // ==================== CHANGE PROFILE IMAGE ====================
+    function changeProfileImage() {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        input.onchange = async (e) => {
+            const file = e.target.files[0];
+            if(file) {
+                showLoading();
+                try {
+                    const url = await uploadToImgbb(file);
+                    document.getElementById('profileImage').src = url;
+                    document.getElementById('profileImageAccount').src = url;
+                    await database.ref('profiles/' + currentUID).set({ image: url, timestamp: Date.now() });
+                    hideLoading();
+                    showNeonToast('Profile updated!');
+                } catch(err) { hideLoading(); showNeonModal('Error', err.message, true); }
+            }
+        };
+        input.click();
+    }
+
+    // ==================== COPY UID & LOGOUT ====================
+    function copyUID() { navigator.clipboard.writeText(currentUID); showNeonToast('UID copied!'); }
+    function logout() {
+        if(confirm('Logout?')) {
+            showLoading();
+            if(currentUID) database.ref('users/' + currentUID + '/status').set('offline');
+            localStorage.removeItem('vip_files_uid'); localStorage.removeItem('vip_uid');
+            currentUID = '';
+            document.getElementById('mainLayout').style.display = 'none';
+            document.getElementById('loginWrapper').classList.remove('hide');
+            clearLoginPin(); clearRegisterPin();
+            hideLoading();
+        }
+    }
+    function showMyIP() { console.log('IP hidden'); }
+
     // ==================== FEATURES ====================
-    const features = ['AimAssist', 'No Recoil', 'ESP', 'Wallhack', 'Speed Hack', 'Anti Ban', 'Aimbot', 'Triggerbot'];
-    let featuresHtml = '';
-    features.forEach(f => { featuresHtml += `<div class="feature-item"><div class="feature-icon"><i class="fas fa-crosshairs"></i></div><div class="feature-name">${f}</div></div>`; });
-    document.getElementById('featuresGrid').innerHTML = featuresHtml;
-    
+    const features = ['AimAssist','No Recoil','ESP','Wallhack','Speed Hack','Anti Ban','Aimbot','Triggerbot'];
+    let fHtml = '';
+    features.forEach(f => { fHtml += `<div class="feature-item"><div class="feature-icon"><i class="fas fa-crosshairs"></i></div><div class="feature-name">${f}</div></div>`; });
+    document.getElementById('featuresGrid').innerHTML = fHtml;
+
     // ==================== INIT ====================
     async function init() {
         loadAdminConfig();
         loadBackgroundVideo();
         checkMaintenance();
-        
-        // Check maintenance periodically
         setInterval(checkMaintenance, 30000);
-        
         const savedUID = localStorage.getItem('vip_uid');
-        if (savedUID) document.getElementById('loginUID').value = savedUID;
-        
+        if(savedUID) document.getElementById('loginUID').value = savedUID;
         const savedProfile = localStorage.getItem('vip_files_profile');
-        if (savedProfile) {
+        if(savedProfile) {
             document.getElementById('profileImage').src = savedProfile;
             document.getElementById('profileImageAccount').src = savedProfile;
         }
-        
         monitorAdminStatus();
-        
-        console.log('🚀 User panel initialized - V1.0.0');
-        console.log('📸 Upload foto via Imgbb (video upload disabled)');
-        console.log('🎬 Background video diatur oleh admin (video1.mp4 - video8.mp4)');
-        console.log('🔔 Maintenance mode akan muncul jika admin mengaktifkan');
+        console.log('User panel initialized - V1.0.0');
     }
-    
     init();
 </script>
 </body>
