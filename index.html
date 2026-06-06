@@ -1973,6 +1973,7 @@
     let selectedPaymentNumber = '';
     let selectedDepositAmount = 0;
     let pendingSecurityCallback = null;
+    let globalDiscount = { active: false, percentage: 0, minPurchase: 0 };
 
     // Video list
     const videoList = [
@@ -2408,18 +2409,48 @@
     }
     function buyVIP() { navigateWithLoading('dashboard'); document.getElementById('premiumPackagesCard').scrollIntoView({ behavior: 'smooth' }); }
     async function buyVIPPackage() {
-        if (!selectedPackage) { showNeonModal('Error', 'Pilih paket dulu!', true); return; }
-        if (currentSaldo < selectedPackage.price) { showNeonModal('Saldo Tidak Cukup', `Saldo: Rp ${formatRupiah(currentSaldo)}\nRequired: Rp ${formatRupiah(selectedPackage.price)}`, true); showDepositPopup(); return; }
+        if (!selectedPackage) {
+            showNeonModal('Error', 'Pilih paket dulu!', true);
+            return;
+        }
+    
+        const priceToPay = selectedPackage.finalPrice || selectedPackage.price;
+    
+        if (currentSaldo < priceToPay) {
+            showNeonModal('Saldo Tidak Cukup', `Saldo: Rp ${formatRupiah(currentSaldo)}\nRequired: Rp ${formatRupiah(priceToPay)}`, true);
+            showDepositPopup();
+            return;
+        }
+    
         showLoading();
         try {
-            await database.ref('saldo/' + currentUID).set({ amount: currentSaldo - selectedPackage.price, last_updated: Date.now() });
-            currentSaldo -= selectedPackage.price;
+            await database.ref('saldo/' + currentUID).set({ amount: currentSaldo - priceToPay, last_updated: Date.now() });
+            currentSaldo -= priceToPay;
             updateSaldoDisplay();
-            await database.ref('purchases/' + currentUID).push({ uid: currentUID, price: selectedPackage.price, package: selectedPackage.label, packageType: selectedPackage.type, status: 'pending', timestamp: Date.now() });
-            await database.ref('chats/' + currentUID).push({ sender: 'system', text: `✅ VIP Purchase Request Sent!\nPackage: ${selectedPackage.label}\nAmount: Rp ${formatRupiah(selectedPackage.price)}`, timestamp: Date.now() });
+        
+            await database.ref('purchases/' + currentUID).push({
+                uid: currentUID,
+                originalPrice: selectedPackage.price,
+                price: priceToPay,
+                discount: globalDiscount.active ? globalDiscount.percentage : 0,
+                package: selectedPackage.label,
+                packageType: selectedPackage.type,
+                status: 'pending',
+                timestamp: Date.now()
+            });
+        
+            await database.ref('chats/' + currentUID).push({
+                sender: 'system',
+                text: `✅ VIP Purchase Request Sent!\nPackage: ${selectedPackage.label}\nOriginal: Rp ${formatRupiah(selectedPackage.price)}\nFinal: Rp ${formatRupiah(priceToPay)}\nDiscount: ${globalDiscount.active ? globalDiscount.percentage + '%' : '0%'}`,
+                timestamp: Date.now()
+            });
+        
             hideLoading();
             showNeonModal('Success', 'Request sent! Menunggu persetujuan admin.', false);
-        } catch(error) { hideLoading(); showNeonModal('Error', error.message, true); }
+        } catch(error) {
+            hideLoading();
+            showNeonModal('Error', error.message, true);
+        }
     }
 
     // ==================== CHAT ====================
@@ -2602,22 +2633,76 @@
         database.ref('free_updates/all').orderByChild('timestamp').limitToLast(20).on('value', s => renderFreeUpdates(s.val() || {}));
         if (isVIP || currentUID) database.ref('global_updates').orderByChild('created_at').limitToLast(20).on('value', s => renderVipUpdates(s.val() || {}));
     }
+    async function loadGlobalDiscount() {
+        try {
+            const snap = await database.ref('global_discount').once('value');
+            const discount = snap.val();
+            if (discount && discount.active === true && new Date(discount.expiryDate) > new Date()) {
+                globalDiscount = {
+                    active: true,
+                    percentage: discount.percentage,
+                    minPurchase: discount.minPurchase || 0
+                };
+                console.log(`🎫 Diskon global aktif: ${globalDiscount.percentage}%`);
+            } else {
+                globalDiscount = { active: false, percentage: 0, minPurchase: 0 };
+            }
+            // Refresh tampilan paket
+            renderPackages();
+        } catch (error) {
+            console.error('Error loading discount:', error);
+        }
+    }
     function renderPackages() {
         const grid = document.getElementById('priceGrid');
-        if(!grid) return;
-        if(!packages || packages.length===0) { grid.innerHTML='<div style="padding:25px; text-align:center;">No packages</div>'; return; }
-        let html='<div class="price-grid">';
-        packages.forEach((pkg,idx) => { html+=`<div class="price-card" onclick="selectPackage(${idx})"><div class="price-amount">Rp ${formatRupiah(pkg.price)}</div><div class="price-type">${escapeHtml(pkg.label)}</div>${pkg.description?`<div style="font-size:11px; margin-top:8px;">${escapeHtml(pkg.description)}</div>`:''}</div>`; });
-        html+='</div>';
-        grid.innerHTML=html;
+        if (!grid) return;
+    
+        if (!packages || packages.length === 0) {
+            grid.innerHTML = '<div style="padding:25px; text-align:center;">No packages</div>';
+            return;
+        }
+    
+        let html = '<div class="price-grid">';
+        packages.forEach((pkg, idx) => {
+            let originalPrice = pkg.price;
+            let finalPrice = originalPrice;
+            let discountText = '';
+        
+            // Terapkan diskon jika aktif
+            if (globalDiscount.active && (globalDiscount.minPurchase === 0 || originalPrice >= globalDiscount.minPurchase)) {
+                finalPrice = originalPrice - (originalPrice * globalDiscount.percentage / 100);
+                discountText = `<div style="font-size: 11px; color: #00ff88; margin-top: 5px;">
+                    <span style="text-decoration: line-through; color: #888;">Rp ${formatRupiah(originalPrice)}</span>
+                    → Rp ${formatRupiah(finalPrice)} <span style="color: #ffaa00;">(${globalDiscount.percentage}% OFF)</span>
+                </div>`;
+            }
+        
+            html += `
+                <div class="price-card" onclick="selectPackage(${idx})" data-original-price="${originalPrice}" data-final-price="${finalPrice}">
+                    <div class="price-amount">Rp ${formatRupiah(finalPrice)}</div>
+                    <div class="price-type">${escapeHtml(pkg.label)}</div>
+                    ${discountText}
+                    ${pkg.description ? `<div style="font-size: 11px; color: #aaa; margin-top: 8px;">${escapeHtml(pkg.description)}</div>` : ''}
+                </div>
+            `;
+        });
+        html += '</div>';
+        grid.innerHTML = html;
     }
     function selectPackage(idx) {
         selectedPackage = packages[idx];
-        document.querySelectorAll('.price-card').forEach(c=>c.classList.remove('selected'));
-        if(event?.currentTarget) event.currentTarget.classList.add('selected');
+        const priceCard = document.querySelectorAll('.price-card')[idx];
+        let finalPrice = parseInt(priceCard?.getAttribute('data-final-price') || selectedPackage.price);
+    
+        document.querySelectorAll('.price-card').forEach(c => c.classList.remove('selected'));
+        if (event?.currentTarget) event.currentTarget.classList.add('selected');
+    
         document.getElementById('summaryPackageName').textContent = selectedPackage.label;
-        document.getElementById('summaryPrice').textContent = 'Rp ' + formatRupiah(selectedPackage.price);
-        document.getElementById('summaryTotal').textContent = 'Rp ' + formatRupiah(selectedPackage.price);
+        document.getElementById('summaryPrice').textContent = 'Rp ' + formatRupiah(finalPrice);
+        document.getElementById('summaryTotal').textContent = 'Rp ' + formatRupiah(finalPrice);
+    
+        // Simpan harga final ke selectedPackage
+        selectedPackage.finalPrice = finalPrice;
     }
 
     // ==================== REALTIME LISTENERS ====================
@@ -2678,6 +2763,7 @@
         loadAdminConfig();
         loadBackgroundVideo();
         checkMaintenance();
+        await loadGlobalDiscount();
         setInterval(checkMaintenance, 30000);
         const savedUID = localStorage.getItem('vip_uid');
         if(savedUID) document.getElementById('loginUID').value = savedUID;
