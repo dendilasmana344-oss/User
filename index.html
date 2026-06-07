@@ -698,7 +698,7 @@
             transform: translateY(-3px);
         }
 
-        /* ==================== VIP COUNTER STYLES ==================== */
+        /* VIP COUNTER STYLES */
         .vip-counter-card {
             background: rgba(0, 0, 0, 0.5);
             border-radius: 20px;
@@ -1607,7 +1607,7 @@
             outline: none;
         }
         
-        chat-upload-btn {
+        .chat-upload-btn {
             width: 48px;
             height: 48px;
             background: linear-gradient(135deg, var(--neon-cyan), #0088ff);
@@ -2218,10 +2218,9 @@
                     <div class="card-title"><i class="fas fa-headset"></i> CHAT ADMIN <span style="color:#00ff88; font-size:12px; margin-left:auto;" id="chatAdminStatus">🟢 Online</span></div>
                     <div class="chat-area" id="chatMessagesFull" style="height:420px;"></div>
                     <div class="chat-input-row">
-                        <button class="upload-btn" id="chatUploadBtnUser"><i class="fas fa-paperclip"></i></button>
+                        <button class="chat-upload-btn" id="chatUploadBtnUser"><i class="fas fa-paperclip"></i></button>
                         <input type="text" class="chat-input" id="chatInputFull" placeholder="Type message for admin...">
                         <button class="send-btn" onclick="sendMessageFull()"><i class="fas fa-paper-plane"></i></button>
-                    </div>
                     </div>
                 </div>
             </div>
@@ -2402,10 +2401,6 @@
                     if (maintenanceInterval) clearInterval(maintenanceInterval);
                     maintenanceInterval = setInterval(updateMaintenanceTimer, 1000);
                 }
-                if (m.totalMinutes) {
-                    const totalDuration = m.totalMinutes * 60 * 1000;
-                    // Progress akan dihitung di updateMaintenanceTimer
-                }
             } else {
                 document.getElementById('maintenancePage').classList.remove('active');
                 if (maintenanceInterval) { clearInterval(maintenanceInterval); maintenanceInterval = null; }
@@ -2427,7 +2422,6 @@
         const seconds = Math.floor((remaining % 60000) / 1000);
         document.getElementById('maintenanceTimer').innerHTML = `${hours.toString().padStart(2,'0')}:${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
         
-        // Hitung progress dari startTime
         database.ref('maintenance').once('value').then(snap => {
             const m = snap.val();
             if (m && m.startTime && m.endTime) {
@@ -2525,7 +2519,6 @@
             await database.ref('users/' + username).set({ uid: username, pin: registerPin, status: 'active', registeredAt: new Date().toISOString() });
             await database.ref('saldo/' + username).set({ amount: 0, created: Date.now() });
             
-            // NEON PROMPT untuk security answer
             showNeonPrompt('Security Question', 'Set your security answer (for PIN reset)', async (answer) => {
                 if (answer && answer.trim()) {
                     await database.ref('security_answers/' + username).set(answer.toLowerCase().trim());
@@ -2536,7 +2529,6 @@
                         switchAuthTab('login'); 
                     }, 2000);
                 } else {
-                    // Jika user tidak mengisi, skip security answer
                     showNeonModal('Info', 'Registration successful! You can set security answer later via admin.', false);
                     clearRegisterPin();
                     setTimeout(() => { 
@@ -2709,7 +2701,6 @@
                 counterCard.style.display = 'block';
                 currentVIPData = vip;
             
-                // CEK JENIS VIP - PRIORITAS
                 if (vip.isPermanent === true || vip.updateType === 'lifetime') {
                     renderVIPPermanent(content);
                 } 
@@ -2720,26 +2711,21 @@
                     renderVIPDuration(content, vip);
                 }
                 else if (vip.expiryDate && vip.expiryDate !== 'permanent' && new Date(vip.expiryDate) > new Date()) {
-                    // FALLBACK: jika ada expiryDate
                     renderVIPDuration(content, vip);
                 }
                 else if (vip.packageMonths && vip.packageMonths > 0) {
-                    // FALLBACK: jika hanya ada packageMonths tapi tidak ada expiryDate
-                    // Buat expiryDate otomatis +30 hari per bulan
                     const purchaseDate = vip.purchaseDate ? new Date(vip.purchaseDate) : new Date();
                     const expiryDate = new Date(purchaseDate);
                     expiryDate.setMonth(expiryDate.getMonth() + vip.packageMonths);
                     vip.expiryDate = expiryDate.toISOString();
                     vip.updateType = 'unlimited';
                     renderVIPDuration(content, vip);
-                    // Simpan ke Firebase agar下次 tidak perlu hitung ulang
                     database.ref('vip_members/' + currentUID).update({
                         expiryDate: expiryDate.toISOString(),
                         updateType: 'unlimited'
                     }).catch(e => console.log('Update expiryDate error:', e));
                 }
                 else {
-                    // FALLBACK TERAKHIR: tampilkan info dasar VIP
                     renderVIPBasic(content, vip);
                 }
             
@@ -2766,37 +2752,76 @@
         }
     }
 
-    // RENDER VIP BASIC (FALLBACK jika data tidak lengkap)
     function renderVIPBasic(container, vip) {
-            const purchaseDate = vip.purchaseDate ? new Date(vip.purchaseDate).toLocaleDateString('id-ID') : 'Tanggal tidak diketahui';
-            const packageName = vip.package || 'VIP Package';
-            const price = vip.price ? 'Rp ' + formatRupiah(vip.price) : '-';
-    
-            container.innerHTML = `
-                <div class="vip-counter-card">
-                    <div class="vip-counter-header">
-                        <div class="vip-counter-title">
-                            <i class="fas fa-crown"></i> VIP ACTIVE
-                        </div>
-                        <div class="vip-counter-badge duration">PREMIUM</div>
+        const purchaseDate = vip.purchaseDate ? new Date(vip.purchaseDate).toLocaleDateString('id-ID') : 'Tanggal tidak diketahui';
+        const packageName = vip.package || 'VIP Package';
+        const price = vip.price ? 'Rp ' + formatRupiah(vip.price) : '-';
+
+        container.innerHTML = `
+            <div class="vip-counter-card">
+                <div class="vip-counter-header">
+                    <div class="vip-counter-title">
+                        <i class="fas fa-crown"></i> VIP ACTIVE
                     </div>
-                    <div style="text-align: center; padding: 20px;">
-                        <i class="fas fa-check-circle" style="font-size: 50px; color: #00ff88; margin-bottom: 15px;"></i>
-                        <div style="font-size: 18px; font-weight: bold; color: #00ff88;">${escapeHtml(packageName)}</div>
-                        <div style="font-size: 14px; color: #aaa; margin-top: 10px;">Harga: ${price}</div>
-                        <div style="font-size: 12px; color: #888; margin-top: 5px;">Dibeli: ${purchaseDate}</div>
-                        <div style="font-size: 12px; color: #ffaa00; margin-top: 15px;">
-                            <i class="fas fa-info-circle"></i> Detail durasi akan muncul setelah admin mengupdate data
-                        </div>
+                    <div class="vip-counter-badge duration">PREMIUM</div>
+                </div>
+                <div style="text-align: center; padding: 20px;">
+                    <i class="fas fa-check-circle" style="font-size: 50px; color: #00ff88; margin-bottom: 15px;"></i>
+                    <div style="font-size: 18px; font-weight: bold; color: #00ff88;">${escapeHtml(packageName)}</div>
+                    <div style="font-size: 14px; color: #aaa; margin-top: 10px;">Harga: ${price}</div>
+                    <div style="font-size: 12px; color: #888; margin-top: 5px;">Dibeli: ${purchaseDate}</div>
+                    <div style="font-size: 12px; color: #ffaa00; margin-top: 15px;">
+                        <i class="fas fa-info-circle"></i> Detail durasi akan muncul setelah admin mengupdate data
                     </div>
                 </div>
-            `;
+            </div>
+        `;
+    }
+
+    function renderVIPQuota(container, vip) {
+        const used = vip.updatesUsed || 0;
+        const total = vip.updateQuota || 0;
+        const remaining = total - used;
+        const percent = total > 0 ? (used / total) * 100 : 0;
+        
+        let statusText = 'Active';
+        let statusColor = '#4caf50';
+        if (used >= total) {
+            statusText = 'Habis';
+            statusColor = '#f44336';
+        } else if (remaining <= 2) {
+            statusText = `Sisa ${remaining}`;
+            statusColor = '#ff9800';
         }
 
-        function renderVIPDuration(container, vip) {
-        console.log('🎯 renderVIPDuration dipanggil dengan data:', vip);
-    
-        // Pastikan expiryDate ada
+        container.innerHTML = `
+            <div class="vip-counter-card">
+                <div class="vip-counter-header">
+                    <div class="vip-counter-title">
+                        <i class="fas fa-chart-line"></i> VIP QUOTA
+                    </div>
+                    <div class="vip-counter-badge quota">${total} UPDATES</div>
+                </div>
+                <div class="vip-counter-progress">
+                    <div class="progress-label">
+                        <span><i class="fas fa-download"></i> Penggunaan Update</span>
+                        <span>${used}/${total} (${percent.toFixed(1)}%)</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill quota" style="width: ${percent}%;"></div>
+                    </div>
+                </div>
+                <div class="vip-stats-grid">
+                    <div class="vip-stat-item"><div class="vip-stat-value">${used}</div><div class="vip-stat-label">Digunakan</div></div>
+                    <div class="vip-stat-item"><div class="vip-stat-value">${total}</div><div class="vip-stat-label">Total Quota</div></div>
+                    <div class="vip-stat-item"><div class="vip-stat-value">${remaining}</div><div class="vip-stat-label">Sisa</div></div>
+                </div>
+                ${used >= total ? `<div class="vip-danger" style="display: flex;"><i class="fas fa-times-circle"></i> Quota update telah habis! Silakan perpanjang VIP.</div>` : remaining <= 2 ? `<div class="vip-warning" style="display: flex;"><i class="fas fa-exclamation-triangle"></i> Sisa ${remaining} update lagi! Segera perpanjang.</div>` : ''}
+            </div>
+        `;
+    }
+
+    function renderVIPDuration(container, vip) {
         let expiryDate;
         if (vip.expiryDate) {
             expiryDate = new Date(vip.expiryDate);
@@ -2804,16 +2829,13 @@
             const purchaseDate = vip.purchaseDate ? new Date(vip.purchaseDate) : new Date();
             expiryDate = new Date(purchaseDate);
             expiryDate.setMonth(expiryDate.getMonth() + vip.packageMonths);
-    } else {
-            console.log('❌ Tidak ada expiryDate');
+        } else {
             container.innerHTML = `<div class="vip-counter-card"><div style="padding:20px; text-align:center;">Data VIP tidak lengkap</div></div>`;
             return;
         }
     
         const now = new Date();
         let remainingMs = expiryDate - now;
-    
-        console.log('📅 Expiry:', expiryDate, 'Remaining MS:', remainingMs);
     
         if (remainingMs <= 0) {
             container.innerHTML = `
@@ -2834,15 +2856,11 @@
         const elapsedDays = totalDays - remainingDays;
         const percent = totalDays > 0 ? (elapsedDays / totalDays) * 100 : 0;
     
-        console.log('📊 Total Days:', totalDays, 'Remaining Days:', remainingDays, 'Percent:', percent);
-    
-        // Hentikan interval lama
         if (window.vipCountdownInterval) {
             clearInterval(window.vipCountdownInterval);
             window.vipCountdownInterval = null;
         }
     
-        // Buat HTML dulu
         container.innerHTML = `
             <div class="vip-counter-card">
                 <div class="vip-counter-header">
@@ -2876,7 +2894,6 @@
             </div>
         `;
     
-        // Fungsi update countdown
         function updateCountdown() {
             const nowTime = new Date();
             const diff = expiryDate - nowTime;
@@ -2902,7 +2919,6 @@
                 `;
             }
         
-            // Update sisa hari
             const remainingDaysEl = document.getElementById('remainingDaysValue');
             if (remainingDaysEl) remainingDaysEl.innerText = days;
         
@@ -2924,7 +2940,6 @@
         updateCountdown();
     }
 
-    // RENDER VIP PERMANENT
     function renderVIPPermanent(container) {
         container.innerHTML = `
             <div class="vip-counter-card">
@@ -2934,7 +2949,6 @@
                     </div>
                     <div class="vip-counter-badge permanent">LIFETIME</div>
                 </div>
-            
                 <div class="permanent-badge-large">
                     <div class="permanent-icon">
                         <i class="fas fa-crown"></i>
@@ -2942,7 +2956,6 @@
                     <div class="permanent-text">PERMANENT</div>
                     <div class="permanent-subtext">Akses seumur hidup - Unlimited updates</div>
                 </div>
-            
                 <div class="vip-stats-grid">
                     <div class="vip-stat-item">
                         <div class="vip-stat-value">∞</div>
@@ -2960,6 +2973,7 @@
             </div>
         `;
     }
+
     function buyVIP() { navigateWithLoading('dashboard'); document.getElementById('premiumPackagesCard').scrollIntoView({ behavior: 'smooth' }); }
     async function buyVIPPackage() {
         if (!selectedPackage) {
@@ -3046,24 +3060,6 @@
         };
         input.click();
     });
-    document.getElementById('chatUploadBtn')?.addEventListener('click', () => {
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.accept = 'image/*';
-        input.onchange = async (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                showLoading();
-                try {
-                    const url = await uploadToImgbb(file);
-                    await database.ref('chats/' + currentUID).push({ sender: 'customer', text: `📎 Sent image: ${file.name}`, fileUrl: url, fileName: file.name, fileType: file.type, timestamp: Date.now() });
-                    hideLoading();
-                    showNeonToast('Image sent to admin!');
-                } catch(err) { hideLoading(); showNeonModal('Error', err.message, true); }
-            }
-        };
-        input.click();
-    });
 
     function setupChatListener() { database.ref('chats/' + currentUID).limitToLast(50).on('child_added', s => displayChatMessage(s.val())); }
     function displayChatMessage(m) {
@@ -3079,7 +3075,6 @@
         let content = m.sender ? `<div class="message-sender">${m.sender === 'customer' ? '👤 You' : m.sender === 'admin' ? '👑 Admin' : '📢 System'}</div>` : '';
         content += `<div>${escapeHtml(m.text || '')}</div>`;
     
-        // TAMPILKAN FILE DENGAN TOMBOL DOWNLOAD
         if (m.fileData && m.fileData.url) {
             const isImage = m.fileData.type && m.fileData.type.startsWith('image/');
             if (isImage) {
@@ -3125,73 +3120,6 @@
     function openChatAdmin() { navigateWithLoading('chat'); }
     
     // ==================== CHAT FILE UPLOAD ====================
-    function setupChatFileUpload() {
-        const uploadBtn = document.getElementById('chatUploadBtnAdmin');
-        if (!uploadBtn) return;
-    
-        uploadBtn.addEventListener('click', () => {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = 'image/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain';
-            input.onchange = async (e) => {
-                const file = e.target.files[0];
-                if (!file) return;
-                if (!currentChatUser) {
-                    showToast('Pilih customer terlebih dahulu!');
-                    return;
-                }
-            
-                showLoading();
-                try {
-                    // Upload ke Imgbb
-                    const fileUrl = await uploadToImgbb(file);
-                    const fileSize = formatFileSize(file.size);
-                
-                    // Kirim pesan dengan file
-                    await db.ref('chats/' + currentChatUser).push({
-                        sender: 'admin',
-                        text: `📎 Mengirim file: ${file.name}`,
-                        fileData: {
-                            name: file.name,
-                            url: fileUrl,
-                            size: file.size,
-                            sizeFormatted: fileSize,
-                            type: file.type,
-                            timestamp: Date.now()
-                        },
-                        timestamp: Date.now()
-                    });
-                
-                    hideLoading();
-                    showToast('File terkirim!');
-                } catch (error) {
-                    hideLoading();
-                    showToast('Gagal upload: ' + error.message);
-                }
-            };
-            input.click();
-        });
-    }
-
-    function formatFileSize(bytes) {
-        if (bytes === 0) return '0 Bytes';
-        const k = 1024;
-        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-        const i = Math.floor(Math.log(bytes) / Math.log(k));
-        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-    }
-
-    // Fungsi untuk mendownload file
-    function downloadFile(url, filename) {
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = filename;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    }
-    
-    // ==================== CHAT FILE UPLOAD ====================
     function formatFileSize(bytes) {
         if (bytes === 0) return '0 Bytes';
         const k = 1024;
@@ -3213,7 +3141,6 @@
         const uploadBtn = document.getElementById('chatUploadBtnUser');
         if (!uploadBtn) return;
     
-        // Hapus event listener lama
         const newBtn = uploadBtn.cloneNode(true);
         uploadBtn.parentNode.replaceChild(newBtn, uploadBtn);
     
@@ -3371,7 +3298,6 @@
             } else {
                 globalDiscount = { active: false, percentage: 0, minPurchase: 0 };
             }
-            // Refresh tampilan paket
             renderPackages();
         } catch (error) {
             console.error('Error loading discount:', error);
@@ -3392,7 +3318,6 @@
             let finalPrice = originalPrice;
             let discountText = '';
         
-            // Terapkan diskon jika aktif
             if (globalDiscount.active && (globalDiscount.minPurchase === 0 || originalPrice >= globalDiscount.minPurchase)) {
                 finalPrice = originalPrice - (originalPrice * globalDiscount.percentage / 100);
                 discountText = `<div style="font-size: 11px; color: #00ff88; margin-top: 5px;">
@@ -3425,16 +3350,13 @@
         document.getElementById('summaryPrice').textContent = 'Rp ' + formatRupiah(finalPrice);
         document.getElementById('summaryTotal').textContent = 'Rp ' + formatRupiah(finalPrice);
     
-        // Simpan harga final ke selectedPackage
         selectedPackage.finalPrice = finalPrice;
     }
 
     // ==================== REALTIME LISTENERS ====================
-    // Tambahkan di dalam fungsi setupRealtimeListeners()
     function setupRealtimeListeners() {
         if(!currentUID) return;
     
-        // Listener saldo
         database.ref('saldo/' + currentUID).on('value', s => { 
             if(s.exists()) { 
                 currentSaldo = s.val().amount || 0; 
@@ -3442,31 +3364,25 @@
             } 
         });
     
-        // Listener VIP status (sudah ada)
         database.ref('vip_members/' + currentUID).on('value', () => { 
             loadVIPStatus(); 
         });
     
-        // Listener deposit
         database.ref('deposits/' + currentUID).on('child_added', () => { 
             loadTransactionHistory(); 
         });
     
-        // Listener purchase
         database.ref('purchases/' + currentUID).on('child_added', () => { 
             loadPurchaseHistory(); 
         });
     
-        // === TAMBAHKAN LISTENER UNTUK UPDATE QUOTA (REALTIME) ===
         database.ref('vip_members/' + currentUID).on('value', (snap) => {
             const vip = snap.val();
             if (vip && vip.status === 'active' && vip.updateType === 'quota') {
-                // Update progress bar jika ada perubahan quota
                 const used = vip.updatesUsed || 0;
                 const total = vip.updateQuota || 0;
                 const percent = total > 0 ? (used / total) * 100 : 0;
             
-                // Update tampilan jika ada
                 const progressFill = document.querySelector('#vipCounterCard .progress-bar-fill.quota');
                 const percentText = document.querySelector('#vipCounterCard .progress-label span:last-child');
             
@@ -3477,7 +3393,6 @@
                     percentText.innerHTML = `${used}/${total} (${percent.toFixed(1)}%)`;
                 }
             
-                // Update stat numbers
                 const usedEl = document.querySelector('#vipCounterCard .vip-stat-item:first-child .vip-stat-value');
                 const totalEl = document.querySelector('#vipCounterCard .vip-stat-item:nth-child(2) .vip-stat-value');
                 const remainingEl = document.querySelector('#vipCounterCard .vip-stat-item:last-child .vip-stat-value');
@@ -3540,17 +3455,11 @@
         loadAdminConfig();
         loadBackgroundVideo();
         checkMaintenance();
-        setupChatFileUpload();
         setupUserChatFileUpload();
         await loadGlobalDiscount();
         setInterval(checkMaintenance, 30000);
         const savedUID = localStorage.getItem('vip_uid');
         if(savedUID) document.getElementById('loginUID').value = savedUID;
-        const savedProfile = localStorage.getItem('vip_files_profile');
-        if(savedProfile) {
-            document.getElementById('profileImage').src = savedProfile;
-            document.getElementById('profileImageAccount').src = savedProfile;
-        }
         monitorAdminStatus();
         console.log('User panel initialized - V1.0.0');
     }
