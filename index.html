@@ -105,7 +105,7 @@
                         radial-gradient(circle at 40% 20%, rgba(191, 0, 255, 0.02) 0%, transparent 50%);
         }
 
-        /* MAINTENANCE PAGE - NEON DESIGN BARU */
+        /* MAINTENANCE PAGE */
         .maintenance-page {
             position: fixed;
             top: 0;
@@ -599,7 +599,64 @@
             box-shadow: 0 10px 25px rgba(0, 255, 255, 0.4);
         }
 
-        /* NEON PROMPT MODAL (untuk security answer) */
+        /* NOTIFICATION TOAST */
+        .notification-toast {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            max-width: 350px;
+            background: linear-gradient(135deg, #1a0a0a, #2a0a0a);
+            border-left: 5px solid #00ffff;
+            border-radius: 12px;
+            padding: 15px;
+            z-index: 10001;
+            animation: slideInRight 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .notification-toast.hide {
+            animation: slideOutRight 0.3s ease forwards;
+        }
+
+        @keyframes slideOutRight {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+
+        .notification-toast-title {
+            font-weight: bold;
+            color: #00ffff;
+            margin-bottom: 5px;
+            font-family: 'Orbitron', monospace;
+        }
+
+        .notification-toast-message {
+            font-size: 13px;
+            color: #ccc;
+        }
+
+        .notification-toast-time {
+            font-size: 10px;
+            color: #888;
+            margin-top: 8px;
+        }
+
+        .notification-toast-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: #888;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .notification-toast-close:hover {
+            color: #ff4444;
+        }
+
+        /* NEON PROMPT MODAL */
         .neon-prompt-modal {
             position: fixed;
             top: 0;
@@ -696,251 +753,6 @@
         .neon-prompt-btn-secondary:hover {
             background: rgba(0, 255, 255, 0.1);
             transform: translateY(-3px);
-        }
-
-        /* ==================== VIP COUNTER STYLES ==================== */
-        .vip-counter-card {
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 20px;
-            padding: 20px;
-            margin-top: 15px;
-            border: 1px solid rgba(0, 255, 255, 0.3);
-            transition: all 0.3s;
-        }
-
-        .vip-counter-card:hover {
-            border-color: var(--neon-cyan);
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
-        }
-
-        .vip-counter-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .vip-counter-title {
-            font-family: 'Orbitron', monospace;
-            font-size: 16px;
-            font-weight: bold;
-            color: var(--neon-cyan);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .vip-counter-badge {
-            padding: 5px 15px;
-            border-radius: 25px;
-            font-size: 12px;
-            font-weight: bold;
-            font-family: 'Orbitron', monospace;
-        }
-
-        .vip-counter-badge.quota {
-            background: linear-gradient(135deg, #4caf50, #2e7d32);
-            color: white;
-            box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
-        }
-
-        .vip-counter-badge.duration {
-            background: linear-gradient(135deg, #2196f3, #1976d2);
-            color: white;
-            box-shadow: 0 0 10px rgba(33, 150, 243, 0.5);
-        }
-
-        .vip-counter-badge.permanent {
-            background: linear-gradient(135deg, #ffd700, #ffaa00);
-            color: #000;
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
-            animation: neonPulse 2s infinite;
-        }
-
-        .vip-counter-progress {
-            margin: 15px 0;
-        }
-
-        .progress-label {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 8px;
-            font-size: 12px;
-            color: #aaa;
-        }
-
-        .progress-bar-bg {
-            height: 10px;
-            background: #1a1a1a;
-            border-radius: 10px;
-            overflow: hidden;
-            border: 1px solid rgba(0, 255, 255, 0.3);
-        }
-
-        .progress-bar-fill {
-            height: 100%;
-            width: 0%;
-            transition: width 0.5s ease;
-            border-radius: 10px;
-            position: relative;
-        }
-
-        .progress-bar-fill::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            animation: shimmer 1.5s infinite;
-        }
-
-        .progress-bar-fill.quota {
-            background: linear-gradient(90deg, #4caf50, #8bc34a);
-        }
-
-        .progress-bar-fill.duration {
-            background: linear-gradient(90deg, #2196f3, #64b5f6);
-        }
-
-        /* Stats Grid */
-        .vip-stats-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin: 15px 0;
-        }
-
-        .vip-stat-item {
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 15px;
-            padding: 12px;
-            text-align: center;
-            border: 1px solid rgba(0, 255, 255, 0.2);
-        }
-
-        .vip-stat-value {
-            font-size: 22px;
-            font-weight: bold;
-            font-family: monospace;
-            color: var(--neon-cyan);
-        }
-
-        .vip-stat-label {
-            font-size: 10px;
-            color: #aaa;
-            margin-top: 5px;
-        }
-
-        /* Countdown Timer */
-        .countdown-timer {
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 15px;
-            padding: 15px;
-            margin-top: 15px;
-            border: 1px solid rgba(33, 150, 243, 0.3);
-        }
-
-        .countdown-title {
-            font-size: 12px;
-            color: #2196f3;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .countdown-display {
-            display: flex;
-            justify-content: space-around;
-            gap: 10px;
-        }
-
-        .countdown-box {
-            flex: 1;
-            text-align: center;
-            background: rgba(0, 0, 0, 0.7);
-            border-radius: 12px;
-            padding: 10px;
-            border: 1px solid rgba(33, 150, 243, 0.3);
-        }
-
-        .countdown-number {
-            font-size: 24px;
-            font-weight: bold;
-            font-family: monospace;
-            color: #2196f3;
-        }
-
-        .countdown-label {
-            font-size: 10px;
-            color: #aaa;
-            margin-top: 5px;
-        }
-
-        /* Warning & Danger */
-        .vip-warning {
-            background: rgba(255, 152, 0, 0.2);
-            border: 1px solid #ff9800;
-            border-radius: 12px;
-            padding: 12px;
-            margin-top: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: #ff9800;
-            font-size: 12px;
-            display: none;
-        }
-
-        .vip-danger {
-            background: rgba(244, 67, 54, 0.2);
-            border: 1px solid #f44336;
-            border-radius: 12px;
-            padding: 12px;
-            margin-top: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: #f44336;
-            font-size: 12px;
-            display: none;
-        }
-
-        /* Permanent Badge Large */
-        .permanent-badge-large {
-            background: linear-gradient(135deg, #ffd700, #ffaa00);
-            border-radius: 20px;
-            padding: 20px;
-            text-align: center;
-            margin: 15px 0;
-            border: 2px solid #ffd700;
-            box-shadow: 0 0 30px rgba(255, 215, 0, 0.4);
-            animation: borderGlow 2s infinite;
-        }
-
-        .permanent-icon {
-            font-size: 50px;
-            color: #ffd700;
-            margin-bottom: 10px;
-            text-shadow: 0 0 20px #ffd700;
-        }
-
-        .permanent-text {
-            font-family: 'Orbitron', monospace;
-            font-size: 24px;
-            font-weight: 900;
-            color: #000;
-            letter-spacing: 2px;
-        }
-
-        .permanent-subtext {
-            font-size: 12px;
-            color: #333;
-            margin-top: 8px;
         }
 
         /* DEPOSIT POPUP */
@@ -1137,6 +949,247 @@
             border: 2px solid var(--neon-cyan);
             border-radius: 40px;
             padding: 35px;
+        }
+
+        /* VIP COUNTER STYLES */
+        .vip-counter-card {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 20px;
+            padding: 20px;
+            margin-top: 15px;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            transition: all 0.3s;
+        }
+
+        .vip-counter-card:hover {
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+        }
+
+        .vip-counter-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .vip-counter-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--neon-cyan);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .vip-counter-badge {
+            padding: 5px 15px;
+            border-radius: 25px;
+            font-size: 12px;
+            font-weight: bold;
+            font-family: 'Orbitron', monospace;
+        }
+
+        .vip-counter-badge.quota {
+            background: linear-gradient(135deg, #4caf50, #2e7d32);
+            color: white;
+            box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+        }
+
+        .vip-counter-badge.duration {
+            background: linear-gradient(135deg, #2196f3, #1976d2);
+            color: white;
+            box-shadow: 0 0 10px rgba(33, 150, 243, 0.5);
+        }
+
+        .vip-counter-badge.permanent {
+            background: linear-gradient(135deg, #ffd700, #ffaa00);
+            color: #000;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+            animation: neonPulse 2s infinite;
+        }
+
+        .vip-counter-progress {
+            margin: 15px 0;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 12px;
+            color: #aaa;
+        }
+
+        .progress-bar-bg {
+            height: 10px;
+            background: #1a1a1a;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease;
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .progress-bar-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 1.5s infinite;
+        }
+
+        .progress-bar-fill.quota {
+            background: linear-gradient(90deg, #4caf50, #8bc34a);
+        }
+
+        .progress-bar-fill.duration {
+            background: linear-gradient(90deg, #2196f3, #64b5f6);
+        }
+
+        .vip-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin: 15px 0;
+        }
+
+        .vip-stat-item {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 15px;
+            padding: 12px;
+            text-align: center;
+            border: 1px solid rgba(0, 255, 255, 0.2);
+        }
+
+        .vip-stat-value {
+            font-size: 22px;
+            font-weight: bold;
+            font-family: monospace;
+            color: var(--neon-cyan);
+        }
+
+        .vip-stat-label {
+            font-size: 10px;
+            color: #aaa;
+            margin-top: 5px;
+        }
+
+        .countdown-timer {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 15px;
+            padding: 15px;
+            margin-top: 15px;
+            border: 1px solid rgba(33, 150, 243, 0.3);
+        }
+
+        .countdown-title {
+            font-size: 12px;
+            color: #2196f3;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .countdown-display {
+            display: flex;
+            justify-content: space-around;
+            gap: 10px;
+        }
+
+        .countdown-box {
+            flex: 1;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 12px;
+            padding: 10px;
+            border: 1px solid rgba(33, 150, 243, 0.3);
+        }
+
+        .countdown-number {
+            font-size: 24px;
+            font-weight: bold;
+            font-family: monospace;
+            color: #2196f3;
+        }
+
+        .countdown-label {
+            font-size: 10px;
+            color: #aaa;
+            margin-top: 5px;
+        }
+
+        .vip-warning {
+            background: rgba(255, 152, 0, 0.2);
+            border: 1px solid #ff9800;
+            border-radius: 12px;
+            padding: 12px;
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #ff9800;
+            font-size: 12px;
+            display: none;
+        }
+
+        .vip-danger {
+            background: rgba(244, 67, 54, 0.2);
+            border: 1px solid #f44336;
+            border-radius: 12px;
+            padding: 12px;
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #f44336;
+            font-size: 12px;
+            display: none;
+        }
+
+        .permanent-badge-large {
+            background: linear-gradient(135deg, #ffd700, #ffaa00);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            margin: 15px 0;
+            border: 2px solid #ffd700;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.4);
+            animation: borderGlow 2s infinite;
+        }
+
+        .permanent-icon {
+            font-size: 50px;
+            color: #ffd700;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px #ffd700;
+        }
+
+        .permanent-text {
+            font-family: 'Orbitron', monospace;
+            font-size: 24px;
+            font-weight: 900;
+            color: #000;
+            letter-spacing: 2px;
+        }
+
+        .permanent-subtext {
+            font-size: 12px;
+            color: #333;
+            margin-top: 8px;
         }
 
         /* UPLOAD PROGRESS */
@@ -1842,7 +1895,7 @@
 
 <div class="neon-bg"></div>
 
-<!-- MAINTENANCE PAGE - NEON DESIGN BARU -->
+<!-- MAINTENANCE PAGE -->
 <div class="maintenance-page" id="maintenancePage">
     <div class="maintenance-card">
         <div class="maintenance-icon"><i class="fas fa-tools"></i></div>
@@ -1938,7 +1991,10 @@
     </div>
 </div>
 
-<!-- NEON PROMPT MODAL (untuk security answer) -->
+<!-- NOTIFICATION TOAST CONTAINER -->
+<div id="notificationToastContainer"></div>
+
+<!-- NEON PROMPT MODAL -->
 <div class="neon-prompt-modal" id="neonPromptModal">
     <div class="neon-prompt-content">
         <div class="neon-prompt-title" id="neonPromptTitle">Security Question</div>
@@ -1960,7 +2016,7 @@
     </div>
 </div>
 
-<!-- DEPOSIT POPUP -->
+<!-- DEPOSIT POPUP (HANYA DANA) -->
 <div class="deposit-popup" id="depositPopup">
     <div class="deposit-content">
         <div class="deposit-title">💰 DEPOSIT</div>
@@ -1970,7 +2026,6 @@
         
         <div class="payment-methods" id="paymentMethods">
             <div class="payment-method" onclick="selectPayment('DANA', '0881011076305', this)">DANA</div>
-            <div class="payment-method" onclick="selectPayment('GOPAY', '083126486017', this)">GOPAY</div>
             <div class="payment-method" onclick="selectPayment('QRIS', 'Hubungi Admin', this)">QRIS</div>
             <div class="payment-method" onclick="selectPayment('PAYPAL', 'Hubungi Admin', this)">PAYPAL</div>
         </div>
@@ -2186,7 +2241,7 @@
 </div>
 
 <script>
-    // Firebase Config
+    // ==================== FIREBASE CONFIG ====================
     const firebaseConfig = {
         apiKey: "AIzaSyCT3zQGBGmPNMm00wbU02hGFBA4xO7P6b0",
         authDomain: "project12-8fa5f.firebaseapp.com",
@@ -2199,10 +2254,10 @@
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
 
-    // Imgbb API
+    // ==================== IMGBB API ====================
     const IMGBB_API_KEY = 'cdb1c90e037e9a74be4bb8d30de5d50f';
 
-    // Global Variables
+    // ==================== GLOBAL VARIABLES ====================
     let currentUID = '';
     let currentSaldo = 0;
     let loginPin = '';
@@ -2222,7 +2277,7 @@
     let vipCountdownInterval = null;
     let currentVIPData = null;
 
-    // Video list
+    // ==================== VIDEO LIST ====================
     const videoList = [
         { id: 1, file: 'video1.mp4' }, { id: 2, file: 'video2.mp4' }, { id: 3, file: 'video3.mp4' },
         { id: 4, file: 'video4.mp4' }, { id: 5, file: 'video5.mp4' }, { id: 6, file: 'video6.mp4' },
@@ -2280,6 +2335,28 @@
     function closeNeonModal() { document.getElementById('neonModal').classList.remove('active'); }
     function showNeonToast(msg) { const toast = document.getElementById('toastNeon'); toast.textContent = msg; toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 3000); }
 
+    // NOTIFICATION TOAST
+    function showNotificationToast(title, message) {
+        const container = document.getElementById('notificationToastContainer');
+        if (!container) return;
+        
+        const toast = document.createElement('div');
+        toast.className = 'notification-toast';
+        toast.innerHTML = `
+            <div class="notification-toast-title">${title}</div>
+            <div class="notification-toast-message">${message}</div>
+            <div class="notification-toast-time">${new Date().toLocaleTimeString()}</div>
+            <button class="notification-toast-close" onclick="this.parentElement.remove()">✕</button>
+        `;
+        container.appendChild(toast);
+        setTimeout(() => {
+            if (toast.parentElement) {
+                toast.classList.add('hide');
+                setTimeout(() => toast.remove(), 400);
+            }
+        }, 5000);
+    }
+
     function showUploadProgress(filename) {
         const el = document.getElementById('uploadProgressNeon');
         document.getElementById('uploadNeonFilename').textContent = filename;
@@ -2333,10 +2410,6 @@
                     if (maintenanceInterval) clearInterval(maintenanceInterval);
                     maintenanceInterval = setInterval(updateMaintenanceTimer, 1000);
                 }
-                if (m.totalMinutes) {
-                    const totalDuration = m.totalMinutes * 60 * 1000;
-                    // Progress akan dihitung di updateMaintenanceTimer
-                }
             } else {
                 document.getElementById('maintenancePage').classList.remove('active');
                 if (maintenanceInterval) { clearInterval(maintenanceInterval); maintenanceInterval = null; }
@@ -2358,7 +2431,6 @@
         const seconds = Math.floor((remaining % 60000) / 1000);
         document.getElementById('maintenanceTimer').innerHTML = `${hours.toString().padStart(2,'0')}:${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
         
-        // Hitung progress dari startTime
         database.ref('maintenance').once('value').then(snap => {
             const m = snap.val();
             if (m && m.startTime && m.endTime) {
@@ -2456,7 +2528,6 @@
             await database.ref('users/' + username).set({ uid: username, pin: registerPin, status: 'active', registeredAt: new Date().toISOString() });
             await database.ref('saldo/' + username).set({ amount: 0, created: Date.now() });
             
-            // NEON PROMPT untuk security answer
             showNeonPrompt('Security Question', 'Set your security answer (for PIN reset)', async (answer) => {
                 if (answer && answer.trim()) {
                     await database.ref('security_answers/' + username).set(answer.toLowerCase().trim());
@@ -2467,7 +2538,6 @@
                         switchAuthTab('login'); 
                     }, 2000);
                 } else {
-                    // Jika user tidak mengisi, skip security answer
                     showNeonModal('Info', 'Registration successful! You can set security answer later via admin.', false);
                     clearRegisterPin();
                     setTimeout(() => { 
@@ -2498,6 +2568,47 @@
         document.getElementById('saldoDisplayRight').innerHTML = 'Rp ' + formatRupiah(currentSaldo);
     }
 
+    // ==================== NOTIFICATION LISTENER (REAL-TIME) ====================
+    function setupNotificationListeners() {
+        if (!currentUID) return;
+        
+        // Listener untuk status deposit
+        database.ref('deposits/' + currentUID).on('child_changed', (snap) => {
+            const deposit = snap.val();
+            if (deposit.status === 'approved') {
+                showNotificationToast('✅ DEPOSIT APPROVED', `Deposit Rp ${formatRupiah(deposit.jumlah)} telah disetujui! Saldo Anda telah bertambah.`);
+                loadTransactionHistory();
+                loadUserData();
+            } else if (deposit.status === 'rejected') {
+                showNotificationToast('❌ DEPOSIT REJECTED', `Deposit Rp ${formatRupiah(deposit.jumlah)} ditolak. Silakan hubungi admin.`);
+                loadTransactionHistory();
+            }
+        });
+        
+        // Listener untuk status purchase VIP
+        database.ref('purchases/' + currentUID).on('child_changed', (snap) => {
+            const purchase = snap.val();
+            if (purchase.status === 'approved') {
+                showNotificationToast('👑 VIP APPROVED', `Paket ${purchase.package} telah disetujui! Selamat Anda sekarang VIP.`);
+                loadVIPStatus();
+                loadPurchaseHistory();
+            } else if (purchase.status === 'rejected') {
+                showNotificationToast('❌ VIP REJECTED', `Pembelian paket ${purchase.package} ditolak. Saldo Anda telah dikembalikan.`);
+                loadUserData();
+                loadPurchaseHistory();
+            }
+        });
+        
+        // Listener untuk notifikasi dari admin
+        database.ref('notifications/latest').on('value', (snap) => {
+            const notif = snap.val();
+            if (notif && notif.active && notif.timestamp && (!localStorage.getItem(`notif_${notif.timestamp}`))) {
+                showNotificationToast(notif.title || '📢 NOTIFICATION', notif.message || '');
+                localStorage.setItem(`notif_${notif.timestamp}`, 'true');
+            }
+        });
+    }
+
     // ==================== DEPOSIT POPUP ====================
     function showDepositPopup() { document.getElementById('depositPopup').classList.add('active'); }
     function closeDepositPopup() { document.getElementById('depositPopup').classList.remove('active'); resetDepositForm(); }
@@ -2508,45 +2619,70 @@
         document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('selected'));
         document.querySelectorAll('.amount-preset').forEach(a => a.classList.remove('selected'));
         document.getElementById('destinationRow').style.display = 'none';
+        selectedPaymentMethod = '';
+        selectedPaymentNumber = '';
     }
+    
     function selectPayment(method, number, el) {
         document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('selected'));
         el.classList.add('selected');
         selectedPaymentMethod = method;
         selectedPaymentNumber = number;
-        if (number !== 'Hubungi Admin') {
+        
+        if (method === 'DANA') {
             document.getElementById('destinationNumber').innerText = number;
             document.getElementById('destinationRow').style.display = 'flex';
         } else {
             document.getElementById('destinationRow').style.display = 'none';
-            showNeonModal('Info', 'Silakan hubungi admin untuk metode ' + method, false);
+            if (method === 'QRIS' || method === 'PAYPAL') {
+                showNeonModal('Info', `Silakan hubungi admin di Telegram untuk melakukan deposit via ${method}. Admin akan memberikan panduan.`, false);
+            }
         }
     }
+    
     function setAmount(amount, el) {
         document.querySelectorAll('.amount-preset').forEach(a => a.classList.remove('selected'));
         el.classList.add('selected');
         document.getElementById('depositJumlah').value = amount;
         selectedDepositAmount = amount;
     }
+    
     function copyDestinationNumber() {
         const num = document.getElementById('destinationNumber').innerText;
         navigator.clipboard.writeText(num);
-        showNeonToast('Nomor disalin!');
+        showNeonToast('Nomor DANA disalin!');
     }
+    
     async function submitDeposit() {
         const nama = document.getElementById('depositNama').value.trim();
         const noEwallet = document.getElementById('depositNoEwallet').value.trim();
         const jumlah = parseInt(document.getElementById('depositJumlah').value);
+        
         if (!nama) { showNeonModal('Error', 'Masukkan nama pengirim!', true); return; }
         if (!noEwallet) { showNeonModal('Error', 'Masukkan no E-Wallet!', true); return; }
         if (!selectedPaymentMethod) { showNeonModal('Error', 'Pilih metode pembayaran!', true); return; }
         if (!jumlah || jumlah < 20000) { showNeonModal('Error', 'Minimal Rp 20.000!', true); return; }
+        
+        // Validasi no E-Wallet harus angka
+        if (!/^\d+$/.test(noEwallet)) {
+            showNeonModal('Error', 'No E-Wallet harus berupa angka!', true);
+            return;
+        }
+        
         showLoading();
         try {
             await database.ref('deposits/' + currentUID).push({
                 uid: currentUID, namaPengirim: nama, noEwallet: noEwallet,
                 metodePembayaran: selectedPaymentMethod, jumlah: jumlah, status: 'pending', timestamp: Date.now()
             });
+            
+            // Kirim pesan ke admin via chat
+            await database.ref('chats/' + currentUID).push({
+                sender: 'customer',
+                text: `💰 *REQUEST DEPOSIT*\n\nMetode: ${selectedPaymentMethod}\nJumlah: Rp ${formatRupiah(jumlah)}\nNama: ${nama}\nNo E-Wallet: ${noEwallet}\n\nMohon segera diproses.`,
+                timestamp: Date.now()
+            });
+            
             hideLoading();
             showNeonModal('Success', 'Deposit request sent! Menunggu konfirmasi admin.', false);
             closeDepositPopup();
@@ -2640,7 +2776,6 @@
                 counterCard.style.display = 'block';
                 currentVIPData = vip;
             
-                // Cek jenis VIP
                 if (vip.isPermanent || vip.updateType === 'lifetime') {
                     renderVIPPermanent(content);
                 } 
@@ -2651,7 +2786,6 @@
                     renderVIPDuration(content, vip);
                 }
             
-                // Refresh VIP updates
                 database.ref('global_updates').orderByChild('created_at').limitToLast(20).once('value', snap => {
                     renderVipUpdates(snap.val() || {});
                 });
@@ -2665,7 +2799,6 @@
                 document.getElementById('statusBadgeRight').classList.remove('status-premium');
                 counterCard.style.display = 'none';
             
-                // Stop countdown interval
                 if (vipCountdownInterval) {
                     clearInterval(vipCountdownInterval);
                     vipCountdownInterval = null;
@@ -2732,12 +2865,10 @@
         `;
     }
 
-    // RENDER VIP DURATION (SEASON/BULAN) DENGAN COUNTDOWN
+    // RENDER VIP DURATION DENGAN COUNTDOWN
     function renderVIPDuration(container, vip) {
         const expiryDate = new Date(vip.expiryDate);
         const now = new Date();
-    
-        // Hitung sisa waktu
         let remainingMs = expiryDate - now;
     
         if (remainingMs <= 0) {
@@ -2761,14 +2892,19 @@
         const elapsedDays = totalDays - Math.ceil(remainingMs / (1000 * 60 * 60 * 24));
         const percent = totalDays > 0 ? (elapsedDays / totalDays) * 100 : 0;
     
-        // Update countdown setiap detik
+        // Hentikan interval lama jika ada
+        if (vipCountdownInterval) {
+            clearInterval(vipCountdownInterval);
+            vipCountdownInterval = null;
+        }
+    
         function updateCountdown() {
             const nowTime = new Date();
             const diff = expiryDate - nowTime;
         
             if (diff <= 0) {
                 if (vipCountdownInterval) clearInterval(vipCountdownInterval);
-                loadVIPStatus(); // Reload status
+                loadVIPStatus();
                 return;
             }
         
@@ -2800,8 +2936,6 @@
             }
         }
     
-        // Hentikan interval lama
-        if (vipCountdownInterval) clearInterval(vipCountdownInterval);
         vipCountdownInterval = setInterval(updateCountdown, 1000);
     
         const remainingDays = Math.ceil(remainingMs / (1000 * 60 * 60 * 24));
@@ -2869,7 +3003,6 @@
             </div>
         `;
     
-        // Jalankan update countdown pertama
         updateCountdown();
     }
 
@@ -2909,50 +3042,38 @@
             </div>
         `;
     }
+
+    // ==================== BUY VIP ====================
     function buyVIP() { navigateWithLoading('dashboard'); document.getElementById('premiumPackagesCard').scrollIntoView({ behavior: 'smooth' }); }
     async function buyVIPPackage() {
         if (!selectedPackage) {
             showNeonModal('Error', 'Pilih paket dulu!', true);
             return;
         }
-    
         const priceToPay = selectedPackage.finalPrice || selectedPackage.price;
-    
         if (currentSaldo < priceToPay) {
             showNeonModal('Saldo Tidak Cukup', `Saldo: Rp ${formatRupiah(currentSaldo)}\nRequired: Rp ${formatRupiah(priceToPay)}`, true);
             showDepositPopup();
             return;
         }
-    
         showLoading();
         try {
             await database.ref('saldo/' + currentUID).set({ amount: currentSaldo - priceToPay, last_updated: Date.now() });
             currentSaldo -= priceToPay;
             updateSaldoDisplay();
-        
             await database.ref('purchases/' + currentUID).push({
-                uid: currentUID,
-                originalPrice: selectedPackage.price,
-                price: priceToPay,
-                discount: globalDiscount.active ? globalDiscount.percentage : 0,
-                package: selectedPackage.label,
-                packageType: selectedPackage.type,
-                status: 'pending',
-                timestamp: Date.now()
+                uid: currentUID, originalPrice: selectedPackage.price, price: priceToPay,
+                discount: globalDiscount.active ? globalDiscount.percentage : 0, package: selectedPackage.label,
+                packageType: selectedPackage.type, status: 'pending', timestamp: Date.now()
             });
-        
             await database.ref('chats/' + currentUID).push({
-                sender: 'system',
-                text: `✅ VIP Purchase Request Sent!\nPackage: ${selectedPackage.label}\nOriginal: Rp ${formatRupiah(selectedPackage.price)}\nFinal: Rp ${formatRupiah(priceToPay)}\nDiscount: ${globalDiscount.active ? globalDiscount.percentage + '%' : '0%'}`,
+                sender: 'customer',
+                text: `👑 *REQUEST VIP*\n\nPaket: ${selectedPackage.label}\nHarga: Rp ${formatRupiah(priceToPay)}\nMohon segera diproses.`,
                 timestamp: Date.now()
             });
-        
             hideLoading();
             showNeonModal('Success', 'Request sent! Menunggu persetujuan admin.', false);
-        } catch(error) {
-            hideLoading();
-            showNeonModal('Error', error.message, true);
-        }
+        } catch(error) { hideLoading(); showNeonModal('Error', error.message, true); }
     }
 
     // ==================== CHAT ====================
@@ -3140,37 +3261,23 @@
             const snap = await database.ref('global_discount').once('value');
             const discount = snap.val();
             if (discount && discount.active === true && new Date(discount.expiryDate) > new Date()) {
-                globalDiscount = {
-                    active: true,
-                    percentage: discount.percentage,
-                    minPurchase: discount.minPurchase || 0
-                };
+                globalDiscount = { active: true, percentage: discount.percentage, minPurchase: discount.minPurchase || 0 };
                 console.log(`🎫 Diskon global aktif: ${globalDiscount.percentage}%`);
             } else {
                 globalDiscount = { active: false, percentage: 0, minPurchase: 0 };
             }
-            // Refresh tampilan paket
             renderPackages();
-        } catch (error) {
-            console.error('Error loading discount:', error);
-        }
+        } catch (error) { console.error('Error loading discount:', error); }
     }
     function renderPackages() {
         const grid = document.getElementById('priceGrid');
         if (!grid) return;
-    
-        if (!packages || packages.length === 0) {
-            grid.innerHTML = '<div style="padding:25px; text-align:center;">No packages</div>';
-            return;
-        }
-    
+        if (!packages || packages.length === 0) { grid.innerHTML = '<div style="padding:25px; text-align:center;">No packages</div>'; return; }
         let html = '<div class="price-grid">';
         packages.forEach((pkg, idx) => {
             let originalPrice = pkg.price;
             let finalPrice = originalPrice;
             let discountText = '';
-        
-            // Terapkan diskon jika aktif
             if (globalDiscount.active && (globalDiscount.minPurchase === 0 || originalPrice >= globalDiscount.minPurchase)) {
                 finalPrice = originalPrice - (originalPrice * globalDiscount.percentage / 100);
                 discountText = `<div style="font-size: 11px; color: #00ff88; margin-top: 5px;">
@@ -3178,15 +3285,12 @@
                     → Rp ${formatRupiah(finalPrice)} <span style="color: #ffaa00;">(${globalDiscount.percentage}% OFF)</span>
                 </div>`;
             }
-        
-            html += `
-                <div class="price-card" onclick="selectPackage(${idx})" data-original-price="${originalPrice}" data-final-price="${finalPrice}">
-                    <div class="price-amount">Rp ${formatRupiah(finalPrice)}</div>
-                    <div class="price-type">${escapeHtml(pkg.label)}</div>
-                    ${discountText}
-                    ${pkg.description ? `<div style="font-size: 11px; color: #aaa; margin-top: 8px;">${escapeHtml(pkg.description)}</div>` : ''}
-                </div>
-            `;
+            html += `<div class="price-card" onclick="selectPackage(${idx})" data-original-price="${originalPrice}" data-final-price="${finalPrice}">
+                <div class="price-amount">Rp ${formatRupiah(finalPrice)}</div>
+                <div class="price-type">${escapeHtml(pkg.label)}</div>
+                ${discountText}
+                ${pkg.description ? `<div style="font-size: 11px; color: #aaa; margin-top: 8px;">${escapeHtml(pkg.description)}</div>` : ''}
+            </div>`;
         });
         html += '</div>';
         grid.innerHTML = html;
@@ -3195,75 +3299,40 @@
         selectedPackage = packages[idx];
         const priceCard = document.querySelectorAll('.price-card')[idx];
         let finalPrice = parseInt(priceCard?.getAttribute('data-final-price') || selectedPackage.price);
-    
-        document.querySelectorAll('.price-card').forEach(c => c.classList.remove('selected'));
-        if (event?.currentTarget) event.currentTarget.classList.add('selected');
-    
+        document.querySelectorAll('.price-card').forEach(c=>c.classList.remove('selected'));
+        if(event?.currentTarget) event.currentTarget.classList.add('selected');
         document.getElementById('summaryPackageName').textContent = selectedPackage.label;
         document.getElementById('summaryPrice').textContent = 'Rp ' + formatRupiah(finalPrice);
         document.getElementById('summaryTotal').textContent = 'Rp ' + formatRupiah(finalPrice);
-    
-        // Simpan harga final ke selectedPackage
         selectedPackage.finalPrice = finalPrice;
     }
 
     // ==================== REALTIME LISTENERS ====================
-    // Tambahkan di dalam fungsi setupRealtimeListeners()
     function setupRealtimeListeners() {
         if(!currentUID) return;
-    
-        // Listener saldo
-        database.ref('saldo/' + currentUID).on('value', s => { 
-            if(s.exists()) { 
-                currentSaldo = s.val().amount || 0; 
-                updateSaldoDisplay(); 
-            } 
-        });
-    
-        // Listener VIP status (sudah ada)
-        database.ref('vip_members/' + currentUID).on('value', () => { 
-            loadVIPStatus(); 
-        });
-    
-        // Listener deposit
-        database.ref('deposits/' + currentUID).on('child_added', () => { 
-            loadTransactionHistory(); 
-        });
-    
-        // Listener purchase
-        database.ref('purchases/' + currentUID).on('child_added', () => { 
-            loadPurchaseHistory(); 
-        });
-    
-        // === TAMBAHKAN LISTENER UNTUK UPDATE QUOTA (REALTIME) ===
+        database.ref('saldo/' + currentUID).on('value', s => { if(s.exists()) { currentSaldo = s.val().amount || 0; updateSaldoDisplay(); } });
+        database.ref('vip_members/' + currentUID).on('value', () => { loadVIPStatus(); });
+        database.ref('deposits/' + currentUID).on('child_added', () => { loadTransactionHistory(); });
+        database.ref('purchases/' + currentUID).on('child_added', () => { loadPurchaseHistory(); });
+        setupNotificationListeners();
+        
+        // Real-time quota update
         database.ref('vip_members/' + currentUID).on('value', (snap) => {
             const vip = snap.val();
             if (vip && vip.status === 'active' && vip.updateType === 'quota') {
-                // Update progress bar jika ada perubahan quota
                 const used = vip.updatesUsed || 0;
                 const total = vip.updateQuota || 0;
                 const percent = total > 0 ? (used / total) * 100 : 0;
-            
-                // Update tampilan jika ada
                 const progressFill = document.querySelector('#vipCounterCard .progress-bar-fill.quota');
                 const percentText = document.querySelector('#vipCounterCard .progress-label span:last-child');
-            
-                if (progressFill) {
-                    progressFill.style.width = percent + '%';
-                }
-                if (percentText) {
-                    percentText.innerHTML = `${used}/${total} (${percent.toFixed(1)}%)`;
-                }
-            
-                // Update stat numbers
+                if (progressFill) progressFill.style.width = percent + '%';
+                if (percentText) percentText.innerHTML = `${used}/${total} (${percent.toFixed(1)}%)`;
                 const usedEl = document.querySelector('#vipCounterCard .vip-stat-item:first-child .vip-stat-value');
                 const totalEl = document.querySelector('#vipCounterCard .vip-stat-item:nth-child(2) .vip-stat-value');
                 const remainingEl = document.querySelector('#vipCounterCard .vip-stat-item:last-child .vip-stat-value');
-            
                 if (usedEl) usedEl.innerHTML = used;
                 if (totalEl) totalEl.innerHTML = total;
                 if (remainingEl) remainingEl.innerHTML = total - used;
-            
                 console.log(`📊 Quota updated: ${used}/${total} (${percent.toFixed(1)}%)`);
             }
         });
@@ -3296,6 +3365,15 @@
     function logout() {
         if(confirm('Logout?')) {
             showLoading();
+            // Hentikan countdown interval
+            if (vipCountdownInterval) {
+                clearInterval(vipCountdownInterval);
+                vipCountdownInterval = null;
+            }
+            if (maintenanceInterval) {
+                clearInterval(maintenanceInterval);
+                maintenanceInterval = null;
+            }
             if(currentUID) database.ref('users/' + currentUID + '/status').set('offline');
             localStorage.removeItem('vip_files_uid'); localStorage.removeItem('vip_uid');
             currentUID = '';
