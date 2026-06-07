@@ -79,6 +79,12 @@
             50% { border-color: #00ffff; box-shadow: 0 0 25px var(--neon-cyan-glow); }
         }
 
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
         html, body {
             height: 100%;
             margin: 0;
@@ -524,7 +530,7 @@
             cursor: pointer;
         }
 
-        /* NEON MODAL */
+        /* NEON MODAL - DESAIN KEREN UNTUK POPUP */
         .neon-modal {
             position: fixed;
             top: 0;
@@ -558,21 +564,71 @@
             box-shadow: 0 0 60px rgba(0, 255, 255, 0.4);
             animation: fadeIn 0.3s ease;
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .neon-modal-content::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 255, 255, 0.1) 0%, transparent 70%);
+            animation: spin 20s linear infinite;
+            z-index: -1;
         }
 
         .neon-modal-icon {
             font-size: 65px;
-            color: var(--neon-cyan);
             margin-bottom: 25px;
-            text-shadow: 0 0 25px var(--neon-cyan);
+            text-shadow: 0 0 25px currentColor;
+            animation: neonPulse 2s infinite;
+        }
+
+        .neon-modal-icon.warning {
+            color: #ff4444;
+        }
+
+        .neon-modal-icon.error {
+            color: #ff4444;
+            animation: shake 0.5s ease;
+        }
+
+        .neon-modal-icon.success {
+            color: #00ff88;
+        }
+
+        .neon-modal-icon.info {
+            color: var(--neon-cyan);
         }
 
         .neon-modal-title {
             font-family: 'Orbitron', monospace;
             font-size: 28px;
             font-weight: 900;
-            color: var(--neon-cyan);
             margin-bottom: 18px;
+        }
+
+        .neon-modal-title.warning {
+            color: #ff4444;
+            text-shadow: 0 0 10px #ff4444;
+        }
+
+        .neon-modal-title.error {
+            color: #ff4444;
+            text-shadow: 0 0 10px #ff4444;
+        }
+
+        .neon-modal-title.success {
+            color: #00ff88;
+            text-shadow: 0 0 10px #00ff88;
+        }
+
+        .neon-modal-title.info {
+            color: var(--neon-cyan);
+            text-shadow: 0 0 10px var(--neon-cyan);
         }
 
         .neon-modal-message {
@@ -580,6 +636,7 @@
             margin-bottom: 28px;
             line-height: 1.7;
             white-space: pre-line;
+            font-size: 15px;
         }
 
         .neon-modal-btn {
@@ -592,11 +649,122 @@
             cursor: pointer;
             color: #000;
             transition: all 0.3s;
+            font-family: 'Orbitron', monospace;
         }
 
         .neon-modal-btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 10px 25px rgba(0, 255, 255, 0.4);
+        }
+
+        .neon-modal-btn.warning {
+            background: linear-gradient(135deg, #ff4444, #cc0000);
+            color: white;
+        }
+
+        /* FORCE LOGOUT MODAL - KHUSUS UNTUK LOGOUT PAKSA (TIDAK BISA DIBATALKAN) */
+        .force-logout-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.99);
+            backdrop-filter: blur(30px);
+            z-index: 20000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+
+        .force-logout-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .force-logout-content {
+            max-width: 480px;
+            width: 100%;
+            background: linear-gradient(145deg, #0a0a0a, #0f0f0f);
+            border: 3px solid #ff4444;
+            border-radius: 50px;
+            padding: 45px 40px;
+            text-align: center;
+            animation: shake 0.5s ease, fadeIn 0.3s ease;
+            box-shadow: 0 0 80px rgba(255, 68, 68, 0.5), inset 0 0 30px rgba(255, 68, 68, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .force-logout-content::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 68, 68, 0.15) 0%, transparent 70%);
+            animation: spin 15s linear infinite;
+            z-index: -1;
+        }
+
+        .force-logout-icon {
+            font-size: 80px;
+            color: #ff4444;
+            margin-bottom: 25px;
+            text-shadow: 0 0 30px #ff4444;
+            animation: pulse 1s infinite;
+        }
+
+        .force-logout-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 30px;
+            font-weight: 900;
+            color: #ff4444;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px #ff4444;
+            letter-spacing: 2px;
+        }
+
+        .force-logout-message {
+            color: #ddd;
+            margin-bottom: 30px;
+            line-height: 1.8;
+            font-size: 16px;
+            background: rgba(255, 68, 68, 0.1);
+            padding: 20px;
+            border-radius: 25px;
+            border: 1px solid rgba(255, 68, 68, 0.3);
+        }
+
+        .force-logout-timer {
+            font-size: 48px;
+            font-weight: bold;
+            font-family: monospace;
+            color: #ff4444;
+            margin: 20px 0;
+            text-shadow: 0 0 15px #ff4444;
+            letter-spacing: 5px;
+        }
+
+        .force-logout-progress {
+            height: 4px;
+            background: rgba(255, 68, 68, 0.2);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        .force-logout-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff4444, #ff8888);
+            width: 0%;
+            transition: width 0.1s linear;
         }
 
         /* NEON PROMPT MODAL (untuk security answer) */
@@ -698,7 +866,7 @@
             transform: translateY(-3px);
         }
 
-        /* ==================== VIP COUNTER STYLES ==================== */
+        /* VIP COUNTER STYLES */
         .vip-counter-card {
             background: rgba(0, 0, 0, 0.5);
             border-radius: 20px;
@@ -1282,6 +1450,7 @@
             max-width: 1400px;
             margin: 0 auto;
             padding: 18px;
+            padding-bottom: 90px;
             position: relative;
             z-index: 1;
             display: block;
@@ -1607,7 +1776,7 @@
             outline: none;
         }
         
-        chat-upload-btn {
+        .chat-upload-btn {
             width: 48px;
             height: 48px;
             background: linear-gradient(135deg, var(--neon-cyan), #0088ff);
@@ -1885,6 +2054,38 @@
             display: none !important;
         }
 
+        /* ACCOUNT DETAILS - PERBAIKAN TATA LETAK */
+        .customer-details {
+            margin: 15px 0;
+        }
+
+        .customer-details .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.35);
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
+
+        .customer-details .detail-label {
+            color: #aaa;
+            font-size: 13px;
+        }
+
+        .customer-details .detail-value {
+            color: #00ff88;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
         @media (max-width: 768px) {
             .features-grid {
                 grid-template-columns: repeat(3, 1fr);
@@ -1898,6 +2099,18 @@
                 white-space: normal;
                 text-align: center;
                 max-width: 92%;
+            }
+            .force-logout-content {
+                padding: 30px 25px;
+            }
+            .force-logout-title {
+                font-size: 24px;
+            }
+            .force-logout-message {
+                font-size: 14px;
+            }
+            .force-logout-timer {
+                font-size: 36px;
             }
         }
     </style>
@@ -2018,13 +2231,29 @@
     </div>
 </div>
 
-<!-- NEON MODAL -->
+<!-- NEON MODAL UNTUK NOTIFIKASI BIASA -->
 <div class="neon-modal" id="neonModal">
     <div class="neon-modal-content">
-        <div class="neon-modal-icon"><i class="fas fa-info-circle"></i></div>
-        <div class="neon-modal-title" id="neonModalTitle">Information</div>
+        <div class="neon-modal-icon info"><i class="fas fa-info-circle"></i></div>
+        <div class="neon-modal-title info" id="neonModalTitle">Information</div>
         <div class="neon-modal-message" id="neonModalMessage">Message here</div>
         <button class="neon-modal-btn" onclick="closeNeonModal()">OK</button>
+    </div>
+</div>
+
+<!-- FORCE LOGOUT MODAL - KHUSUS UNTUK LOGOUT PAKSA (TIDAK BISA DIBATALKAN) -->
+<div class="force-logout-modal" id="forceLogoutModal">
+    <div class="force-logout-content">
+        <div class="force-logout-icon"><i class="fas fa-shield-alt"></i></div>
+        <div class="force-logout-title">⚠️ FORCE LOGOUT ⚠️</div>
+        <div class="force-logout-message" id="forceLogoutMessage">
+            Akun Anda sementara kami tangguhkan karena ada aktivitas mencurigakan.<br>
+            Harap bersabar dan hubungi admin untuk informasi lebih lanjut.
+        </div>
+        <div class="force-logout-timer" id="forceLogoutTimer">3</div>
+        <div class="force-logout-progress">
+            <div class="force-logout-progress-fill" id="forceLogoutProgress"></div>
+        </div>
     </div>
 </div>
 
@@ -2069,8 +2298,8 @@
 <!-- RESET PIN MODAL -->
 <div class="reset-pin-modal" id="resetPinModal">
     <div class="reset-pin-content">
-        <div class="neon-modal-icon"><i class="fas fa-key"></i></div>
-        <div class="neon-modal-title" style="font-size:24px;">Reset PIN</div>
+        <div class="neon-modal-icon info"><i class="fas fa-key"></i></div>
+        <div class="neon-modal-title info" style="font-size:24px;">Reset PIN</div>
         <div class="login-field">
             <div class="login-label">PIN Lama</div>
             <input type="password" class="login-input" id="oldPin" maxlength="6" placeholder="******">
@@ -2093,8 +2322,8 @@
 <!-- FORGOT PIN MODAL -->
 <div class="forgot-pin-modal" id="forgotPinModal">
     <div class="forgot-pin-content">
-        <div class="neon-modal-icon"><i class="fas fa-question-circle"></i></div>
-        <div class="neon-modal-title" style="font-size:24px;">Lupa PIN</div>
+        <div class="neon-modal-icon info"><i class="fas fa-question-circle"></i></div>
+        <div class="neon-modal-title info" style="font-size:24px;">Lupa PIN</div>
         <div class="login-field">
             <div class="login-label">UID / Username</div>
             <input type="text" class="login-input" id="forgotUID" placeholder="UID Anda">
@@ -2218,10 +2447,9 @@
                     <div class="card-title"><i class="fas fa-headset"></i> CHAT ADMIN <span style="color:#00ff88; font-size:12px; margin-left:auto;" id="chatAdminStatus">🟢 Online</span></div>
                     <div class="chat-area" id="chatMessagesFull" style="height:420px;"></div>
                     <div class="chat-input-row">
-                        <button class="upload-btn" id="chatUploadBtnUser"><i class="fas fa-paperclip"></i></button>
+                        <button class="chat-upload-btn" id="chatUploadBtnUser"><i class="fas fa-paperclip"></i></button>
                         <input type="text" class="chat-input" id="chatInputFull" placeholder="Type message for admin...">
                         <button class="send-btn" onclick="sendMessageFull()"><i class="fas fa-paper-plane"></i></button>
-                    </div>
                     </div>
                 </div>
             </div>
@@ -2232,12 +2460,12 @@
                     <div class="profile-row"><img src="" class="profile-image" style="width:85px; height:85px;" id="profileImageAccount"><div><h3 style="color:var(--neon-cyan);">PROFILE</h3><p style="color:#aaa; font-size:12px;">Click photo to change</p></div></div>
                     <div class="uid-row"><span class="uid-text" id="uidDisplayRight">-</span><div class="copy-icon" onclick="copyUID()"><i class="fas fa-copy"></i></div></div>
                     <div style="margin:15px 0;"><span class="status-badge" id="statusBadgeRight">Free</span></div>
-                    <div class="customer-details" style="margin:15px 0;">
-                        <div style="display:flex; justify-content:space-between; padding:12px; background:rgba(0,0,0,0.35); border-radius:12px; margin-bottom:10px;"><span>Saldo</span><span style="color:#00ff88; font-weight:bold;" id="saldoDisplayRight">Rp 0</span></div>
-                        <div style="display:flex; justify-content:space-between; padding:12px; background:rgba(0,0,0,0.35); border-radius:12px; margin-bottom:10px;"><span>Total Deposit</span><span style="color:#ffaa00; font-weight:bold;" id="totalDepositRight">Rp 0</span></div>
-                        <div style="display:flex; justify-content:space-between; padding:12px; background:rgba(0,0,0,0.35); border-radius:12px;"><span>VIP Status</span><span style="color:#00ffff; font-weight:bold;" id="vipStatusRight">Free</span></div>
+                    <div class="customer-details">
+                        <div class="detail-row"><span class="detail-label">Saldo</span><span class="detail-value" id="saldoDisplayRight">Rp 0</span></div>
+                        <div class="detail-row"><span class="detail-label">Total Deposit</span><span class="detail-value" id="totalDepositRight">Rp 0</span></div>
+                        <div class="detail-row"><span class="detail-label">VIP Status</span><span class="detail-value" id="vipStatusRight">Free</span></div>
                     </div>
-                    <div class="action-buttons" style="display:flex; gap:12px; flex-wrap:wrap;">
+                    <div class="action-buttons">
                         <button class="btn-neon" style="flex:1;" onclick="showDepositPopup()"><i class="fas fa-plus-circle"></i> DEPOSIT</button>
                         <button class="btn-neon-outline btn-neon" style="flex:1;" onclick="openResetPin()"><i class="fas fa-key"></i> CHANGE PIN</button>
                         <button class="btn-neon-outline btn-neon" style="flex:1;" onclick="logout()"><i class="fas fa-sign-out-alt"></i> LOGOUT</button>
@@ -2290,6 +2518,9 @@
     let globalDiscount = { active: false, percentage: 0, minPurchase: 0 };
     let vipCountdownInterval = null;
     let currentVIPData = null;
+    let forceLogoutTimerInterval = null;
+    let forceLogoutCount = 0;
+    let forceLogoutBlocked = false;
 
     // Video list
     const videoList = [
@@ -2337,16 +2568,84 @@
     function escapeHtml(text) { if (!text) return ''; return String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
     function formatRupiah(num) { if (!num && num !== 0) return '0'; return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'); }
 
-    function showNeonModal(title, message, isError = false) {
+    function showNeonModal(title, message, type = 'info') {
         const modal = document.getElementById('neonModal');
-        document.getElementById('neonModalTitle').textContent = title;
-        document.getElementById('neonModalMessage').innerHTML = message;
-        const icon = modal.querySelector('.neon-modal-icon i');
-        icon.className = isError ? 'fas fa-exclamation-triangle' : 'fas fa-check-circle';
-        document.getElementById('neonModalTitle').style.color = isError ? '#ff4444' : '#00ffff';
+        const iconEl = modal.querySelector('.neon-modal-icon');
+        const titleEl = document.getElementById('neonModalTitle');
+        const messageEl = document.getElementById('neonModalMessage');
+        
+        // Reset class
+        iconEl.className = 'neon-modal-icon ' + type;
+        titleEl.className = 'neon-modal-title ' + type;
+        
+        // Set icon
+        if (type === 'error' || type === 'warning') {
+            iconEl.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
+        } else if (type === 'success') {
+            iconEl.innerHTML = '<i class="fas fa-check-circle"></i>';
+        } else {
+            iconEl.innerHTML = '<i class="fas fa-info-circle"></i>';
+        }
+        
+        titleEl.textContent = title;
+        messageEl.innerHTML = message;
         modal.classList.add('active');
     }
+    
     function closeNeonModal() { document.getElementById('neonModal').classList.remove('active'); }
+    
+    // FORCE LOGOUT MODAL - TIDAK BISA DIBATALKAN
+    function showForceLogoutModal(message, durationSeconds = 3) {
+        if (forceLogoutBlocked) return;
+        forceLogoutBlocked = true;
+        
+        const modal = document.getElementById('forceLogoutModal');
+        const messageEl = document.getElementById('forceLogoutMessage');
+        const timerEl = document.getElementById('forceLogoutTimer');
+        const progressEl = document.getElementById('forceLogoutProgress');
+        
+        messageEl.innerHTML = message || 'Akun Anda sementara kami tangguhkan karena ada aktivitas mencurigakan.<br>Harap bersabar dan hubungi admin untuk informasi lebih lanjut.';
+        
+        modal.classList.add('active');
+        
+        let timeLeft = durationSeconds;
+        timerEl.textContent = timeLeft;
+        progressEl.style.width = '100%';
+        
+        if (forceLogoutTimerInterval) clearInterval(forceLogoutTimerInterval);
+        
+        forceLogoutTimerInterval = setInterval(() => {
+            timeLeft--;
+            if (timeLeft <= 0) {
+                clearInterval(forceLogoutTimerInterval);
+                forceLogoutTimerInterval = null;
+                modal.classList.remove('active');
+                forceLogoutBlocked = false;
+                // Eksekusi logout
+                executeForceLogout();
+            } else {
+                timerEl.textContent = timeLeft;
+                const percent = (timeLeft / durationSeconds) * 100;
+                progressEl.style.width = percent + '%';
+            }
+        }, 1000);
+    }
+    
+    function executeForceLogout() {
+        if (currentUID) {
+            database.ref('users/' + currentUID + '/status').set('offline');
+            database.ref('sessions/' + currentUID).remove();
+        }
+        localStorage.removeItem('vip_files_uid');
+        localStorage.removeItem('vip_uid');
+        currentUID = '';
+        document.getElementById('mainLayout').style.display = 'none';
+        document.getElementById('loginWrapper').classList.remove('hide');
+        clearLoginPin();
+        clearRegisterPin();
+        showNeonModal('Force Logout', 'Anda telah di-logout paksa oleh admin.', 'warning');
+    }
+    
     function showNeonToast(msg) { const toast = document.getElementById('toastNeon'); toast.textContent = msg; toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 3000); }
 
     function showUploadProgress(filename) {
@@ -2402,10 +2701,6 @@
                     if (maintenanceInterval) clearInterval(maintenanceInterval);
                     maintenanceInterval = setInterval(updateMaintenanceTimer, 1000);
                 }
-                if (m.totalMinutes) {
-                    const totalDuration = m.totalMinutes * 60 * 1000;
-                    // Progress akan dihitung di updateMaintenanceTimer
-                }
             } else {
                 document.getElementById('maintenancePage').classList.remove('active');
                 if (maintenanceInterval) { clearInterval(maintenanceInterval); maintenanceInterval = null; }
@@ -2427,7 +2722,6 @@
         const seconds = Math.floor((remaining % 60000) / 1000);
         document.getElementById('maintenanceTimer').innerHTML = `${hours.toString().padStart(2,'0')}:${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
         
-        // Hitung progress dari startTime
         database.ref('maintenance').once('value').then(snap => {
             const m = snap.val();
             if (m && m.startTime && m.endTime) {
@@ -2489,16 +2783,39 @@
         if (loginPin.length < 6) { showMessage('loginMessage', 'PIN must be 6 digits!', true); return; }
         showLoading();
         try {
+            // Cek banned
+            const bannedSnap = await database.ref('banned_users/' + uid).once('value');
+            if (bannedSnap.exists() && bannedSnap.val().status === 'banned') { 
+                showForceLogoutModal('⚠️ AKUN ANDA DIBLOKIR ⚠️\n\nAkun Anda telah diblokir oleh admin karena melanggar aturan.\nHubungi admin untuk informasi lebih lanjut.\n\nAnda akan diarahkan ke halaman login.', 5);
+                hideLoading(); 
+                return; 
+            }
+            
             const userSnap = await database.ref('users/' + uid).once('value');
             const user = userSnap.val();
             if (!user) { showMessage('loginMessage', 'User not found!', true); clearLoginPin(); hideLoading(); return; }
             if (user.pin !== loginPin) { showMessage('loginMessage', 'Wrong PIN!', true); clearLoginPin(); hideLoading(); return; }
-            const bannedSnap = await database.ref('banned_users/' + uid).once('value');
-            if (bannedSnap.exists() && bannedSnap.val().status === 'banned') { showNeonModal('Account Banned', 'Your account has been banned.', true); hideLoading(); return; }
+            
             currentUID = uid;
             if (document.getElementById('rememberUID').checked) localStorage.setItem('vip_uid', uid);
             localStorage.setItem('vip_files_uid', uid);
+            
+            // Dapatkan IP Address (sederhana)
+            let ipAddress = 'unknown';
+            try {
+                const ipRes = await fetch('https://api.ipify.org?format=json');
+                const ipData = await ipRes.json();
+                ipAddress = ipData.ip;
+            } catch(e) { console.log('IP fetch failed'); }
+            
             await database.ref('users/' + uid).update({ status: 'online', lastLogin: new Date().toISOString() });
+            await database.ref('sessions/' + uid).set({ 
+                sessionId: Date.now().toString(), 
+                timestamp: Date.now(),
+                ipAddress: ipAddress,
+                userAgent: navigator.userAgent
+            });
+            
             await loadUserData();
             document.getElementById('loginWrapper').classList.add('hide');
             document.getElementById('mainLayout').style.display = 'block';
@@ -2525,19 +2842,17 @@
             await database.ref('users/' + username).set({ uid: username, pin: registerPin, status: 'active', registeredAt: new Date().toISOString() });
             await database.ref('saldo/' + username).set({ amount: 0, created: Date.now() });
             
-            // NEON PROMPT untuk security answer
             showNeonPrompt('Security Question', 'Set your security answer (for PIN reset)', async (answer) => {
                 if (answer && answer.trim()) {
                     await database.ref('security_answers/' + username).set(answer.toLowerCase().trim());
-                    showNeonModal('Success', 'Registration successful! Please login.', false);
+                    showNeonModal('Success', 'Registration successful! Please login.', 'success');
                     clearRegisterPin();
                     setTimeout(() => { 
                         document.getElementById('loginUID').value = username; 
                         switchAuthTab('login'); 
                     }, 2000);
                 } else {
-                    // Jika user tidak mengisi, skip security answer
-                    showNeonModal('Info', 'Registration successful! You can set security answer later via admin.', false);
+                    showNeonModal('Info', 'Registration successful! You can set security answer later via admin.', 'info');
                     clearRegisterPin();
                     setTimeout(() => { 
                         document.getElementById('loginUID').value = username; 
@@ -2588,7 +2903,7 @@
             document.getElementById('destinationRow').style.display = 'flex';
         } else {
             document.getElementById('destinationRow').style.display = 'none';
-            showNeonModal('Info', 'Silakan hubungi admin untuk metode ' + method, false);
+            showNeonModal('Info', 'Silakan hubungi admin untuk metode ' + method, 'info');
         }
     }
     function setAmount(amount, el) {
@@ -2606,10 +2921,10 @@
         const nama = document.getElementById('depositNama').value.trim();
         const noEwallet = document.getElementById('depositNoEwallet').value.trim();
         const jumlah = parseInt(document.getElementById('depositJumlah').value);
-        if (!nama) { showNeonModal('Error', 'Masukkan nama pengirim!', true); return; }
-        if (!noEwallet) { showNeonModal('Error', 'Masukkan no E-Wallet!', true); return; }
-        if (!selectedPaymentMethod) { showNeonModal('Error', 'Pilih metode pembayaran!', true); return; }
-        if (!jumlah || jumlah < 20000) { showNeonModal('Error', 'Minimal Rp 20.000!', true); return; }
+        if (!nama) { showNeonModal('Error', 'Masukkan nama pengirim!', 'error'); return; }
+        if (!noEwallet) { showNeonModal('Error', 'Masukkan no E-Wallet!', 'error'); return; }
+        if (!selectedPaymentMethod) { showNeonModal('Error', 'Pilih metode pembayaran!', 'error'); return; }
+        if (!jumlah || jumlah < 20000) { showNeonModal('Error', 'Minimal Rp 20.000!', 'error'); return; }
         showLoading();
         try {
             await database.ref('deposits/' + currentUID).push({
@@ -2617,9 +2932,9 @@
                 metodePembayaran: selectedPaymentMethod, jumlah: jumlah, status: 'pending', timestamp: Date.now()
             });
             hideLoading();
-            showNeonModal('Success', 'Deposit request sent! Menunggu konfirmasi admin.', false);
+            showNeonModal('Success', 'Deposit request sent! Menunggu konfirmasi admin.', 'success');
             closeDepositPopup();
-        } catch(error) { hideLoading(); showNeonModal('Error', error.message, true); }
+        } catch(error) { hideLoading(); showNeonModal('Error', error.message, 'error'); }
     }
 
     // ==================== RESET PIN ====================
@@ -2629,18 +2944,18 @@
         const old = document.getElementById('oldPin').value;
         const newPin = document.getElementById('newPin').value;
         const confirm = document.getElementById('confirmPin').value;
-        if (!old || old.length !== 6) { showNeonModal('Error', 'PIN lama harus 6 digit!', true); return; }
-        if (!newPin || newPin.length !== 6) { showNeonModal('Error', 'PIN baru harus 6 digit!', true); return; }
-        if (newPin !== confirm) { showNeonModal('Error', 'PIN baru tidak cocok!', true); return; }
+        if (!old || old.length !== 6) { showNeonModal('Error', 'PIN lama harus 6 digit!', 'error'); return; }
+        if (!newPin || newPin.length !== 6) { showNeonModal('Error', 'PIN baru harus 6 digit!', 'error'); return; }
+        if (newPin !== confirm) { showNeonModal('Error', 'PIN baru tidak cocok!', 'error'); return; }
         showLoading();
         try {
             const userSnap = await database.ref('users/' + currentUID).once('value');
             if (userSnap.val().pin !== old) throw new Error('PIN lama salah!');
             await database.ref('users/' + currentUID).update({ pin: newPin });
             hideLoading();
-            showNeonModal('Success', 'PIN berhasil diubah!', false);
+            showNeonModal('Success', 'PIN berhasil diubah!', 'success');
             closeResetPinModal();
-        } catch(error) { hideLoading(); showNeonModal('Error', error.message, true); }
+        } catch(error) { hideLoading(); showNeonModal('Error', error.message, 'error'); }
     }
 
     // ==================== FORGOT PIN ====================
@@ -2650,33 +2965,33 @@
         const uid = document.getElementById('forgotUID').value.trim();
         const answer = document.getElementById('securityAnswer').value.trim();
         const newPin = document.getElementById('newPinForgot').value.trim();
-        if (!uid) { showNeonModal('Error', 'Masukkan UID!', true); return; }
-        if (!answer) { showNeonModal('Error', 'Masukkan jawaban keamanan!', true); return; }
-        if (!newPin || newPin.length !== 6) { showNeonModal('Error', 'PIN baru harus 6 digit!', true); return; }
+        if (!uid) { showNeonModal('Error', 'Masukkan UID!', 'error'); return; }
+        if (!answer) { showNeonModal('Error', 'Masukkan jawaban keamanan!', 'error'); return; }
+        if (!newPin || newPin.length !== 6) { showNeonModal('Error', 'PIN baru harus 6 digit!', 'error'); return; }
         showLoading();
         try {
             const secSnap = await database.ref('security_answers/' + uid).once('value');
             if (!secSnap.exists() || secSnap.val() !== answer.toLowerCase()) throw new Error('Jawaban keamanan salah!');
             await database.ref('users/' + uid).update({ pin: newPin });
             hideLoading();
-            showNeonModal('Success', 'PIN berhasil direset! Silakan login.', false);
+            showNeonModal('Success', 'PIN berhasil direset! Silakan login.', 'success');
             closeForgotPinModal();
-        } catch(error) { hideLoading(); showNeonModal('Error', error.message, true); }
+        } catch(error) { hideLoading(); showNeonModal('Error', error.message, 'error'); }
     }
 
     // ==================== CEK SALDO & DEPOSIT ====================
     async function cekSaldo() {
-        if (!currentUID) { showNeonModal('Error', 'Login dulu!', true); return; }
+        if (!currentUID) { showNeonModal('Error', 'Login dulu!', 'error'); return; }
         showLoading();
         try {
             const snap = await database.ref('saldo/' + currentUID).once('value');
             const saldo = snap.val()?.amount || 0;
             hideLoading();
-            showNeonModal('Saldo Anda', `💰 Rp ${formatRupiah(saldo)}`, false);
-        } catch(error) { hideLoading(); showNeonModal('Error', error.message, true); }
+            showNeonModal('Saldo Anda', `💰 Rp ${formatRupiah(saldo)}`, 'success');
+        } catch(error) { hideLoading(); showNeonModal('Error', error.message, 'error'); }
     }
     async function cekDeposit() {
-        if (!currentUID) { showNeonModal('Error', 'Login dulu!', true); return; }
+        if (!currentUID) { showNeonModal('Error', 'Login dulu!', 'error'); return; }
         showLoading();
         try {
             const snap = await database.ref('deposits/' + currentUID).once('value');
@@ -2684,8 +2999,8 @@
             let pending=0, approved=0, rejected=0, total=0;
             Object.keys(deposits).forEach(k => { total++; if(deposits[k].status==='pending') pending++; else if(deposits[k].status==='approved') approved++; else if(deposits[k].status==='rejected') rejected++; });
             hideLoading();
-            showNeonModal('Riwayat Deposit', `📊 Total: ${total}\n✅ Approved: ${approved}\n⏳ Pending: ${pending}\n❌ Rejected: ${rejected}`, false);
-        } catch(error) { hideLoading(); showNeonModal('Error', error.message, true); }
+            showNeonModal('Riwayat Deposit', `📊 Total: ${total}\n✅ Approved: ${approved}\n⏳ Pending: ${pending}\n❌ Rejected: ${rejected}`, 'info');
+        } catch(error) { hideLoading(); showNeonModal('Error', error.message, 'error'); }
     }
 
     // ==================== VIP STATUS DENGAN COUNTER ====================
@@ -2709,7 +3024,6 @@
                 counterCard.style.display = 'block';
                 currentVIPData = vip;
             
-                // CEK JENIS VIP - PRIORITAS
                 if (vip.isPermanent === true || vip.updateType === 'lifetime') {
                     renderVIPPermanent(content);
                 } 
@@ -2720,26 +3034,21 @@
                     renderVIPDuration(content, vip);
                 }
                 else if (vip.expiryDate && vip.expiryDate !== 'permanent' && new Date(vip.expiryDate) > new Date()) {
-                    // FALLBACK: jika ada expiryDate
                     renderVIPDuration(content, vip);
                 }
                 else if (vip.packageMonths && vip.packageMonths > 0) {
-                    // FALLBACK: jika hanya ada packageMonths tapi tidak ada expiryDate
-                    // Buat expiryDate otomatis +30 hari per bulan
                     const purchaseDate = vip.purchaseDate ? new Date(vip.purchaseDate) : new Date();
                     const expiryDate = new Date(purchaseDate);
                     expiryDate.setMonth(expiryDate.getMonth() + vip.packageMonths);
                     vip.expiryDate = expiryDate.toISOString();
                     vip.updateType = 'unlimited';
                     renderVIPDuration(content, vip);
-                    // Simpan ke Firebase agar下次 tidak perlu hitung ulang
                     database.ref('vip_members/' + currentUID).update({
                         expiryDate: expiryDate.toISOString(),
                         updateType: 'unlimited'
                     }).catch(e => console.log('Update expiryDate error:', e));
                 }
                 else {
-                    // FALLBACK TERAKHIR: tampilkan info dasar VIP
                     renderVIPBasic(content, vip);
                 }
             
@@ -2766,37 +3075,76 @@
         }
     }
 
-    // RENDER VIP BASIC (FALLBACK jika data tidak lengkap)
     function renderVIPBasic(container, vip) {
-            const purchaseDate = vip.purchaseDate ? new Date(vip.purchaseDate).toLocaleDateString('id-ID') : 'Tanggal tidak diketahui';
-            const packageName = vip.package || 'VIP Package';
-            const price = vip.price ? 'Rp ' + formatRupiah(vip.price) : '-';
-    
-            container.innerHTML = `
-                <div class="vip-counter-card">
-                    <div class="vip-counter-header">
-                        <div class="vip-counter-title">
-                            <i class="fas fa-crown"></i> VIP ACTIVE
-                        </div>
-                        <div class="vip-counter-badge duration">PREMIUM</div>
+        const purchaseDate = vip.purchaseDate ? new Date(vip.purchaseDate).toLocaleDateString('id-ID') : 'Tanggal tidak diketahui';
+        const packageName = vip.package || 'VIP Package';
+        const price = vip.price ? 'Rp ' + formatRupiah(vip.price) : '-';
+
+        container.innerHTML = `
+            <div class="vip-counter-card">
+                <div class="vip-counter-header">
+                    <div class="vip-counter-title">
+                        <i class="fas fa-crown"></i> VIP ACTIVE
                     </div>
-                    <div style="text-align: center; padding: 20px;">
-                        <i class="fas fa-check-circle" style="font-size: 50px; color: #00ff88; margin-bottom: 15px;"></i>
-                        <div style="font-size: 18px; font-weight: bold; color: #00ff88;">${escapeHtml(packageName)}</div>
-                        <div style="font-size: 14px; color: #aaa; margin-top: 10px;">Harga: ${price}</div>
-                        <div style="font-size: 12px; color: #888; margin-top: 5px;">Dibeli: ${purchaseDate}</div>
-                        <div style="font-size: 12px; color: #ffaa00; margin-top: 15px;">
-                            <i class="fas fa-info-circle"></i> Detail durasi akan muncul setelah admin mengupdate data
-                        </div>
+                    <div class="vip-counter-badge duration">PREMIUM</div>
+                </div>
+                <div style="text-align: center; padding: 20px;">
+                    <i class="fas fa-check-circle" style="font-size: 50px; color: #00ff88; margin-bottom: 15px;"></i>
+                    <div style="font-size: 18px; font-weight: bold; color: #00ff88;">${escapeHtml(packageName)}</div>
+                    <div style="font-size: 14px; color: #aaa; margin-top: 10px;">Harga: ${price}</div>
+                    <div style="font-size: 12px; color: #888; margin-top: 5px;">Dibeli: ${purchaseDate}</div>
+                    <div style="font-size: 12px; color: #ffaa00; margin-top: 15px;">
+                        <i class="fas fa-info-circle"></i> Detail durasi akan muncul setelah admin mengupdate data
                     </div>
                 </div>
-            `;
+            </div>
+        `;
+    }
+
+    function renderVIPQuota(container, vip) {
+        const used = vip.updatesUsed || 0;
+        const total = vip.updateQuota || 0;
+        const remaining = total - used;
+        const percent = total > 0 ? (used / total) * 100 : 0;
+        
+        let statusText = 'Active';
+        let statusColor = '#4caf50';
+        if (used >= total) {
+            statusText = 'Habis';
+            statusColor = '#f44336';
+        } else if (remaining <= 2) {
+            statusText = `Sisa ${remaining}`;
+            statusColor = '#ff9800';
         }
 
-        function renderVIPDuration(container, vip) {
-        console.log('🎯 renderVIPDuration dipanggil dengan data:', vip);
-    
-        // Pastikan expiryDate ada
+        container.innerHTML = `
+            <div class="vip-counter-card">
+                <div class="vip-counter-header">
+                    <div class="vip-counter-title">
+                        <i class="fas fa-chart-line"></i> VIP QUOTA
+                    </div>
+                    <div class="vip-counter-badge quota">${total} UPDATES</div>
+                </div>
+                <div class="vip-counter-progress">
+                    <div class="progress-label">
+                        <span><i class="fas fa-download"></i> Penggunaan Update</span>
+                        <span>${used}/${total} (${percent.toFixed(1)}%)</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill quota" style="width: ${percent}%;"></div>
+                    </div>
+                </div>
+                <div class="vip-stats-grid">
+                    <div class="vip-stat-item"><div class="vip-stat-value">${used}</div><div class="vip-stat-label">Digunakan</div></div>
+                    <div class="vip-stat-item"><div class="vip-stat-value">${total}</div><div class="vip-stat-label">Total Quota</div></div>
+                    <div class="vip-stat-item"><div class="vip-stat-value">${remaining}</div><div class="vip-stat-label">Sisa</div></div>
+                </div>
+                ${used >= total ? `<div class="vip-danger" style="display: flex;"><i class="fas fa-times-circle"></i> Quota update telah habis! Silakan perpanjang VIP.</div>` : remaining <= 2 ? `<div class="vip-warning" style="display: flex;"><i class="fas fa-exclamation-triangle"></i> Sisa ${remaining} update lagi! Segera perpanjang.</div>` : ''}
+            </div>
+        `;
+    }
+
+    function renderVIPDuration(container, vip) {
         let expiryDate;
         if (vip.expiryDate) {
             expiryDate = new Date(vip.expiryDate);
@@ -2804,16 +3152,13 @@
             const purchaseDate = vip.purchaseDate ? new Date(vip.purchaseDate) : new Date();
             expiryDate = new Date(purchaseDate);
             expiryDate.setMonth(expiryDate.getMonth() + vip.packageMonths);
-    } else {
-            console.log('❌ Tidak ada expiryDate');
+        } else {
             container.innerHTML = `<div class="vip-counter-card"><div style="padding:20px; text-align:center;">Data VIP tidak lengkap</div></div>`;
             return;
         }
     
         const now = new Date();
         let remainingMs = expiryDate - now;
-    
-        console.log('📅 Expiry:', expiryDate, 'Remaining MS:', remainingMs);
     
         if (remainingMs <= 0) {
             container.innerHTML = `
@@ -2834,15 +3179,11 @@
         const elapsedDays = totalDays - remainingDays;
         const percent = totalDays > 0 ? (elapsedDays / totalDays) * 100 : 0;
     
-        console.log('📊 Total Days:', totalDays, 'Remaining Days:', remainingDays, 'Percent:', percent);
-    
-        // Hentikan interval lama
         if (window.vipCountdownInterval) {
             clearInterval(window.vipCountdownInterval);
             window.vipCountdownInterval = null;
         }
     
-        // Buat HTML dulu
         container.innerHTML = `
             <div class="vip-counter-card">
                 <div class="vip-counter-header">
@@ -2876,7 +3217,6 @@
             </div>
         `;
     
-        // Fungsi update countdown
         function updateCountdown() {
             const nowTime = new Date();
             const diff = expiryDate - nowTime;
@@ -2902,7 +3242,6 @@
                 `;
             }
         
-            // Update sisa hari
             const remainingDaysEl = document.getElementById('remainingDaysValue');
             if (remainingDaysEl) remainingDaysEl.innerText = days;
         
@@ -2924,7 +3263,6 @@
         updateCountdown();
     }
 
-    // RENDER VIP PERMANENT
     function renderVIPPermanent(container) {
         container.innerHTML = `
             <div class="vip-counter-card">
@@ -2934,7 +3272,6 @@
                     </div>
                     <div class="vip-counter-badge permanent">LIFETIME</div>
                 </div>
-            
                 <div class="permanent-badge-large">
                     <div class="permanent-icon">
                         <i class="fas fa-crown"></i>
@@ -2942,7 +3279,6 @@
                     <div class="permanent-text">PERMANENT</div>
                     <div class="permanent-subtext">Akses seumur hidup - Unlimited updates</div>
                 </div>
-            
                 <div class="vip-stats-grid">
                     <div class="vip-stat-item">
                         <div class="vip-stat-value">∞</div>
@@ -2960,17 +3296,18 @@
             </div>
         `;
     }
+
     function buyVIP() { navigateWithLoading('dashboard'); document.getElementById('premiumPackagesCard').scrollIntoView({ behavior: 'smooth' }); }
     async function buyVIPPackage() {
         if (!selectedPackage) {
-            showNeonModal('Error', 'Pilih paket dulu!', true);
+            showNeonModal('Error', 'Pilih paket dulu!', 'error');
             return;
         }
     
         const priceToPay = selectedPackage.finalPrice || selectedPackage.price;
     
         if (currentSaldo < priceToPay) {
-            showNeonModal('Saldo Tidak Cukup', `Saldo: Rp ${formatRupiah(currentSaldo)}\nRequired: Rp ${formatRupiah(priceToPay)}`, true);
+            showNeonModal('Saldo Tidak Cukup', `Saldo: Rp ${formatRupiah(currentSaldo)}\nRequired: Rp ${formatRupiah(priceToPay)}`, 'error');
             showDepositPopup();
             return;
         }
@@ -2999,10 +3336,10 @@
             });
         
             hideLoading();
-            showNeonModal('Success', 'Request sent! Menunggu persetujuan admin.', false);
+            showNeonModal('Success', 'Request sent! Menunggu persetujuan admin.', 'success');
         } catch(error) {
             hideLoading();
-            showNeonModal('Error', error.message, true);
+            showNeonModal('Error', error.message, 'error');
         }
     }
 
@@ -3041,25 +3378,7 @@
                     await database.ref('all_comments').push({ uid: currentUID, text: `📎 Sent image: ${file.name}`, fileUrl: url, fileName: file.name, fileType: file.type, timestamp: Date.now() });
                     hideLoading();
                     showNeonToast('Image sent!');
-                } catch(err) { hideLoading(); showNeonModal('Error', err.message, true); }
-            }
-        };
-        input.click();
-    });
-    document.getElementById('chatUploadBtn')?.addEventListener('click', () => {
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.accept = 'image/*';
-        input.onchange = async (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                showLoading();
-                try {
-                    const url = await uploadToImgbb(file);
-                    await database.ref('chats/' + currentUID).push({ sender: 'customer', text: `📎 Sent image: ${file.name}`, fileUrl: url, fileName: file.name, fileType: file.type, timestamp: Date.now() });
-                    hideLoading();
-                    showNeonToast('Image sent to admin!');
-                } catch(err) { hideLoading(); showNeonModal('Error', err.message, true); }
+                } catch(err) { hideLoading(); showNeonModal('Error', err.message, 'error'); }
             }
         };
         input.click();
@@ -3079,7 +3398,6 @@
         let content = m.sender ? `<div class="message-sender">${m.sender === 'customer' ? '👤 You' : m.sender === 'admin' ? '👑 Admin' : '📢 System'}</div>` : '';
         content += `<div>${escapeHtml(m.text || '')}</div>`;
     
-        // TAMPILKAN FILE DENGAN TOMBOL DOWNLOAD
         if (m.fileData && m.fileData.url) {
             const isImage = m.fileData.type && m.fileData.type.startsWith('image/');
             if (isImage) {
@@ -3125,73 +3443,6 @@
     function openChatAdmin() { navigateWithLoading('chat'); }
     
     // ==================== CHAT FILE UPLOAD ====================
-    function setupChatFileUpload() {
-        const uploadBtn = document.getElementById('chatUploadBtnAdmin');
-        if (!uploadBtn) return;
-    
-        uploadBtn.addEventListener('click', () => {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = 'image/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain';
-            input.onchange = async (e) => {
-                const file = e.target.files[0];
-                if (!file) return;
-                if (!currentChatUser) {
-                    showToast('Pilih customer terlebih dahulu!');
-                    return;
-                }
-            
-                showLoading();
-                try {
-                    // Upload ke Imgbb
-                    const fileUrl = await uploadToImgbb(file);
-                    const fileSize = formatFileSize(file.size);
-                
-                    // Kirim pesan dengan file
-                    await db.ref('chats/' + currentChatUser).push({
-                        sender: 'admin',
-                        text: `📎 Mengirim file: ${file.name}`,
-                        fileData: {
-                            name: file.name,
-                            url: fileUrl,
-                            size: file.size,
-                            sizeFormatted: fileSize,
-                            type: file.type,
-                            timestamp: Date.now()
-                        },
-                        timestamp: Date.now()
-                    });
-                
-                    hideLoading();
-                    showToast('File terkirim!');
-                } catch (error) {
-                    hideLoading();
-                    showToast('Gagal upload: ' + error.message);
-                }
-            };
-            input.click();
-        });
-    }
-
-    function formatFileSize(bytes) {
-        if (bytes === 0) return '0 Bytes';
-        const k = 1024;
-        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-        const i = Math.floor(Math.log(bytes) / Math.log(k));
-        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-    }
-
-    // Fungsi untuk mendownload file
-    function downloadFile(url, filename) {
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = filename;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    }
-    
-    // ==================== CHAT FILE UPLOAD ====================
     function formatFileSize(bytes) {
         if (bytes === 0) return '0 Bytes';
         const k = 1024;
@@ -3213,13 +3464,12 @@
         const uploadBtn = document.getElementById('chatUploadBtnUser');
         if (!uploadBtn) return;
     
-        // Hapus event listener lama
         const newBtn = uploadBtn.cloneNode(true);
         uploadBtn.parentNode.replaceChild(newBtn, uploadBtn);
     
         newBtn.addEventListener('click', () => {
             if (!currentUID) {
-                showNeonModal('Error', 'Anda belum login!', true);
+                showNeonModal('Error', 'Anda belum login!', 'error');
                 return;
             }
         
@@ -3253,7 +3503,7 @@
                     showNeonToast('File terkirim!');
                 } catch (error) {
                     hideLoading();
-                    showNeonModal('Error', 'Gagal upload: ' + error.message, true);
+                    showNeonModal('Error', 'Gagal upload: ' + error.message, 'error');
                 }
             };
             input.click();
@@ -3371,7 +3621,6 @@
             } else {
                 globalDiscount = { active: false, percentage: 0, minPurchase: 0 };
             }
-            // Refresh tampilan paket
             renderPackages();
         } catch (error) {
             console.error('Error loading discount:', error);
@@ -3392,7 +3641,6 @@
             let finalPrice = originalPrice;
             let discountText = '';
         
-            // Terapkan diskon jika aktif
             if (globalDiscount.active && (globalDiscount.minPurchase === 0 || originalPrice >= globalDiscount.minPurchase)) {
                 finalPrice = originalPrice - (originalPrice * globalDiscount.percentage / 100);
                 discountText = `<div style="font-size: 11px; color: #00ff88; margin-top: 5px;">
@@ -3425,12 +3673,10 @@
         document.getElementById('summaryPrice').textContent = 'Rp ' + formatRupiah(finalPrice);
         document.getElementById('summaryTotal').textContent = 'Rp ' + formatRupiah(finalPrice);
     
-        // Simpan harga final ke selectedPackage
         selectedPackage.finalPrice = finalPrice;
     }
 
-    // ==================== REALTIME LISTENERS ====================
-    // Tambahkan di dalam fungsi setupRealtimeListeners()
+    // ==================== REALTIME LISTENERS (TERMASUK DETEKSI BAN & FORCE LOGOUT) ====================
     function setupRealtimeListeners() {
         if(!currentUID) return;
     
@@ -3442,7 +3688,7 @@
             } 
         });
     
-        // Listener VIP status (sudah ada)
+        // Listener VIP status
         database.ref('vip_members/' + currentUID).on('value', () => { 
             loadVIPStatus(); 
         });
@@ -3456,49 +3702,45 @@
         database.ref('purchases/' + currentUID).on('child_added', () => { 
             loadPurchaseHistory(); 
         });
-        
-        // ========== TAMBAHKAN KODE INI UNTUK DETEKSI BAN & FORCE LOGOUT ==========
     
-        // 1. DETEKSI SESSION DIHAPUS (FORCE LOGOUT OLEH ADMIN)
+        // ========== DETEKSI SESSION DIHAPUS (FORCE LOGOUT OLEH ADMIN) ==========
         database.ref('sessions/' + currentUID).on('value', (snap) => {
             const session = snap.val();
-            if (!session) {
+            if (!session && currentUID) {
                 // Session dihapus oleh admin (force logout)
-                showNeonModal('Force Logout', 'Anda telah di-logout paksa oleh admin. Silakan login kembali.', false);
-                setTimeout(() => {
-                    logout();
-                }, 3000);
-            }
-        });
-
-        // 2. DETEKSI AKUN DI BAN OLEH ADMIN
-        database.ref('banned_users/' + currentUID).on('value', (snap) => {
-            if (snap.exists() && snap.val().status === 'banned') {
-                showNeonModal('Akun Diblokir', 'Akun Anda telah diblokir oleh admin. Hubungi admin untuk info lebih lanjut.', true);
-                setTimeout(() => {
-                    logout();
-                }, 3000);
-            }
-        });
-
-        // 3. DETEKSI MULTI-IP (jika admin mengaktifkan alert)
-        database.ref('admin_config/multi_ip_alerts/' + currentUID).on('value', (snap) => {
-            if (snap.exists()) {
-                const alert = snap.val();
-                showNeonModal('Peringatan Keamanan', `⚠️ Akun Anda terdeteksi login dari ${alert.ips?.length || 0} IP berbeda.\nAkses dibatasi demi keamanan.\nHubungi admin jika ini bukan Anda.`, true);
+                forceLogoutCount++;
+                if (forceLogoutCount <= 3) {
+                    showForceLogoutModal('⚠️ AKUN ANDA SEMENTARA KAMI TANGGUHKAN ⚠️\n\nAkun Anda sementara kami tangguhkan karena ada aktivitas mencurigakan.\nHarap bersabar dan hubungi admin untuk informasi lebih lanjut.\n\nAnda akan diarahkan ke halaman login.', 5);
+                } else {
+                    showForceLogoutModal('⚠️ AKUN ANDA DIBLOKIR SEMENTARA ⚠️\n\nTerjadi aktivitas mencurigakan berulang kali.\nAkun Anda akan diblokir sementara.\nHubungi admin untuk informasi lebih lanjut.', 5);
+                }
             }
         });
     
-        // === TAMBAHKAN LISTENER UNTUK UPDATE QUOTA (REALTIME) ===
+        // ========== DETEKSI AKUN DI BAN OLEH ADMIN (REAL-TIME) ==========
+        database.ref('banned_users/' + currentUID).on('value', (snap) => {
+            if (snap.exists() && snap.val().status === 'banned' && currentUID) {
+                forceLogoutCount = 0;
+                showForceLogoutModal('⚠️ AKUN ANDA DIBLOKIR ⚠️\n\nAkun Anda telah diblokir oleh admin karena melanggar aturan.\nHubungi admin untuk informasi lebih lanjut.\n\nAnda akan diarahkan ke halaman login.', 5);
+            }
+        });
+    
+        // ========== DETEKSI MULTI-IP (jika admin mengaktifkan alert) ==========
+        database.ref('admin_config/multi_ip_alerts/' + currentUID).on('value', (snap) => {
+            if (snap.exists() && currentUID) {
+                const alert = snap.val();
+                showNeonModal('Peringatan Keamanan', `⚠️ Akun Anda terdeteksi login dari ${alert.ips?.length || 0} IP berbeda.\nAkses dibatasi demi keamanan.\nHubungi admin jika ini bukan Anda.`, 'warning');
+            }
+        });
+    
+        // ========== UPDATE QUOTA REAL-TIME ==========
         database.ref('vip_members/' + currentUID).on('value', (snap) => {
             const vip = snap.val();
             if (vip && vip.status === 'active' && vip.updateType === 'quota') {
-                // Update progress bar jika ada perubahan quota
                 const used = vip.updatesUsed || 0;
                 const total = vip.updateQuota || 0;
                 const percent = total > 0 ? (used / total) * 100 : 0;
             
-                // Update tampilan jika ada
                 const progressFill = document.querySelector('#vipCounterCard .progress-bar-fill.quota');
                 const percentText = document.querySelector('#vipCounterCard .progress-label span:last-child');
             
@@ -3509,7 +3751,6 @@
                     percentText.innerHTML = `${used}/${total} (${percent.toFixed(1)}%)`;
                 }
             
-                // Update stat numbers
                 const usedEl = document.querySelector('#vipCounterCard .vip-stat-item:first-child .vip-stat-value');
                 const totalEl = document.querySelector('#vipCounterCard .vip-stat-item:nth-child(2) .vip-stat-value');
                 const remainingEl = document.querySelector('#vipCounterCard .vip-stat-item:last-child .vip-stat-value');
@@ -3539,7 +3780,7 @@
                     await database.ref('profiles/' + currentUID).set({ image: url, timestamp: Date.now() });
                     hideLoading();
                     showNeonToast('Profile updated!');
-                } catch(err) { hideLoading(); showNeonModal('Error', err.message, true); }
+                } catch(err) { hideLoading(); showNeonModal('Error', err.message, 'error'); }
             }
         };
         input.click();
@@ -3548,17 +3789,26 @@
     // ==================== COPY UID & LOGOUT ====================
     function copyUID() { navigator.clipboard.writeText(currentUID); showNeonToast('UID copied!'); }
     function logout() {
-        if(confirm('Logout?')) {
+        showConfirm('Logout', 'Apakah Anda yakin ingin logout?', () => {
             showLoading();
             if(currentUID) database.ref('users/' + currentUID + '/status').set('offline');
+            if(currentUID) database.ref('sessions/' + currentUID).remove();
             localStorage.removeItem('vip_files_uid'); localStorage.removeItem('vip_uid');
             currentUID = '';
             document.getElementById('mainLayout').style.display = 'none';
             document.getElementById('loginWrapper').classList.remove('hide');
             clearLoginPin(); clearRegisterPin();
             hideLoading();
+            showNeonToast('Logged out successfully!');
+        });
+    }
+    
+    function showConfirm(title, message, callback) {
+        if (confirm(title + '\n\n' + message)) {
+            callback();
         }
     }
+    
     function showMyIP() { console.log('IP hidden'); }
 
     // ==================== FEATURES ====================
@@ -3572,19 +3822,13 @@
         loadAdminConfig();
         loadBackgroundVideo();
         checkMaintenance();
-        setupChatFileUpload();
         setupUserChatFileUpload();
         await loadGlobalDiscount();
         setInterval(checkMaintenance, 30000);
         const savedUID = localStorage.getItem('vip_uid');
         if(savedUID) document.getElementById('loginUID').value = savedUID;
-        const savedProfile = localStorage.getItem('vip_files_profile');
-        if(savedProfile) {
-            document.getElementById('profileImage').src = savedProfile;
-            document.getElementById('profileImageAccount').src = savedProfile;
-        }
         monitorAdminStatus();
-        console.log('User panel initialized - V1.0.0');
+        console.log('User panel initialized - V1.0.0 with Real-Time Force Logout & Ban Detection');
     }
     init();
 </script>
