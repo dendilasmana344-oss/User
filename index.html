@@ -2794,41 +2794,35 @@
         }
 
         function renderVIPDuration(container, vip) {
+        console.log('🎯 renderVIPDuration dipanggil dengan data:', vip);
+    
         // Pastikan expiryDate ada
         let expiryDate;
         if (vip.expiryDate) {
             expiryDate = new Date(vip.expiryDate);
         } else if (vip.packageMonths && vip.packageMonths > 0) {
-            // Buat expiryDate dari purchaseDate + packageMonths
             const purchaseDate = vip.purchaseDate ? new Date(vip.purchaseDate) : new Date();
             expiryDate = new Date(purchaseDate);
             expiryDate.setMonth(expiryDate.getMonth() + vip.packageMonths);
-            // Simpan ke Firebase untuk下次
-            database.ref('vip_members/' + currentUID).update({
-                expiryDate: expiryDate.toISOString(),
-                updateType: 'unlimited'
-            }).catch(e => console.log('Update expiryDate error:', e));
-        } else {
-            // Jika tidak ada data, tampilkan fallback
-            renderVIPBasic(container, vip);
+    } else {
+            console.log('❌ Tidak ada expiryDate');
+            container.innerHTML = `<div class="vip-counter-card"><div style="padding:20px; text-align:center;">Data VIP tidak lengkap</div></div>`;
             return;
         }
     
         const now = new Date();
         let remainingMs = expiryDate - now;
     
+        console.log('📅 Expiry:', expiryDate, 'Remaining MS:', remainingMs);
+    
         if (remainingMs <= 0) {
             container.innerHTML = `
                 <div class="vip-counter-card">
                     <div class="vip-counter-header">
-                        <div class="vip-counter-title">
-                            <i class="fas fa-calendar-alt"></i> VIP DURATION
-                        </div>
+                        <div class="vip-counter-title"><i class="fas fa-calendar-alt"></i> VIP DURATION</div>
                         <div class="vip-counter-badge duration">EXPIRED</div>
                     </div>
-                    <div class="vip-danger" style="display: flex;">
-                        <i class="fas fa-times-circle"></i> Masa aktif telah berakhir! Silakan perpanjang VIP.
-                    </div>
+                    <div class="vip-danger" style="display: flex;"><i class="fas fa-times-circle"></i> Masa aktif telah berakhir!</div>
                 </div>
             `;
             return;
@@ -2840,18 +2834,55 @@
         const elapsedDays = totalDays - remainingDays;
         const percent = totalDays > 0 ? (elapsedDays / totalDays) * 100 : 0;
     
-        // Hentikan interval lama jika ada
-        if (vipCountdownInterval) {
-            clearInterval(vipCountdownInterval);
-            vipCountdownInterval = null;
+        console.log('📊 Total Days:', totalDays, 'Remaining Days:', remainingDays, 'Percent:', percent);
+    
+        // Hentikan interval lama
+        if (window.vipCountdownInterval) {
+            clearInterval(window.vipCountdownInterval);
+            window.vipCountdownInterval = null;
         }
     
+        // Buat HTML dulu
+        container.innerHTML = `
+            <div class="vip-counter-card">
+                <div class="vip-counter-header">
+                    <div class="vip-counter-title"><i class="fas fa-calendar-alt"></i> VIP DURATION</div>
+                    <div class="vip-counter-badge duration">${packageMonths} BULAN</div>
+                </div>
+                <div class="vip-counter-progress">
+                    <div class="progress-label">
+                        <span><i class="fas fa-hourglass-half"></i> Masa Aktif</span>
+                        <span id="progressLabelText">${elapsedDays}/${totalDays} hari (${percent.toFixed(1)}%)</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill duration" id="durationProgressFill" style="width: ${percent}%;"></div>
+                    </div>
+                </div>
+                <div class="vip-stats-grid">
+                    <div class="vip-stat-item"><div class="vip-stat-value">${packageMonths}</div><div class="vip-stat-label">Bulan</div></div>
+                    <div class="vip-stat-item"><div class="vip-stat-value" id="remainingDaysValue">${remainingDays}</div><div class="vip-stat-label">Sisa Hari</div></div>
+                    <div class="vip-stat-item"><div class="vip-stat-value" id="remainingPercentValue">${Math.ceil((remainingDays / totalDays) * 100)}%</div><div class="vip-stat-label">Sisa Persen</div></div>
+                </div>
+                <div class="countdown-timer">
+                    <div class="countdown-title"><i class="fas fa-clock"></i> Waktu Berakhir</div>
+                    <div class="countdown-display" id="vipCountdownDisplay">
+                        <div class="countdown-box"><div class="countdown-number">--</div><div class="countdown-label">Hari</div></div>
+                        <div class="countdown-box"><div class="countdown-number">--</div><div class="countdown-label">Jam</div></div>
+                        <div class="countdown-box"><div class="countdown-number">--</div><div class="countdown-label">Menit</div></div>
+                        <div class="countdown-box"><div class="countdown-number">--</div><div class="countdown-label">Detik</div></div>
+                    </div>
+                </div>
+                ${remainingDays <= 7 ? `<div class="vip-warning" style="display: flex;"><i class="fas fa-exclamation-triangle"></i> Sisa ${remainingDays} hari lagi! Segera perpanjang.</div>` : ''}
+            </div>
+        `;
+    
+        // Fungsi update countdown
         function updateCountdown() {
             const nowTime = new Date();
             const diff = expiryDate - nowTime;
         
             if (diff <= 0) {
-                if (vipCountdownInterval) clearInterval(vipCountdownInterval);
+                if (window.vipCountdownInterval) clearInterval(window.vipCountdownInterval);
                 loadVIPStatus();
                 return;
             }
@@ -2864,92 +2895,32 @@
             const countdownEl = document.getElementById('vipCountdownDisplay');
             if (countdownEl) {
                 countdownEl.innerHTML = `
-                    <div class="countdown-box">
-                        <div class="countdown-number">${days.toString().padStart(2, '0')}</div>
-                        <div class="countdown-label">Hari</div>
-                    </div>
-                    <div class="countdown-box">
-                        <div class="countdown-number">${hours.toString().padStart(2, '0')}</div>
-                        <div class="countdown-label">Jam</div>
-                    </div>
-                    <div class="countdown-box">
-                        <div class="countdown-number">${minutes.toString().padStart(2, '0')}</div>
-                        <div class="countdown-label">Menit</div>
-                    </div>
-                    <div class="countdown-box">
-                        <div class="countdown-number">${seconds.toString().padStart(2, '0')}</div>
-                        <div class="countdown-label">Detik</div>
-                    </div>
+                    <div class="countdown-box"><div class="countdown-number">${days.toString().padStart(2, '0')}</div><div class="countdown-label">Hari</div></div>
+                    <div class="countdown-box"><div class="countdown-number">${hours.toString().padStart(2, '0')}</div><div class="countdown-label">Jam</div></div>
+                    <div class="countdown-box"><div class="countdown-number">${minutes.toString().padStart(2, '0')}</div><div class="countdown-label">Menit</div></div>
+                    <div class="countdown-box"><div class="countdown-number">${seconds.toString().padStart(2, '0')}</div><div class="countdown-label">Detik</div></div>
                 `;
             }
+        
+            // Update sisa hari
+            const remainingDaysEl = document.getElementById('remainingDaysValue');
+            if (remainingDaysEl) remainingDaysEl.innerText = days;
+        
+            const newRemainingDays = days;
+            const newPercent = Math.ceil((newRemainingDays / totalDays) * 100);
+            const remainingPercentEl = document.getElementById('remainingPercentValue');
+            if (remainingPercentEl) remainingPercentEl.innerText = newPercent + '%';
+        
+            const elapsedDaysNew = totalDays - newRemainingDays;
+            const newPercentFill = totalDays > 0 ? (elapsedDaysNew / totalDays) * 100 : 0;
+            const progressFill = document.getElementById('durationProgressFill');
+            if (progressFill) progressFill.style.width = newPercentFill + '%';
+        
+            const progressLabel = document.getElementById('progressLabelText');
+            if (progressLabel) progressLabel.innerText = `${elapsedDaysNew}/${totalDays} hari (${newPercentFill.toFixed(1)}%)`;
         }
     
-        vipCountdownInterval = setInterval(updateCountdown, 1000);
-    
-        const warningHtml = remainingDays <= 7 ? `<div class="vip-warning" style="display: flex;"><i class="fas fa-exclamation-triangle"></i> Sisa ${remainingDays} hari lagi! Segera perpanjang VIP.</div>` : '';
-    
-        container.innerHTML = `
-            <div class="vip-counter-card">
-                <div class="vip-counter-header">
-                    <div class="vip-counter-title">
-                        <i class="fas fa-calendar-alt"></i> VIP DURATION
-                    </div>
-                    <div class="vip-counter-badge duration">${packageMonths} BULAN</div>
-                </div>
-            
-                <div class="vip-counter-progress">
-                    <div class="progress-label">
-                        <span><i class="fas fa-hourglass-half"></i> Masa Aktif</span>
-                        <span>${elapsedDays}/${totalDays} hari (${percent.toFixed(1)}%)</span>
-                    </div>
-                    <div class="progress-bar-bg">
-                        <div class="progress-bar-fill duration" style="width: ${percent}%;"></div>
-                    </div>
-                </div>
-            
-                <div class="vip-stats-grid">
-                    <div class="vip-stat-item">
-                        <div class="vip-stat-value">${packageMonths}</div>
-                        <div class="vip-stat-label">Bulan</div>
-                    </div>
-                    <div class="vip-stat-item">
-                        <div class="vip-stat-value">${remainingDays}</div>
-                        <div class="vip-stat-label">Sisa Hari</div>
-                    </div>
-                    <div class="vip-stat-item">
-                        <div class="vip-stat-value" id="vipRemainingPercent">${Math.ceil((remainingDays / totalDays) * 100)}%</div>
-                        <div class="vip-stat-label">Sisa Persen</div>
-                    </div>
-                </div>
-            
-                <div class="countdown-timer">
-                    <div class="countdown-title">
-                        <i class="fas fa-clock"></i> Waktu Berakhir
-                    </div>
-                    <div class="countdown-display" id="vipCountdownDisplay">
-                        <div class="countdown-box">
-                            <div class="countdown-number">--</div>
-                            <div class="countdown-label">Hari</div>
-                        </div>
-                        <div class="countdown-box">
-                            <div class="countdown-number">--</div>
-                            <div class="countdown-label">Jam</div>
-                        </div>
-                        <div class="countdown-box">
-                            <div class="countdown-number">--</div>
-                            <div class="countdown-label">Menit</div>
-                        </div>
-                        <div class="countdown-box">
-                            <div class="countdown-number">--</div>
-                            <div class="countdown-label">Detik</div>
-                        </div>
-                    </div>
-                </div>
-            
-                ${warningHtml}
-            </div>
-        `;
-    
+        window.vipCountdownInterval = setInterval(updateCountdown, 1000);
         updateCountdown();
     }
 
