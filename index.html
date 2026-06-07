@@ -1606,6 +1606,74 @@
             font-size: 14px;
             outline: none;
         }
+        
+        chat-upload-btn {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--neon-cyan), #0088ff);
+            border: none;
+            border-radius: 50%;
+            color: #000;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            font-size: 20px;
+        }
+
+        .chat-upload-btn:hover {
+            transform: scale(1.1) rotate(15deg);
+            box-shadow: 0 0 15px var(--neon-cyan);
+        }
+
+        .file-preview-item {
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 12px;
+            padding: 10px;
+            margin-top: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid var(--neon-cyan);
+        }
+
+        .file-preview-item img {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .file-preview-item .file-info {
+            flex: 1;
+            font-size: 12px;
+        }
+
+        .file-preview-item .file-name {
+            color: var(--neon-cyan);
+            font-weight: bold;
+        }
+
+        .file-preview-item .file-size {
+            color: #aaa;
+            font-size: 10px;
+        }
+
+        .file-download-btn {
+            background: none;
+            border: none;
+            color: #00ff88;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 5px;
+            transition: all 0.3s;
+        }
+
+        .file-download-btn:hover {
+            transform: scale(1.2);
+            color: #00ffff;
+        }
 
         .upload-btn, .send-btn {
             width: 48px;
@@ -2153,6 +2221,11 @@
                         <input type="text" class="chat-input" id="chatInputFull" placeholder="Type message for admin...">
                         <button class="upload-btn" id="chatUploadBtn"><i class="fas fa-paperclip"></i></button>
                         <button class="send-btn" onclick="sendMessageFull()"><i class="fas fa-paper-plane"></i></button>
+                        <div class="chat-input-row">
+                        <button class="upload-btn" id="chatUploadBtnUser"><i class="fas fa-paperclip"></i></button>
+                        <input type="text" class="chat-input" id="chatInputFull" placeholder="Type message for admin...">
+                        <button class="send-btn" onclick="sendMessageFull()"><i class="fas fa-paper-plane"></i></button>
+                    </div>
                     </div>
                 </div>
             </div>
@@ -3027,16 +3100,51 @@
 
     function setupChatListener() { database.ref('chats/' + currentUID).limitToLast(50).on('child_added', s => displayChatMessage(s.val())); }
     function displayChatMessage(m) {
-        const box = document.getElementById('chatMessagesFull');
+        const box = document.getElementById('chatMessages');
+        if (!box) return;
+    
         const div = document.createElement('div');
         let cls = 'system';
         if (m.sender === 'customer') cls = 'customer';
         else if (m.sender === 'admin') cls = 'admin';
         div.className = `message ${cls}`;
-        let content = m.sender ? `<div class="message-sender">${m.sender === 'customer' ? '👤 You' : m.sender === 'admin' ? '👑 Admin' : '📢 System'}</div>` : '';
-        content += escapeHtml(m.text || '');
-        if (m.fileUrl) content += `<div><img src="${m.fileUrl}" style="max-width:150px; border-radius:10px; cursor:pointer;" onclick="window.open('${m.fileUrl}')"></div>`;
-        content += `<div class="message-time">${m.timestamp ? new Date(m.timestamp).toLocaleTimeString() : '-'}</div>`;
+    
+        let content = m.sender ? `<div class="message-sender">${m.sender === 'customer' ? '👤 Customer' : m.sender === 'admin' ? '👑 Admin' : '📢 System'}</div>` : '';
+        content += `<div>${escapeHtml(m.text || '')}</div>`;
+    
+        // TAMPILKAN FILE DENGAN TOMBOL DOWNLOAD
+        if (m.fileData && m.fileData.url) {
+            const isImage = m.fileData.type && m.fileData.type.startsWith('image/');
+            if (isImage) {
+                content += `
+                    <div class="file-preview-item" style="margin-top: 10px;">
+                        <img src="${m.fileData.url}" onclick="window.open('${m.fileData.url}')" style="cursor: pointer; width: 60px; height: 60px; object-fit: cover; border-radius: 10px;">
+                        <div class="file-info">
+                            <div class="file-name">${escapeHtml(m.fileData.name || 'Image')}</div>
+                            <div class="file-size">${m.fileData.sizeFormatted || formatFileSize(m.fileData.size || 0)}</div>
+                        </div>
+                        <button class="file-download-btn" onclick="downloadFile('${m.fileData.url}', '${escapeHtml(m.fileData.name || 'file')}')">
+                            <i class="fas fa-download"></i>
+                        </button>
+                    </div>
+                `;
+            } else {
+                content += `
+                    <div class="file-preview-item" style="margin-top: 10px;">
+                        <i class="fas fa-file" style="font-size: 30px; color: #ffaa00;"></i>
+                        <div class="file-info">
+                            <div class="file-name">${escapeHtml(m.fileData.name || 'File')}</div>
+                            <div class="file-size">${m.fileData.sizeFormatted || formatFileSize(m.fileData.size || 0)}</div>
+                        </div>
+                        <button class="file-download-btn" onclick="downloadFile('${m.fileData.url}', '${escapeHtml(m.fileData.name || 'file')}')">
+                            <i class="fas fa-download"></i>
+                        </button>
+                    </div>
+                `;
+            }
+        }
+    
+        content += `<div class="message-time">${m.timestamp ? new Date(m.timestamp).toLocaleString() : '-'}</div>`;
         div.innerHTML = content;
         box.appendChild(div);
         box.scrollTop = box.scrollHeight;
@@ -3048,6 +3156,73 @@
         document.getElementById('chatInputFull').value = '';
     }
     function openChatAdmin() { navigateWithLoading('chat'); }
+    
+    // ==================== CHAT FILE UPLOAD ====================
+    function setupChatFileUpload() {
+        const uploadBtn = document.getElementById('chatUploadBtnAdmin');
+        if (!uploadBtn) return;
+    
+        uploadBtn.addEventListener('click', () => {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain';
+            input.onchange = async (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                if (!currentChatUser) {
+                    showToast('Pilih customer terlebih dahulu!');
+                    return;
+                }
+            
+                showLoading();
+                try {
+                    // Upload ke Imgbb
+                    const fileUrl = await uploadToImgbb(file);
+                    const fileSize = formatFileSize(file.size);
+                
+                    // Kirim pesan dengan file
+                    await db.ref('chats/' + currentChatUser).push({
+                        sender: 'admin',
+                        text: `📎 Mengirim file: ${file.name}`,
+                        fileData: {
+                            name: file.name,
+                            url: fileUrl,
+                            size: file.size,
+                            sizeFormatted: fileSize,
+                            type: file.type,
+                            timestamp: Date.now()
+                        },
+                        timestamp: Date.now()
+                    });
+                
+                    hideLoading();
+                    showToast('File terkirim!');
+                } catch (error) {
+                    hideLoading();
+                    showToast('Gagal upload: ' + error.message);
+                }
+            };
+            input.click();
+        });
+    }
+
+    function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    // Fungsi untuk mendownload file
+    function downloadFile(url, filename) {
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
 
     // ==================== LEADERBOARD ====================
     async function loadLeaderboard() {
@@ -3329,6 +3504,7 @@
         loadAdminConfig();
         loadBackgroundVideo();
         checkMaintenance();
+        setupChatFileUpload();
         await loadGlobalDiscount();
         setInterval(checkMaintenance, 30000);
         const savedUID = localStorage.getItem('vip_uid');
