@@ -3096,7 +3096,7 @@
 
     function setupChatListener() { database.ref('chats/' + currentUID).limitToLast(50).on('child_added', s => displayChatMessage(s.val())); }
     function displayChatMessage(m) {
-        const box = document.getElementById('chatMessages');
+        const box = document.getElementById('chatMessagesFull');
         if (!box) return;
     
         const div = document.createElement('div');
@@ -3105,7 +3105,7 @@
         else if (m.sender === 'admin') cls = 'admin';
         div.className = `message ${cls}`;
     
-        let content = m.sender ? `<div class="message-sender">${m.sender === 'customer' ? '👤 Customer' : m.sender === 'admin' ? '👑 Admin' : '📢 System'}</div>` : '';
+        let content = m.sender ? `<div class="message-sender">${m.sender === 'customer' ? '👤 You' : m.sender === 'admin' ? '👑 Admin' : '📢 System'}</div>` : '';
         content += `<div>${escapeHtml(m.text || '')}</div>`;
     
         // TAMPILKAN FILE DENGAN TOMBOL DOWNLOAD
@@ -3114,7 +3114,7 @@
             if (isImage) {
                 content += `
                     <div class="file-preview-item" style="margin-top: 10px;">
-                        <img src="${m.fileData.url}" onclick="window.open('${m.fileData.url}')" style="cursor: pointer; width: 60px; height: 60px; object-fit: cover; border-radius: 10px;">
+                        <img src="${m.fileData.url}" onclick="window.open('${m.fileData.url}')" style="cursor: pointer; width: 50px; height: 50px; object-fit: cover; border-radius: 10px;">
                         <div class="file-info">
                             <div class="file-name">${escapeHtml(m.fileData.name || 'Image')}</div>
                             <div class="file-size">${m.fileData.sizeFormatted || formatFileSize(m.fileData.size || 0)}</div>
@@ -3218,6 +3218,75 @@
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+    }
+    
+    // ==================== CHAT FILE UPLOAD ====================
+    function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    function downloadFile(url, filename) {
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    function setupUserChatFileUpload() {
+        const uploadBtn = document.getElementById('chatUploadBtnUser');
+        if (!uploadBtn) return;
+    
+        // Hapus event listener lama
+        const newBtn = uploadBtn.cloneNode(true);
+        uploadBtn.parentNode.replaceChild(newBtn, uploadBtn);
+    
+        newBtn.addEventListener('click', () => {
+            if (!currentUID) {
+                showNeonModal('Error', 'Anda belum login!', true);
+                return;
+            }
+        
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain';
+            input.onchange = async (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+            
+                showLoading();
+                try {
+                    const fileUrl = await uploadToImgbb(file);
+                    const fileSize = formatFileSize(file.size);
+                
+                    await database.ref('chats/' + currentUID).push({
+                        sender: 'customer',
+                        text: `📎 Mengirim file: ${file.name}`,
+                        fileData: {
+                            name: file.name,
+                            url: fileUrl,
+                            size: file.size,
+                            sizeFormatted: fileSize,
+                            type: file.type,
+                            timestamp: Date.now()
+                        },
+                        timestamp: Date.now()
+                    });
+                
+                    hideLoading();
+                    showNeonToast('File terkirim!');
+                } catch (error) {
+                    hideLoading();
+                    showNeonModal('Error', 'Gagal upload: ' + error.message, true);
+                }
+            };
+            input.click();
+        });
     }
 
     // ==================== LEADERBOARD ====================
@@ -3501,6 +3570,7 @@
         loadBackgroundVideo();
         checkMaintenance();
         setupChatFileUpload();
+        setupUserChatFileUpload();
         await loadGlobalDiscount();
         setInterval(checkMaintenance, 30000);
         const savedUID = localStorage.getItem('vip_uid');
