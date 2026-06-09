@@ -3041,6 +3041,7 @@
 
     // ==================== DEPOSIT POPUP WITH PHOTO UPLOAD ====================
     function showDepositPopup() { 
+        // Reset form
         document.getElementById('depositNama').value = '';
         document.getElementById('depositNoEwallet').value = '';
         document.getElementById('depositJumlah').value = '';
@@ -3052,6 +3053,7 @@
         selectedProofPreview = null;
         document.getElementById('photoPreview').style.display = 'none';
         document.getElementById('photoName').innerHTML = '';
+        
         document.getElementById('depositPopup').classList.add('active'); 
     }
     function closeDepositPopup() { document.getElementById('depositPopup').classList.remove('active'); }
@@ -3069,6 +3071,7 @@
             document.getElementById('destinationRow').style.display = 'none';
         }
         
+        // Hanya untuk DANA yang perlu upload bukti photo
         if (method === 'DANA') {
             document.getElementById('uploadProofContainer').style.display = 'block';
             setupPhotoUpload();
@@ -3127,6 +3130,7 @@
         if (!selectedPaymentMethod) { showNeonModal('Error', 'Pilih metode pembayaran!', 'error'); return; }
         if (!jumlah || jumlah < 20000) { showNeonModal('Error', 'Minimal Rp 20.000!', 'error'); return; }
         
+        // Validasi untuk DANA harus ada photo
         if (selectedPaymentMethod === 'DANA' && !selectedProofFile) {
             showNeonModal('Error', 'Silakan upload bukti transfer untuk pembayaran DANA!', 'error');
             return;
@@ -3160,6 +3164,7 @@
             
             await database.ref('deposits/' + currentUID).push(depositData);
             
+            // Kirim ke chat private
             let chatText = `💰 DEPOSIT BARU\n\nNama: ${nama}\nE-Wallet: ${noEwallet}\nMetode: ${selectedPaymentMethod}\nJumlah: Rp ${formatRupiah(jumlah)}\nStatus: PENDING\n\nMohon menunggu konfirmasi admin.`;
             if (photoUrl) {
                 chatText += `\n\n📎 Bukti Transfer: ${photoUrl}`;
@@ -3392,6 +3397,7 @@
             </div>
         `;
         
+        // Kirim notifikasi jika quota mendekati habis
         if (remaining <= 2 && remaining > 0) {
             sendUserNotification('⚠️ Peringatan Quota', `Sisa ${remaining} update lagi! Segera perpanjang VIP.`, `quota_warning_${currentUID}`);
         } else if (used >= total) {
@@ -3499,719 +3505,635 @@
                     <div class="countdown-box"><div class="countdown-number">${hours.toString().padStart(2, '0')}</div><div class="countdown-label">Jam</div></div>
                     <div class="countdown-box"><div class="countdown-number">${minutes.toString().padStart(2, '0')}</div><div class="countdown-label">Menit</div></div>
                     <div class="countdown-box"><div class="countdown-number">${seconds.toString().padStart(2, '0')}</div><div class="countdown-label">Detik</div></div>
-                    `;
-                }
-            
-                const remainingDaysEl = document.getElementById('remainingDaysValue');
-                if (remainingDaysEl) remainingDaysEl.innerText = days;
-            
-                const newRemainingDays = days;
-                const newPercent = Math.ceil((newRemainingDays / totalDays) * 100);
-                const remainingPercentEl = document.getElementById('remainingPercentValue');
-                if (remainingPercentEl) remainingPercentEl.innerText = newPercent + '%';
-            
-                const elapsedDaysNew = totalDays - newRemainingDays;
-                const newPercentFill = totalDays > 0 ? (elapsedDaysNew / totalDays) * 100 : 0;
-                const progressFill = document.getElementById('durationProgressFill');
-                if (progressFill) progressFill.style.width = newPercentFill + '%';
-            
-                const progressLabel = document.getElementById('progressLabelText');
-                if (progressLabel) progressLabel.innerText = `${elapsedDaysNew}/${totalDays} hari (${newPercentFill.toFixed(1)}%)`;
+                `;
             }
         
-            window.vipCountdownInterval = setInterval(updateCountdown, 1000);
-            updateCountdown();
+            const remainingDaysEl = document.getElementById('remainingDaysValue');
+            if (remainingDaysEl) remainingDaysEl.innerText = days;
+        
+            const newRemainingDays = days;
+            const newPercent = Math.ceil((newRemainingDays / totalDays) * 100);
+            const remainingPercentEl = document.getElementById('remainingPercentValue');
+            if (remainingPercentEl) remainingPercentEl.innerText = newPercent + '%';
+        
+            const elapsedDaysNew = totalDays - newRemainingDays;
+            const newPercentFill = totalDays > 0 ? (elapsedDaysNew / totalDays) * 100 : 0;
+            const progressFill = document.getElementById('durationProgressFill');
+            if (progressFill) progressFill.style.width = newPercentFill + '%';
+        
+            const progressLabel = document.getElementById('progressLabelText');
+            if (progressLabel) progressLabel.innerText = `${elapsedDaysNew}/${totalDays} hari (${newPercentFill.toFixed(1)}%)`;
         }
+    
+        window.vipCountdownInterval = setInterval(updateCountdown, 1000);
+        updateCountdown();
+    }
 
-        function renderVIPPermanent(container) {
-            container.innerHTML = `
-                <div class="vip-counter-card">
-                    <div class="vip-counter-header">
-                        <div class="vip-counter-title">
-                            <i class="fas fa-infinity"></i> VIP PERMANENT
-                        </div>
-                        <div class="vip-counter-badge permanent">LIFETIME</div>
+    function renderVIPPermanent(container) {
+        container.innerHTML = `
+            <div class="vip-counter-card">
+                <div class="vip-counter-header">
+                    <div class="vip-counter-title">
+                        <i class="fas fa-infinity"></i> VIP PERMANENT
                     </div>
-                    <div class="permanent-badge-large">
-                        <div class="permanent-icon">
-                            <i class="fas fa-crown"></i>
-                        </div>
-                        <div class="permanent-text">PERMANENT</div>
-                        <div class="permanent-subtext">Akses seumur hidup - Unlimited updates</div>
+                    <div class="vip-counter-badge permanent">LIFETIME</div>
+                </div>
+                <div class="permanent-badge-large">
+                    <div class="permanent-icon">
+                        <i class="fas fa-crown"></i>
                     </div>
-                    <div class="vip-stats-grid">
-                        <div class="vip-stat-item">
-                            <div class="vip-stat-value">∞</div>
-                            <div class="vip-stat-label">Updates</div>
-                        </div>
-                        <div class="vip-stat-item">
-                            <div class="vip-stat-value">∞</div>
-                            <div class="vip-stat-label">Masa Aktif</div>
-                        </div>
-                        <div class="vip-stat-item">
-                            <div class="vip-stat-value"><i class="fas fa-check-circle" style="color: #00ff88;"></i></div>
-                            <div class="vip-stat-label">Status</div>
-                        </div>
+                    <div class="permanent-text">PERMANENT</div>
+                    <div class="permanent-subtext">Akses seumur hidup - Unlimited updates</div>
+                </div>
+                <div class="vip-stats-grid">
+                    <div class="vip-stat-item">
+                        <div class="vip-stat-value">∞</div>
+                        <div class="vip-stat-label">Updates</div>
+                    </div>
+                    <div class="vip-stat-item">
+                        <div class="vip-stat-value">∞</div>
+                        <div class="vip-stat-label">Masa Aktif</div>
+                    </div>
+                    <div class="vip-stat-item">
+                        <div class="vip-stat-value"><i class="fas fa-check-circle" style="color: #00ff88;"></i></div>
+                        <div class="vip-stat-label">Status</div>
                     </div>
                 </div>
-            `;
-        }
+            </div>
+        `;
+    }
 
-        function buyVIP() { navigateWithLoading('dashboard'); document.getElementById('premiumPackagesCard').scrollIntoView({ behavior: 'smooth' }); }
-        async function buyVIPPackage() {
-            if (!selectedPackage) {
-                showNeonModal('Error', 'Pilih paket dulu!', 'error');
+    function buyVIP() { navigateWithLoading('dashboard'); document.getElementById('premiumPackagesCard').scrollIntoView({ behavior: 'smooth' }); }
+    async function buyVIPPackage() {
+        if (!selectedPackage) {
+            showNeonModal('Error', 'Pilih paket dulu!', 'error');
+            return;
+        }
+    
+        const priceToPay = selectedPackage.finalPrice || selectedPackage.price;
+    
+        if (currentSaldo < priceToPay) {
+            showNeonModal('Saldo Tidak Cukup', `Saldo: Rp ${formatRupiah(currentSaldo)}\nRequired: Rp ${formatRupiah(priceToPay)}`, 'error');
+            showDepositPopup();
+            return;
+        }
+    
+        showLoading();
+        try {
+            await database.ref('saldo/' + currentUID).set({ amount: currentSaldo - priceToPay, last_updated: Date.now() });
+            currentSaldo -= priceToPay;
+            updateSaldoDisplay();
+        
+            await database.ref('purchases/' + currentUID).push({
+                uid: currentUID,
+                originalPrice: selectedPackage.price,
+                price: priceToPay,
+                discount: globalDiscount.active ? globalDiscount.percentage : 0,
+                package: selectedPackage.label,
+                packageType: selectedPackage.type,
+                status: 'pending',
+                timestamp: Date.now()
+            });
+        
+            await database.ref('chats/' + currentUID).push({
+                sender: 'system',
+                text: `✅ VIP Purchase Request Sent!\nPackage: ${selectedPackage.label}\nOriginal: Rp ${formatRupiah(selectedPackage.price)}\nFinal: Rp ${formatRupiah(priceToPay)}\nDiscount: ${globalDiscount.active ? globalDiscount.percentage + '%' : '0%'}`,
+                timestamp: Date.now()
+            });
+        
+            sendUserNotification('👑 VIP Purchase', `Request pembelian VIP ${selectedPackage.label} telah dikirim ke admin.`, `vip_purchase_${Date.now()}`);
+        
+            hideLoading();
+            showNeonModal('Success', 'Request sent! Menunggu persetujuan admin.', 'success');
+        } catch(error) {
+            hideLoading();
+            showNeonModal('Error', error.message, 'error');
+        }
+    }
+
+    // ==================== CHAT ====================
+    function loadAllComments() { database.ref('all_comments').limitToLast(50).on('child_added', s => displayAllComment(s.val())); }
+    function displayAllComment(c) {
+        const area = document.getElementById('allCommentsArea');
+        const div = document.createElement('div');
+        let cls = 'admin';
+        if (c.uid === currentUID) cls = 'customer';
+        else if (c.uid === 'ADMIN') cls = 'admin';
+        div.className = `message ${cls}`;
+        let content = `<b>${escapeHtml(c.uid)}:</b> ${escapeHtml(c.text || '')}`;
+        if (c.fileUrl) content += `<div><img src="${c.fileUrl}" style="max-width:150px; border-radius:10px; cursor:pointer;" onclick="window.open('${c.fileUrl}')"></div>`;
+        content += `<div class="message-time">${c.timestamp ? new Date(c.timestamp).toLocaleTimeString() : '-'}</div>`;
+        div.innerHTML = content;
+        area.appendChild(div);
+        area.scrollTop = area.scrollHeight;
+    }
+    async function sendAllComment() {
+        const txt = document.getElementById('allCommentsInput').value.trim();
+        if (!txt) return;
+        await database.ref('all_comments').push({ uid: currentUID, text: txt, timestamp: Date.now() });
+        document.getElementById('allCommentsInput').value = '';
+    }
+    document.getElementById('publicUploadBtn')?.addEventListener('click', () => {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        input.onchange = async (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                showLoading();
+                try {
+                    const url = await uploadToImgbb(file);
+                    await database.ref('all_comments').push({ uid: currentUID, text: `📎 Sent image: ${file.name}`, fileUrl: url, fileName: file.name, fileType: file.type, timestamp: Date.now() });
+                    hideLoading();
+                    showNeonToast('Image sent!');
+                } catch(err) { hideLoading(); showNeonModal('Error', err.message, 'error'); }
+            }
+        };
+        input.click();
+    });
+
+    function setupChatListener() { database.ref('chats/' + currentUID).limitToLast(50).on('child_added', s => displayChatMessage(s.val())); }
+    function displayChatMessage(m) {
+        const box = document.getElementById('chatMessagesFull');
+        if (!box) return;
+    
+        const div = document.createElement('div');
+        let cls = 'system';
+        if (m.sender === 'customer') cls = 'customer';
+        else if (m.sender === 'admin') cls = 'admin';
+        div.className = `message ${cls}`;
+    
+        let content = m.sender ? `<div class="message-sender">${m.sender === 'customer' ? '👤 You' : m.sender === 'admin' ? '👑 Admin' : '📢 System'}</div>` : '';
+        content += `<div>${escapeHtml(m.text || '')}</div>`;
+    
+        if (m.fileData && m.fileData.url) {
+            const isImage = m.fileData.type && m.fileData.type.startsWith('image/');
+            if (isImage) {
+                content += `
+                    <div class="file-preview-item" style="margin-top: 10px;">
+                        <img src="${m.fileData.url}" onclick="window.open('${m.fileData.url}')" style="cursor: pointer; width: 50px; height: 50px; object-fit: cover; border-radius: 10px;">
+                        <div class="file-info">
+                            <div class="file-name">${escapeHtml(m.fileData.name || 'Image')}</div>
+                            <div class="file-size">${m.fileData.sizeFormatted || formatFileSize(m.fileData.size || 0)}</div>
+                        </div>
+                        <button class="file-download-btn" onclick="downloadFile('${m.fileData.url}', '${escapeHtml(m.fileData.name || 'file')}')">
+                            <i class="fas fa-download"></i>
+                        </button>
+                    </div>
+                `;
+            } else {
+                content += `
+                    <div class="file-preview-item" style="margin-top: 10px;">
+                        <i class="fas fa-file" style="font-size: 30px; color: #ffaa00;"></i>
+                        <div class="file-info">
+                            <div class="file-name">${escapeHtml(m.fileData.name || 'File')}</div>
+                            <div class="file-size">${m.fileData.sizeFormatted || formatFileSize(m.fileData.size || 0)}</div>
+                        </div>
+                        <button class="file-download-btn" onclick="downloadFile('${m.fileData.url}', '${escapeHtml(m.fileData.name || 'file')}')">
+                            <i class="fas fa-download"></i>
+                        </button>
+                    </div>
+                `;
+            }
+        }
+        
+        // Notifikasi chat dari admin
+        if (m.sender === 'admin' && m.text) {
+            sendUserNotification('💬 Pesan dari Admin', m.text.substring(0, 100), `admin_chat_${Date.now()}`);
+        }
+    
+        content += `<div class="message-time">${m.timestamp ? new Date(m.timestamp).toLocaleString() : '-'}</div>`;
+        div.innerHTML = content;
+        box.appendChild(div);
+        box.scrollTop = box.scrollHeight;
+    }
+    function sendMessageFull() {
+        const txt = document.getElementById('chatInputFull').value.trim();
+        if (!txt) return;
+        database.ref('chats/' + currentUID).push({ sender: 'customer', text: txt, timestamp: Date.now() });
+        document.getElementById('chatInputFull').value = '';
+    }
+    function openChatAdmin() { navigateWithLoading('chat'); }
+    
+    // ==================== CHAT FILE UPLOAD ====================
+    function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    function downloadFile(url, filename) {
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    function setupUserChatFileUpload() {
+        const uploadBtn = document.getElementById('chatUploadBtnUser');
+        if (!uploadBtn) return;
+    
+        const newBtn = uploadBtn.cloneNode(true);
+        uploadBtn.parentNode.replaceChild(newBtn, uploadBtn);
+    
+        newBtn.addEventListener('click', () => {
+            if (!currentUID) {
+                showNeonModal('Error', 'Anda belum login!', 'error');
                 return;
             }
         
-            const priceToPay = selectedPackage.finalPrice || selectedPackage.price;
-        
-            if (currentSaldo < priceToPay) {
-                showNeonModal('Saldo Tidak Cukup', `Saldo: Rp ${formatRupiah(currentSaldo)}\nRequired: Rp ${formatRupiah(priceToPay)}`, 'error');
-                showDepositPopup();
-                return;
-            }
-        
-            showLoading();
-            try {
-                await database.ref('saldo/' + currentUID).set({ amount: currentSaldo - priceToPay, last_updated: Date.now() });
-                currentSaldo -= priceToPay;
-                updateSaldoDisplay();
-            
-                await database.ref('purchases/' + currentUID).push({
-                    uid: currentUID,
-                    originalPrice: selectedPackage.price,
-                    price: priceToPay,
-                    discount: globalDiscount.active ? globalDiscount.percentage : 0,
-                    package: selectedPackage.label,
-                    packageType: selectedPackage.type,
-                    status: 'pending',
-                    timestamp: Date.now()
-                });
-            
-                await database.ref('chats/' + currentUID).push({
-                    sender: 'system',
-                    text: `✅ VIP Purchase Request Sent!\nPackage: ${selectedPackage.label}\nOriginal: Rp ${formatRupiah(selectedPackage.price)}\nFinal: Rp ${formatRupiah(priceToPay)}\nDiscount: ${globalDiscount.active ? globalDiscount.percentage + '%' : '0%'}`,
-                    timestamp: Date.now()
-                });
-            
-                sendUserNotification('👑 VIP Purchase', `Request pembelian VIP ${selectedPackage.label} telah dikirim ke admin.`, `vip_purchase_${Date.now()}`);
-            
-                hideLoading();
-                showNeonModal('Success', 'Request sent! Menunggu persetujuan admin.', 'success');
-            } catch(error) {
-                hideLoading();
-                showNeonModal('Error', error.message, 'error');
-            }
-        }
-
-        // ==================== CHAT ====================
-        function loadAllComments() { database.ref('all_comments').limitToLast(50).on('child_added', s => displayAllComment(s.val())); }
-        function displayAllComment(c) {
-            const area = document.getElementById('allCommentsArea');
-            const div = document.createElement('div');
-            let cls = 'admin';
-            if (c.uid === currentUID) cls = 'customer';
-            else if (c.uid === 'ADMIN') cls = 'admin';
-            div.className = `message ${cls}`;
-            let content = `<b>${escapeHtml(c.uid)}:</b> ${escapeHtml(c.text || '')}`;
-            if (c.fileUrl) content += `<div><img src="${c.fileUrl}" style="max-width:150px; border-radius:10px; cursor:pointer;" onclick="window.open('${c.fileUrl}')"></div>`;
-            content += `<div class="message-time">${c.timestamp ? new Date(c.timestamp).toLocaleTimeString() : '-'}</div>`;
-            div.innerHTML = content;
-            area.appendChild(div);
-            area.scrollTop = area.scrollHeight;
-        }
-        async function sendAllComment() {
-            const txt = document.getElementById('allCommentsInput').value.trim();
-            if (!txt) return;
-            await database.ref('all_comments').push({ uid: currentUID, text: txt, timestamp: Date.now() });
-            document.getElementById('allCommentsInput').value = '';
-        }
-        document.getElementById('publicUploadBtn')?.addEventListener('click', () => {
             const input = document.createElement('input');
             input.type = 'file';
-            input.accept = 'image/*';
+            input.accept = 'image/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain';
             input.onchange = async (e) => {
                 const file = e.target.files[0];
-                if (file) {
-                    showLoading();
-                    try {
-                        const url = await uploadToImgbb(file);
-                        await database.ref('all_comments').push({ uid: currentUID, text: `📎 Sent image: ${file.name}`, fileUrl: url, fileName: file.name, fileType: file.type, timestamp: Date.now() });
-                        hideLoading();
-                        showNeonToast('Image sent!');
-                    } catch(err) { hideLoading(); showNeonModal('Error', err.message, 'error'); }
+                if (!file) return;
+            
+                showLoading();
+                try {
+                    const fileUrl = await uploadToImgbb(file);
+                    const fileSize = formatFileSize(file.size);
+                
+                    await database.ref('chats/' + currentUID).push({
+                        sender: 'customer',
+                        text: `📎 Mengirim file: ${file.name}`,
+                        fileData: {
+                            name: file.name,
+                            url: fileUrl,
+                            size: file.size,
+                            sizeFormatted: fileSize,
+                            type: file.type,
+                            timestamp: Date.now()
+                        },
+                        timestamp: Date.now()
+                    });
+                
+                    hideLoading();
+                    showNeonToast('File terkirim!');
+                } catch (error) {
+                    hideLoading();
+                    showNeonModal('Error', 'Gagal upload: ' + error.message, 'error');
                 }
             };
             input.click();
         });
+    }
 
-        function setupChatListener() { database.ref('chats/' + currentUID).limitToLast(50).on('child_added', s => displayChatMessage(s.val())); }
-        function displayChatMessage(m) {
-            const box = document.getElementById('chatMessagesFull');
-            if (!box) return;
-        
-            const div = document.createElement('div');
-            let cls = 'system';
-            if (m.sender === 'customer') cls = 'customer';
-            else if (m.sender === 'admin') cls = 'admin';
-            div.className = `message ${cls}`;
-        
-            let content = m.sender ? `<div class="message-sender">${m.sender === 'customer' ? '👤 You' : m.sender === 'admin' ? '👑 Admin' : '📢 System'}</div>` : '';
-            content += `<div>${escapeHtml(m.text || '')}</div>`;
-        
-            if (m.fileData && m.fileData.url) {
-                const isImage = m.fileData.type && m.fileData.type.startsWith('image/');
-                if (isImage) {
-                    content += `
-                        <div class="file-preview-item" style="margin-top: 10px;">
-                            <img src="${m.fileData.url}" onclick="window.open('${m.fileData.url}')" style="cursor: pointer; width: 50px; height: 50px; object-fit: cover; border-radius: 10px;">
-                            <div class="file-info">
-                                <div class="file-name">${escapeHtml(m.fileData.name || 'Image')}</div>
-                                <div class="file-size">${m.fileData.sizeFormatted || formatFileSize(m.fileData.size || 0)}</div>
-                            </div>
-                            <button class="file-download-btn" onclick="downloadFile('${m.fileData.url}', '${escapeHtml(m.fileData.name || 'file')}')">
-                                <i class="fas fa-download"></i>
-                            </button>
-                        </div>
-                    `;
-                } else {
-                    content += `
-                        <div class="file-preview-item" style="margin-top: 10px;">
-                            <i class="fas fa-file" style="font-size: 30px; color: #ffaa00;"></i>
-                            <div class="file-info">
-                                <div class="file-name">${escapeHtml(m.fileData.name || 'File')}</div>
-                                <div class="file-size">${m.fileData.sizeFormatted || formatFileSize(m.fileData.size || 0)}</div>
-                            </div>
-                            <button class="file-download-btn" onclick="downloadFile('${m.fileData.url}', '${escapeHtml(m.fileData.name || 'file')}')">
-                                <i class="fas fa-download"></i>
-                            </button>
-                        </div>
-                    `;
+    // ==================== LEADERBOARD ====================
+    async function loadLeaderboard() {
+        try {
+            const deposits = (await database.ref('deposits').once('value')).val() || {};
+            let totals = {};
+            Object.keys(deposits).forEach(uid => { let t=0; Object.keys(deposits[uid]).forEach(k => { if(deposits[uid][k].status==='approved') t+=deposits[uid][k].jumlah||0; }); if(t>0) totals[uid]=t; });
+            const sorted = Object.keys(totals).map(uid=>({uid,total:totals[uid]})).sort((a,b)=>b.total-a.total).slice(0,5);
+            const vip = (await database.ref('vip_members').once('value')).val() || {};
+            let html = '';
+            sorted.forEach((item,i) => {
+                const isVip = !!(vip[item.uid] && vip[item.uid].status==='active');
+                const rank = i===0?'🥇':i===1?'🥈':i===2?'🥉':(i+1)+'.';
+                html += `<div class="leaderboard-item"><span style="width:45px; color:#ffaa00;">${rank}</span><span style="flex:1; font-family:monospace;">${escapeHtml(item.uid)} ${isVip?'<i class="fas fa-crown" style="color:#ffd700;"></i>':''}</span><span style="color:#00ff88;">Rp ${formatRupiah(item.total)}</span></div>`;
+            });
+            document.getElementById('leaderboardList').innerHTML = html || '<div style="padding:25px; text-align:center;">No data</div>';
+        } catch(e) { console.error(e); }
+    }
+
+    // ==================== HISTORY ====================
+    async function loadTransactionHistory() {
+        try {
+            const deposits = (await database.ref('deposits/' + currentUID).once('value')).val() || {};
+            let html = '', total=0;
+            const items = Object.keys(deposits).map(k=>({...deposits[k]})).sort((a,b)=>(b.timestamp||0)-(a.timestamp||0));
+            items.slice(0,10).forEach(d => { if(d.status==='approved') total+=d.jumlah||0; html += `<div class="history-item" style="border-left-color:${d.status==='approved'?'#00ff88':d.status==='pending'?'#ffaa00':'#ff4444'}"><div style="display:flex; justify-content:space-between;"><span>Rp ${formatRupiah(d.jumlah||0)}</span><span style="color:${d.status==='approved'?'#00ff88':d.status==='pending'?'#ffaa00':'#ff4444'}">${d.status}</span></div><div style="font-size:11px;">${d.timestamp?new Date(d.timestamp).toLocaleDateString():'-'}</div></div>`; });
+            document.getElementById('transactionListDeposit').innerHTML = html || '<div style="padding:25px; text-align:center;">No history</div>';
+            document.getElementById('totalDepositAmount').innerHTML = 'Rp ' + formatRupiah(total);
+            document.getElementById('totalDepositRight').innerHTML = 'Rp ' + formatRupiah(total);
+            
+            // Notifikasi status deposit
+            const pendingDeposits = items.filter(d => d.status === 'pending').length;
+            const approvedDeposits = items.filter(d => d.status === 'approved').length;
+            if (approvedDeposits > 0) {
+                const lastApproved = items.find(d => d.status === 'approved');
+                if (lastApproved && !localStorage.getItem(`deposit_notified_${lastApproved.timestamp}`)) {
+                    localStorage.setItem(`deposit_notified_${lastApproved.timestamp}`, 'true');
+                    sendUserNotification('✅ Deposit Diterima', `Deposit Rp ${formatRupiah(lastApproved.jumlah)} Anda telah disetujui!`, `deposit_approved_${lastApproved.timestamp}`);
                 }
             }
+        } catch(e) { console.error(e); }
+    }
+    
+    async function loadPurchaseHistory() {
+        try {
+            const purchases = (await database.ref('purchases/' + currentUID).once('value')).val() || {};
+            let html = '';
+            const items = Object.keys(purchases).map(k=>({...purchases[k]})).sort((a,b)=>(b.timestamp||0)-(a.timestamp||0));
+            items.slice(0,10).forEach(p => { html += `<div class="history-item" style="border-left-color:${p.status==='approved'?'#00ff88':p.status==='pending'?'#ffaa00':'#ff4444'}"><div style="display:flex; justify-content:space-between;"><span>${escapeHtml(p.package||'Package')}</span><span>Rp ${formatRupiah(p.price||0)}</span></div><div style="display:flex; justify-content:space-between; font-size:11px;"><span>${p.status}</span><span>${p.timestamp?new Date(p.timestamp).toLocaleDateString():'-'}</span></div></div>`; });
+            document.getElementById('purchaseHistoryList').innerHTML = html || '<div style="padding:25px; text-align:center;">No history</div>';
             
-            if (m.sender === 'admin' && m.text) {
-                sendUserNotification('💬 Pesan dari Admin', m.text.substring(0, 100), `admin_chat_${Date.now()}`);
+            const approvedPurchase = items.find(p => p.status === 'approved');
+            if (approvedPurchase && !localStorage.getItem(`vip_approved_notified_${approvedPurchase.timestamp}`)) {
+                localStorage.setItem(`vip_approved_notified_${approvedPurchase.timestamp}`, 'true');
+                sendUserNotification('👑 VIP Disetujui', `Paket ${approvedPurchase.package} Anda telah disetujui! Selamat Anda sekarang VIP!`, `vip_approved_${approvedPurchase.timestamp}`);
             }
-        
-            content += `<div class="message-time">${m.timestamp ? new Date(m.timestamp).toLocaleString() : '-'}</div>`;
-            div.innerHTML = content;
-            box.appendChild(div);
-            box.scrollTop = box.scrollHeight;
-        }
-        function sendMessageFull() {
-            const txt = document.getElementById('chatInputFull').value.trim();
-            if (!txt) return;
-            database.ref('chats/' + currentUID).push({ sender: 'customer', text: txt, timestamp: Date.now() });
-            document.getElementById('chatInputFull').value = '';
-        }
-        function openChatAdmin() { navigateWithLoading('chat'); }
-        
-        // ==================== CHAT FILE UPLOAD ====================
-        function formatFileSize(bytes) {
-            if (bytes === 0) return '0 Bytes';
-            const k = 1024;
-            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-        }
+        } catch(e) { console.error(e); }
+    }
 
-        function downloadFile(url, filename) {
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = filename;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
+    // ==================== ADMIN STATUS ====================
+    function monitorAdminStatus() {
+        database.ref('admin_status').on('value', s => {
+            const st = s.val();
+            if (st && st.status === 'online' && (Date.now() - (st.last_seen||0) < 300000)) {
+                document.getElementById('chatAdminStatus').innerHTML = '🟢 Online';
+                document.getElementById('publicChatStatus').innerHTML = '● Online';
+            } else {
+                document.getElementById('chatAdminStatus').innerHTML = '🔴 Offline';
+                document.getElementById('publicChatStatus').innerHTML = '○ Offline';
+            }
+        });
+    }
 
-        function setupUserChatFileUpload() {
-            const uploadBtn = document.getElementById('chatUploadBtnUser');
-            if (!uploadBtn) return;
-        
-            const newBtn = uploadBtn.cloneNode(true);
-            uploadBtn.parentNode.replaceChild(newBtn, uploadBtn);
-        
-            newBtn.addEventListener('click', () => {
-                if (!currentUID) {
-                    showNeonModal('Error', 'Anda belum login!', 'error');
-                    return;
-                }
+    // ==================== NAVIGATION ====================
+    function navigateWithLoading(view) {
+        document.querySelectorAll('.view-container').forEach(v => v.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        if (view === 'dashboard') { document.getElementById('dashboardView').classList.add('active'); document.querySelectorAll('.nav-item')[0].classList.add('active'); }
+        else if (view === 'account') { document.getElementById('accountView').classList.add('active'); document.querySelectorAll('.nav-item')[1].classList.add('active'); }
+        else if (view === 'chat') { document.getElementById('chatAdminView').classList.add('active'); document.querySelectorAll('.nav-item')[2].classList.add('active'); }
+    }
+
+    // ==================== UPDATE HISTORY ====================
+    function renderFreeUpdates(updates) {
+        const cont = document.getElementById('freeUpdateList');
+        if (!cont) return;
+        const sorted = Object.keys(updates).map(k=>({...updates[k]})).sort((a,b)=>(b.timestamp||0)-(a.timestamp||0));
+        if(sorted.length===0) { cont.innerHTML='<div style="padding:25px; text-align:center;">No updates</div>'; return; }
+        let html='';
+        sorted.slice(0,15).forEach(u => { html+=`<div class="update-item"><div class="update-title">📢 ${escapeHtml(u.title||'Free Update')}</div><div class="update-desc">${escapeHtml(u.description||'')}</div><div class="update-meta"><span>${u.version||'v1.0'}</span><span>${u.timestamp?new Date(u.timestamp).toLocaleString():'-'}</span></div><div><a href="${u.link||'#'}" target="_blank" class="update-link">Download</a></div></div>`; });
+        cont.innerHTML=html;
+    }
+    function renderVipUpdates(updates) {
+        const cont = document.getElementById('vipUpdateList');
+        if (!cont) return;
+        if(!isVIP) { cont.innerHTML=`<div style="padding:25px; text-align:center; color:#ffaa00;"><i class="fas fa-crown" style="font-size:48px;"></i><p>VIP only feature</p><button class="btn-neon" onclick="buyVIP()">Upgrade to VIP</button></div>`; return; }
+        const sorted = Object.keys(updates).map(k=>({...updates[k]})).sort((a,b)=>(b.created_at||0)-(a.created_at||0));
+        if(sorted.length===0) { cont.innerHTML='<div style="padding:25px; text-align:center;">No VIP updates</div>'; return; }
+        let html='';
+        sorted.slice(0,15).forEach(u => { 
+            html+=`<div class="update-item" style="border-color:#ffd700;"><div class="update-title" style="color:#ffd700;">👑 ${escapeHtml(u.title||'VIP Update')}</div><div class="update-desc">${escapeHtml(u.description||'')}</div><div class="update-meta"><span>${u.version||'v2.0'}</span><span>${u.created_at?new Date(u.created_at).toLocaleString():'-'}</span></div><div><a href="${u.link||'#'}" target="_blank" class="update-link" style="color:#ffd700;">Download</a></div></div>`;
             
-                const input = document.createElement('input');
-                input.type = 'file';
-                input.accept = 'image/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain';
-                input.onchange = async (e) => {
-                    const file = e.target.files[0];
-                    if (!file) return;
-                
-                    showLoading();
-                    try {
-                        const fileUrl = await uploadToImgbb(file);
-                        const fileSize = formatFileSize(file.size);
-                    
-                        await database.ref('chats/' + currentUID).push({
-                            sender: 'customer',
-                            text: `📎 Mengirim file: ${file.name}`,
-                            fileData: {
-                                name: file.name,
-                                url: fileUrl,
-                                size: file.size,
-                                sizeFormatted: fileSize,
-                                type: file.type,
-                                timestamp: Date.now()
-                            },
-                            timestamp: Date.now()
-                        });
-                    
-                        hideLoading();
-                        showNeonToast('File terkirim!');
-                    } catch (error) {
-                        hideLoading();
-                        showNeonModal('Error', 'Gagal upload: ' + error.message, 'error');
-                    }
+            // Notifikasi update VIP baru (hanya sekali per update)
+            if (u.created_at && !localStorage.getItem(`vip_update_notified_${u.created_at}`)) {
+                localStorage.setItem(`vip_update_notified_${u.created_at}`, 'true');
+                sendUserNotification('👑 Update VIP Baru!', `${u.title} - ${u.version}\nKlik untuk lihat detail.`, `vip_update_${u.created_at}`);
+            }
+        });
+        cont.innerHTML=html;
+    }
+    function showUpdateTab(tab) {
+        const freeTab = document.getElementById('freeUpdateTab'), vipTab = document.getElementById('vipUpdateTab'), btns = document.querySelectorAll('.tab-btn');
+        btns.forEach(b=>b.classList.remove('active'));
+        if(tab==='free') { freeTab.classList.add('active'); vipTab.classList.remove('active'); btns[0].classList.add('active'); database.ref('free_updates/all').orderByChild('timestamp').limitToLast(20).once('value',s=>renderFreeUpdates(s.val()||{})); }
+        else { freeTab.classList.remove('active'); vipTab.classList.add('active'); btns[1].classList.add('active'); if(isVIP) database.ref('global_updates').orderByChild('created_at').limitToLast(20).once('value',s=>renderVipUpdates(s.val()||{})); else renderVipUpdates({}); }
+    }
+
+    // ==================== PACKAGES ====================
+    function loadAdminConfig() {
+        database.ref('admin_config/premium_packages').on('value', s => { if(s.exists()) { packages = s.val(); renderPackages(); } });
+        database.ref('admin_config/loading_logo_url').on('value', s => { if(s.exists()) loadingLogoUrl = s.val(); });
+        database.ref('free_updates/all').orderByChild('timestamp').limitToLast(20).on('value', s => renderFreeUpdates(s.val() || {}));
+        if (isVIP || currentUID) database.ref('global_updates').orderByChild('created_at').limitToLast(20).on('value', s => renderVipUpdates(s.val() || {}));
+    }
+    async function loadGlobalDiscount() {
+        try {
+            const snap = await database.ref('global_discount').once('value');
+            const discount = snap.val();
+            if (discount && discount.active === true && new Date(discount.expiryDate) > new Date()) {
+                globalDiscount = {
+                    active: true,
+                    percentage: discount.percentage,
+                    minPurchase: discount.minPurchase || 0
                 };
-                input.click();
-            });
-        }
-
-        // ==================== LEADERBOARD  ====================
-        async function loadLeaderboard() {
-            try {
-                const deposits = (await database.ref('deposits').once('value')).val() || {};
-                let totals = {};
-                Object.keys(deposits).forEach(uid => { let t=0; Object.keys(deposits[uid]).forEach(k => { if(deposits[uid][k].status==='approved') t+=deposits[uid][k].jumlah||0; }); if(t>0) totals[uid]=t; });
-                const sorted = Object.keys(totals).map(uid=>({uid,total:totals[uid]})).sort((a,b)=>b.total-a.total).slice(0,5);
-                const vip = (await database.ref('vip_members').once('value')).val() || {};
-                let html = '';
-                sorted.forEach((item,i) => {
-                    const isVip = !!(vip[item.uid] && vip[item.uid].status==='active');
-                    const rank = i===0?'🥇':i===1?'🥈':i===2?'🥉':(i+1)+'.';
-                    html += `<div class="leaderboard-item"><span style="width:45px; color:#ffaa00;">${rank}</span><span style="flex:1; font-family:monospace;">${escapeHtml(item.uid)} ${isVip?'<i class="fas fa-crown" style="color:#ffd700;"></i>':''}</span><span style="color:#00ff88;">Rp ${formatRupiah(item.total)}</span></div>`;
-                });
-                document.getElementById('leaderboardList').innerHTML = html || '<div style="padding:25px; text-align:center;">No data</div>';
-            } catch(e) { console.error(e); }
-        }
-
-        // ==================== HISTORY ====================
-        async function loadTransactionHistory() {
-            try {
-                const deposits = (await database.ref('deposits/' + currentUID).once('value')).val() || {};
-                let html = '', total=0;
-                const items = Object.keys(deposits).map(k=>({...deposits[k]})).sort((a,b)=>(b.timestamp||0)-(a.timestamp||0));
-                items.slice(0,10).forEach(d => { if(d.status==='approved') total+=d.jumlah||0; html += `<div class="history-item" style="border-left-color:${d.status==='approved'?'#00ff88':d.status==='pending'?'#ffaa00':'#ff4444'}"><div style="display:flex; justify-content:space-between;"><span>Rp ${formatRupiah(d.jumlah||0)}</span><span style="color:${d.status==='approved'?'#00ff88':d.status==='pending'?'#ffaa00':'#ff4444'}">${d.status}</span></div><div style="font-size:11px;">${d.timestamp?new Date(d.timestamp).toLocaleDateString():'-'}</div></div>`; });
-                document.getElementById('transactionListDeposit').innerHTML = html || '<div style="padding:25px; text-align:center;">No history</div>';
-                document.getElementById('totalDepositAmount').innerHTML = 'Rp ' + formatRupiah(total);
-                document.getElementById('totalDepositRight').innerHTML = 'Rp ' + formatRupiah(total);
-                
-                const approvedDeposits = items.filter(d => d.status === 'approved').length;
-                if (approvedDeposits > 0) {
-                    const lastApproved = items.find(d => d.status === 'approved');
-                    if (lastApproved && !localStorage.getItem(`deposit_notified_${lastApproved.timestamp}`)) {
-                        localStorage.setItem(`deposit_notified_${lastApproved.timestamp}`, 'true');
-                        sendUserNotification('✅ Deposit Diterima', `Deposit Rp ${formatRupiah(lastApproved.jumlah)} Anda telah disetujui!`, `deposit_approved_${lastApproved.timestamp}`);
-                    }
-                }
-            } catch(e) { console.error(e); }
-        }
-        
-        async function loadPurchaseHistory() {
-            try {
-                const purchases = (await database.ref('purchases/' + currentUID).once('value')).val() || {};
-                let html = '';
-                const items = Object.keys(purchases).map(k=>({...purchases[k]})).sort((a,b)=>(b.timestamp||0)-(a.timestamp||0));
-                items.slice(0,10).forEach(p => { html += `<div class="history-item" style="border-left-color:${p.status==='approved'?'#00ff88':p.status==='pending'?'#ffaa00':'#ff4444'}"><div style="display:flex; justify-content:space-between;"><span>${escapeHtml(p.package||'Package')}</span><span>Rp ${formatRupiah(p.price||0)}</span></div><div style="display:flex; justify-content:space-between; font-size:11px;"><span>${p.status}</span><span>${p.timestamp?new Date(p.timestamp).toLocaleDateString():'-'}</span></div></div>`; });
-                document.getElementById('purchaseHistoryList').innerHTML = html || '<div style="padding:25px; text-align:center;">No history</div>';
-                
-                const approvedPurchase = items.find(p => p.status === 'approved');
-                if (approvedPurchase && !localStorage.getItem(`vip_approved_notified_${approvedPurchase.timestamp}`)) {
-                    localStorage.setItem(`vip_approved_notified_${approvedPurchase.timestamp}`, 'true');
-                    sendUserNotification('👑 VIP Disetujui', `Paket ${approvedPurchase.package} Anda telah disetujui! Selamat Anda sekarang VIP!`, `vip_approved_${approvedPurchase.timestamp}`);
-                }
-            } catch(e) { console.error(e); }
-        }
-
-        // ==================== ADMIN STATUS ====================
-        function monitorAdminStatus() {
-            database.ref('admin_status').on('value', s => {
-                const st = s.val();
-                if (st && st.status === 'online' && (Date.now() - (st.last_seen||0) < 300000)) {
-                    document.getElementById('chatAdminStatus').innerHTML = '🟢 Online';
-                    document.getElementById('publicChatStatus').innerHTML = '● Online';
-                } else {
-                    document.getElementById('chatAdminStatus').innerHTML = '🔴 Offline';
-                    document.getElementById('publicChatStatus').innerHTML = '○ Offline';
-                }
-            });
-        }
-
-        // ==================== NAVIGATION ====================
-        function navigateWithLoading(view) {
-            document.querySelectorAll('.view-container').forEach(v => v.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            if (view === 'dashboard') { document.getElementById('dashboardView').classList.add('active'); document.querySelectorAll('.nav-item')[0].classList.add('active'); }
-            else if (view === 'account') { document.getElementById('accountView').classList.add('active'); document.querySelectorAll('.nav-item')[1].classList.add('active'); }
-            else if (view === 'chat') { document.getElementById('chatAdminView').classList.add('active'); document.querySelectorAll('.nav-item')[2].classList.add('active'); }
-        }
-
-        // ==================== UPDATE HISTORY ====================
-        function renderFreeUpdates(updates) {
-            const cont = document.getElementById('freeUpdateList');
-            if (!cont) return;
-            const sorted = Object.keys(updates).map(k=>({...updates[k]})).sort((a,b)=>(b.timestamp||0)-(a.timestamp||0));
-            if(sorted.length===0) { cont.innerHTML='<div style="padding:25px; text-align:center;">No updates</div>'; return; }
-            let html='';
-            sorted.slice(0,15).forEach(u => { html+=`<div class="update-item"><div class="update-title">📢 ${escapeHtml(u.title||'Free Update')}</div><div class="update-desc">${escapeHtml(u.description||'')}</div><div class="update-meta"><span>${u.version||'v1.0'}</span><span>${u.timestamp?new Date(u.timestamp).toLocaleString():'-'}</span></div><div><a href="${u.link||'#'}" target="_blank" class="update-link">Download</a></div></div>`; });
-            cont.innerHTML=html;
-        }
-        function renderVipUpdates(updates) {
-            const cont = document.getElementById('vipUpdateList');
-            if (!cont) return;
-            if(!isVIP) { cont.innerHTML=`<div style="padding:25px; text-align:center; color:#ffaa00;"><i class="fas fa-crown" style="font-size:48px;"></i><p>VIP only feature</p><button class="btn-neon" onclick="buyVIP()">Upgrade to VIP</button></div>`; return; }
-            const sorted = Object.keys(updates).map(k=>({...updates[k]})).sort((a,b)=>(b.created_at||0)-(a.created_at||0));
-            if(sorted.length===0) { cont.innerHTML='<div style="padding:25px; text-align:center;">No VIP updates</div>'; return; }
-            let html='';
-            sorted.slice(0,15).forEach(u => { 
-                html+=`<div class="update-item" style="border-color:#ffd700;"><div class="update-title" style="color:#ffd700;">👑 ${escapeHtml(u.title||'VIP Update')}</div><div class="update-desc">${escapeHtml(u.description||'')}</div><div class="update-meta"><span>${u.version||'v2.0'}</span><span>${u.created_at?new Date(u.created_at).toLocaleString():'-'}</span></div><div><a href="${u.link||'#'}" target="_blank" class="update-link" style="color:#ffd700;">Download</a></div></div>`;
-                
-                if (u.created_at && !localStorage.getItem(`vip_update_notified_${u.created_at}`)) {
-                    localStorage.setItem(`vip_update_notified_${u.created_at}`, 'true');
-                    sendUserNotification('👑 Update VIP Baru!', `${u.title} - ${u.version}\nKlik untuk lihat detail.`, `vip_update_${u.created_at}`);
-                }
-            });
-            cont.innerHTML=html;
-        }
-        function showUpdateTab(tab) {
-            const freeTab = document.getElementById('freeUpdateTab'), vipTab = document.getElementById('vipUpdateTab'), btns = document.querySelectorAll('.tab-btn');
-            btns.forEach(b=>b.classList.remove('active'));
-            if(tab==='free') { freeTab.classList.add('active'); vipTab.classList.remove('active'); btns[0].classList.add('active'); database.ref('free_updates/all').orderByChild('timestamp').limitToLast(20).once('value',s=>renderFreeUpdates(s.val()||{})); }
-            else { freeTab.classList.remove('active'); vipTab.classList.add('active'); btns[1].classList.add('active'); if(isVIP) database.ref('global_updates').orderByChild('created_at').limitToLast(20).once('value',s=>renderVipUpdates(s.val()||{})); else renderVipUpdates({}); }
-        }
-
-        // ==================== PACKAGES ====================
-        function loadAdminConfig() {
-            database.ref('admin_config/premium_packages').on('value', s => { if(s.exists()) { packages = s.val(); renderPackages(); } });
-            database.ref('admin_config/loading_logo_url').on('value', s => { if(s.exists()) loadingLogoUrl = s.val(); });
-            database.ref('free_updates/all').orderByChild('timestamp').limitToLast(20).on('value', s => renderFreeUpdates(s.val() || {}));
-            if (isVIP || currentUID) database.ref('global_updates').orderByChild('created_at').limitToLast(20).on('value', s => renderVipUpdates(s.val() || {}));
-        }
-        async function loadGlobalDiscount() {
-            try {
-                const snap = await database.ref('global_discount').once('value');
-                const discount = snap.val();
-                if (discount && discount.active === true && new Date(discount.expiryDate) > new Date()) {
-                    globalDiscount = {
-                        active: true,
-                        percentage: discount.percentage,
-                        minPurchase: discount.minPurchase || 0
-                    };
-                    console.log(`🎫 Diskon global aktif: ${globalDiscount.percentage}%`);
-                } else {
-                    globalDiscount = { active: false, percentage: 0, minPurchase: 0 };
-                }
-                renderPackages();
-            } catch (error) {
-                console.error('Error loading discount:', error);
+                console.log(`🎫 Diskon global aktif: ${globalDiscount.percentage}%`);
+            } else {
+                globalDiscount = { active: false, percentage: 0, minPurchase: 0 };
             }
+            renderPackages();
+        } catch (error) {
+            console.error('Error loading discount:', error);
         }
-        function renderPackages() {
-            const grid = document.getElementById('priceGrid');
-            if (!grid) return;
+    }
+    function renderPackages() {
+        const grid = document.getElementById('priceGrid');
+        if (!grid) return;
+    
+        if (!packages || packages.length === 0) {
+            grid.innerHTML = '<div style="padding:25px; text-align:center;">No packages</div>';
+            return;
+        }
+    
+        let html = '<div class="price-grid">';
+        packages.forEach((pkg, idx) => {
+            let originalPrice = pkg.price;
+            let finalPrice = originalPrice;
+            let discountText = '';
         
-            if (!packages || packages.length === 0) {
-                grid.innerHTML = '<div style="padding:25px; text-align:center;">No packages</div>';
-                return;
+            if (globalDiscount.active && (globalDiscount.minPurchase === 0 || originalPrice >= globalDiscount.minPurchase)) {
+                finalPrice = originalPrice - (originalPrice * globalDiscount.percentage / 100);
+                discountText = `<div style="font-size: 11px; color: #00ff88; margin-top: 5px;">
+                    <span style="text-decoration: line-through; color: #888;">Rp ${formatRupiah(originalPrice)}</span>
+                    → Rp ${formatRupiah(finalPrice)} <span style="color: #ffaa00;">(${globalDiscount.percentage}% OFF)</span>
+                </div>`;
             }
         
-            let html = '<div class="price-grid">';
-            packages.forEach((pkg, idx) => {
-                let originalPrice = pkg.price;
-                let finalPrice = originalPrice;
-                let discountText = '';
-            
-                if (globalDiscount.active && (globalDiscount.minPurchase === 0 || originalPrice >= globalDiscount.minPurchase)) {
-                    finalPrice = originalPrice - (originalPrice * globalDiscount.percentage / 100);
-                    discountText = `<div style="font-size: 11px; color: #00ff88; margin-top: 5px;">
-                        <span style="text-decoration: line-through; color: #888;">Rp ${formatRupiah(originalPrice)}</span>
-                        → Rp ${formatRupiah(finalPrice)} <span style="color: #ffaa00;">(${globalDiscount.percentage}% OFF)</span>
-                    </div>`;
-                }
-            
-                html += `
-                    <div class="price-card" onclick="selectPackage(${idx})" data-original-price="${originalPrice}" data-final-price="${finalPrice}">
-                        <div class="price-amount">Rp ${formatRupiah(finalPrice)}</div>
-                        <div class="price-type">${escapeHtml(pkg.label)}</div>
-                        ${discountText}
-                        ${pkg.description ? `<div style="font-size: 11px; color: #aaa; margin-top: 8px;">${escapeHtml(pkg.description)}</div>` : ''}
-                    </div>
-                `;
-            });
-            html += '</div>';
-            grid.innerHTML = html;
-        }
-        function selectPackage(idx) {
-            selectedPackage = packages[idx];
-            const priceCard = document.querySelectorAll('.price-card')[idx];
-            let finalPrice = parseInt(priceCard?.getAttribute('data-final-price') || selectedPackage.price);
-        
-            document.querySelectorAll('.price-card').forEach(c => c.classList.remove('selected'));
-            if (event?.currentTarget) event.currentTarget.classList.add('selected');
-        
-            document.getElementById('summaryPackageName').textContent = selectedPackage.label;
-            document.getElementById('summaryPrice').textContent = 'Rp ' + formatRupiah(finalPrice);
-            document.getElementById('summaryTotal').textContent = 'Rp ' + formatRupiah(finalPrice);
-        
-            selectedPackage.finalPrice = finalPrice;
-        }
-
-        // ==================== REALTIME LISTENERS ====================
-        function setupRealtimeListeners() {
-            if(!currentUID) return;
-        
-            database.ref('saldo/' + currentUID).on('value', s => { 
-                if(s.exists()) { 
-                    currentSaldo = s.val().amount || 0; 
-                    updateSaldoDisplay(); 
-                } 
-            });
-        
-            database.ref('vip_members/' + currentUID).on('value', () => { 
-                loadVIPStatus(); 
-            });
-        
-            database.ref('deposits/' + currentUID).on('child_added', () => { 
-                loadTransactionHistory(); 
-            });
-        
-            database.ref('purchases/' + currentUID).on('child_added', () => { 
-                loadPurchaseHistory(); 
-            });
-        
-            // Deteksi session dihapus (force logout)
-            database.ref('sessions/' + currentUID).on('value', (snap) => {
-                const session = snap.val();
-                if (!session && currentUID) {
-                    forceLogoutCount++;
-                    if (forceLogoutCount <= 3) {
-                        showForceLogoutModal('⚠️ AKUN ANDA SEMENTARA KAMI TANGGUHKAN ⚠️\n\nAkun Anda sementara kami tangguhkan karena ada aktivitas mencurigakan.\nHarap bersabar dan hubungi admin untuk informasi lebih lanjut.\n\nAnda akan diarahkan ke halaman login.', 5);
-                    } else {
-                        showForceLogoutModal('⚠️ AKUN ANDA DIBLOKIR SEMENTARA ⚠️\n\nTerjadi aktivitas mencurigakan berulang kali.\nAkun Anda akan diblokir sementara.\nHubungi admin untuk informasi lebih lanjut.', 5);
-                    }
-                }
-            });
-        
-            // Deteksi banned
-            database.ref('banned_users/' + currentUID).on('value', (snap) => {
-                if (snap.exists() && snap.val().status === 'banned' && currentUID) {
-                    forceLogoutCount = 0;
-                    showForceLogoutModal('⚠️ AKUN ANDA DIBLOKIR ⚠️\n\nAkun Anda telah diblokir oleh admin karena melanggar aturan.\nHubungi admin untuk informasi lebih lanjut.\n\nAnda akan diarahkan ke halaman login.', 5);
-                }
-            });
-        
-            // NOTIFIKASI REAL-TIME DEPOSIT STATUS CHANGE
-            database.ref('deposits/' + currentUID).on('child_changed', (snap) => {
-                const deposit = snap.val();
-                if (deposit && deposit.status === 'approved') {
-                    if (Notification.permission === 'granted') {
-                        new Notification('✅ DEPOSIT DISETUJUI!', {
-                            body: `Deposit Rp ${formatRupiah(deposit.jumlah)} telah disetujui. Saldo Anda akan bertambah.`,
-                            icon: userIcon,
-                            requireInteraction: true
-                        });
-                    }
-                    showNeonModal('Deposit Disetujui', `✅ Deposit Rp ${formatRupiah(deposit.jumlah)} Anda telah disetujui! Saldo akan bertambah.`, 'success');
-                } else if (deposit && deposit.status === 'rejected') {
-                    if (Notification.permission === 'granted') {
-                        new Notification('❌ DEPOSIT DITOLAK!', {
-                            body: `Deposit Rp ${formatRupiah(deposit.jumlah)} ditolak. Silakan hubungi admin.`,
-                            icon: userIcon
-                        });
-                    }
-                    showNeonModal('Deposit Ditolak', `❌ Deposit Rp ${formatRupiah(deposit.jumlah)} Anda ditolak. Hubungi admin untuk info lebih lanjut.`, 'error');
-                }
-            });
-        
-            // NOTIFIKASI REAL-TIME VIP PURCHASE STATUS CHANGE
-            database.ref('purchases/' + currentUID).on('child_changed', (snap) => {
-                const purchase = snap.val();
-                if (purchase && purchase.status === 'approved') {
-                    if (Notification.permission === 'granted') {
-                        new Notification('👑 VIP DISETUJUI!', {
-                            body: `Paket ${purchase.package} telah disetujui! Selamat Anda sekarang VIP.`,
-                            icon: userIcon,
-                            requireInteraction: true
-                        });
-                    }
-                    showNeonModal('VIP Disetujui', `✅ Paket ${purchase.package} Anda telah disetujui! Selamat Anda sekarang VIP.`, 'success');
-                    loadVIPStatus();
-                } else if (purchase && purchase.status === 'rejected') {
-                    if (Notification.permission === 'granted') {
-                        new Notification('❌ VIP DITOLAK!', {
-                            body: `Pembelian VIP ${purchase.package} ditolak. Saldo Anda akan dikembalikan.`,
-                            icon: userIcon
-                        });
-                    }
-                    showNeonModal('VIP Ditolak', `❌ Pembelian VIP ${purchase.package} ditolak. Saldo Anda akan dikembalikan.`, 'error');
-                    loadUserData();
-                }
-            });
-        
-            // NOTIFIKASI CHAT DARI ADMIN
-            database.ref('chats/' + currentUID).limitToLast(1).on('child_added', (snap) => {
-                const msg = snap.val();
-                if (msg && msg.sender === 'admin' && Notification.permission === 'granted') {
-                    new Notification('💬 Pesan dari Admin', {
-                        body: msg.text.substring(0, 100),
-                        icon: userIcon,
-                        requireInteraction: true
-                    });
-                    showNeonModal('Pesan dari Admin', msg.text.substring(0, 150), 'info');
-                }
-            });
-        
-            // NOTIFIKASI BROADCAST UPDATE VIP
-            database.ref('global_updates').orderByChild('created_at').limitToLast(1).on('child_added', (snap) => {
-                const update = snap.val();
-                if (!update) return;
-                
-                const notified = localStorage.getItem(`broadcast_notified_${snap.key}`);
-                if (!notified && update.is_broadcast) {
-                    localStorage.setItem(`broadcast_notified_${snap.key}`, 'true');
-                    if (Notification.permission === 'granted') {
-                        new Notification('📢 UPDATE VIP BARU!', {
-                            body: `${update.title} - ${update.version}\nKlik untuk lihat detail.`,
-                            icon: userIcon,
-                            requireInteraction: true
-                        });
-                    }
-                    showNeonModal('Update VIP Baru', `📢 ${update.title}\n\n${update.description}\n\nVersion: ${update.version}`, 'info');
-                }
-            });
-        
-            // Update quota real-time
-            database.ref('vip_members/' + currentUID).on('value', (snap) => {
-                const vip = snap.val();
-                if (vip && vip.status === 'active' && vip.updateType === 'quota') {
-                    const used = vip.updatesUsed || 0;
-                    const total = vip.updateQuota || 0;
-                    const percent = total > 0 ? (used / total) * 100 : 0;
-                
-                    const progressFill = document.querySelector('#vipCounterCard .progress-bar-fill.quota');
-                    const percentText = document.querySelector('#vipCounterCard .progress-label span:last-child');
-                
-                    if (progressFill) progressFill.style.width = percent + '%';
-                    if (percentText) percentText.innerHTML = `${used}/${total} (${percent.toFixed(1)}%)`;
-                
-                    const usedEl = document.querySelector('#vipCounterCard .vip-stat-item:first-child .vip-stat-value');
-                    const totalEl = document.querySelector('#vipCounterCard .vip-stat-item:nth-child(2) .vip-stat-value');
-                    const remainingEl = document.querySelector('#vipCounterCard .vip-stat-item:last-child .vip-stat-value');
-                
-                    if (usedEl) usedEl.innerHTML = used;
-                    if (totalEl) totalEl.innerHTML = total;
-                    if (remainingEl) remainingEl.innerHTML = total - used;
-                }
-            });
-        }
-
-        // ==================== CHANGE PROFILE IMAGE ====================
-        function changeProfileImage() {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = 'image/*';
-            input.onchange = async (e) => {
-                const file = e.target.files[0];
-                if(file) {
-                    showLoading();
-                    try {
-                        const url = await uploadToImgbb(file);
-                        document.getElementById('profileImage').src = url;
-                        document.getElementById('profileImageAccount').src = url;
-                        await database.ref('profiles/' + currentUID).set({ image: url, timestamp: Date.now() });
-                        hideLoading();
-                        showNeonToast('Profile updated!');
-                    } catch(err) { hideLoading(); showNeonModal('Error', err.message, 'error'); }
-                }
-            };
-            input.click();
-        }
-
-        // ==================== COPY UID & LOGOUT ====================
-        function copyUID() { navigator.clipboard.writeText(currentUID); showNeonToast('UID copied!'); }
-        function logout() {
-            showConfirm('Logout', 'Apakah Anda yakin ingin logout?', () => {
-                showLoading();
-                if(currentUID) database.ref('users/' + currentUID + '/status').set('offline');
-                if(currentUID) database.ref('sessions/' + currentUID).remove();
-                localStorage.removeItem('vip_files_uid');
-                localStorage.removeItem('vip_uid');
-                currentUID = '';
-                document.getElementById('mainLayout').style.display = 'none';
-                document.getElementById('loginWrapper').classList.remove('hide');
-                clearLoginPin(); clearRegisterPin();
-                hideLoading();
-                showNeonToast('Logged out successfully!');
-            });
-        }
-        
-        function showConfirm(title, message, callback) {
-            const modal = document.createElement('div');
-            modal.className = 'confirm-modal active';
-            modal.innerHTML = `
-                <div class="confirm-content">
-                    <div class="confirm-icon"><i class="fas fa-question-circle"></i></div>
-                    <div class="confirm-title">${title}</div>
-                    <div class="confirm-message">${message}</div>
-                    <div class="confirm-actions">
-                        <button class="confirm-btn confirm-btn-yes" id="customConfirmYes">Ya</button>
-                        <button class="confirm-btn confirm-btn-no" id="customConfirmNo">Tidak</button>
-                    </div>
+            html += `
+                <div class="price-card" onclick="selectPackage(${idx})" data-original-price="${originalPrice}" data-final-price="${finalPrice}">
+                    <div class="price-amount">Rp ${formatRupiah(finalPrice)}</div>
+                    <div class="price-type">${escapeHtml(pkg.label)}</div>
+                    ${discountText}
+                    ${pkg.description ? `<div style="font-size: 11px; color: #aaa; margin-top: 8px;">${escapeHtml(pkg.description)}</div>` : ''}
                 </div>
             `;
-            document.body.appendChild(modal);
-            
-            document.getElementById('customConfirmYes').onclick = () => {
-                modal.remove();
-                callback();
-            };
-            document.getElementById('customConfirmNo').onclick = () => {
-                modal.remove();
-            };
-        }
-        
-        function showMyIP() { console.log('IP hidden'); }
+        });
+        html += '</div>';
+        grid.innerHTML = html;
+    }
+    function selectPackage(idx) {
+        selectedPackage = packages[idx];
+        const priceCard = document.querySelectorAll('.price-card')[idx];
+        let finalPrice = parseInt(priceCard?.getAttribute('data-final-price') || selectedPackage.price);
+    
+        document.querySelectorAll('.price-card').forEach(c => c.classList.remove('selected'));
+        if (event?.currentTarget) event.currentTarget.classList.add('selected');
+    
+        document.getElementById('summaryPackageName').textContent = selectedPackage.label;
+        document.getElementById('summaryPrice').textContent = 'Rp ' + formatRupiah(finalPrice);
+        document.getElementById('summaryTotal').textContent = 'Rp ' + formatRupiah(finalPrice);
+    
+        selectedPackage.finalPrice = finalPrice;
+    }
 
-        // ==================== FEATURES ====================
-        const features = ['AimAssist','No Recoil','ESP','Wallhack','Speed Hack','Anti Ban','Aimbot','Triggerbot'];
-        let fHtml = '';
-        features.forEach(f => { fHtml += `<div class="feature-item"><div class="feature-icon"><i class="fas fa-crosshairs"></i></div><div class="feature-name">${f}</div></div>`; });
-        document.getElementById('featuresGrid').innerHTML = fHtml;
-
-        // ==================== INIT ====================
-        async function init() {
-            loadAdminConfig();
-            loadBackgroundVideo();
-            checkMaintenance();
-            setupUserChatFileUpload();
-            await loadGlobalDiscount();
-            setInterval(checkMaintenance, 30000);
-            const savedUID = localStorage.getItem('vip_uid');
-            if(savedUID) document.getElementById('loginUID').value = savedUID;
-            monitorAdminStatus();
-            
-            // Request izin notifikasi saat pertama kali load
-            if (Notification.permission === 'default') {
-                Notification.requestPermission().then(permission => {
-                    console.log('Notification permission:', permission);
-                    if (permission === 'granted') {
-                        console.log('Notifikasi diizinkan!');
-                    }
-                });
+    // ==================== REALTIME LISTENERS ====================
+    function setupRealtimeListeners() {
+        if(!currentUID) return;
+    
+        database.ref('saldo/' + currentUID).on('value', s => { 
+            if(s.exists()) { 
+                currentSaldo = s.val().amount || 0; 
+                updateSaldoDisplay(); 
+            } 
+        });
+    
+        database.ref('vip_members/' + currentUID).on('value', () => { 
+            loadVIPStatus(); 
+        });
+    
+        database.ref('deposits/' + currentUID).on('child_added', () => { 
+            loadTransactionHistory(); 
+        });
+    
+        database.ref('purchases/' + currentUID).on('child_added', () => { 
+            loadPurchaseHistory(); 
+        });
+    
+        // Deteksi session dihapus (force logout)
+        database.ref('sessions/' + currentUID).on('value', (snap) => {
+            const session = snap.val();
+            if (!session && currentUID) {
+                forceLogoutCount++;
+                if (forceLogoutCount <= 3) {
+                    showForceLogoutModal('⚠️ AKUN ANDA SEMENTARA KAMI TANGGUHKAN ⚠️\n\nAkun Anda sementara kami tangguhkan karena ada aktivitas mencurigakan.\nHarap bersabar dan hubungi admin untuk informasi lebih lanjut.\n\nAnda akan diarahkan ke halaman login.', 5);
+                } else {
+                    showForceLogoutModal('⚠️ AKUN ANDA DIBLOKIR SEMENTARA ⚠️\n\nTerjadi aktivitas mencurigakan berulang kali.\nAkun Anda akan diblokir sementara.\nHubungi admin untuk informasi lebih lanjut.', 5);
+                }
             }
+        });
+    
+        // Deteksi banned
+        database.ref('banned_users/' + currentUID).on('value', (snap) => {
+            if (snap.exists() && snap.val().status === 'banned' && currentUID) {
+                forceLogoutCount = 0;
+                showForceLogoutModal('⚠️ AKUN ANDA DIBLOKIR ⚠️\n\nAkun Anda telah diblokir oleh admin karena melanggar aturan.\nHubungi admin untuk informasi lebih lanjut.\n\nAnda akan diarahkan ke halaman login.', 5);
+            }
+        });
+    
+        // Update quota real-time
+        database.ref('vip_members/' + currentUID).on('value', (snap) => {
+            const vip = snap.val();
+            if (vip && vip.status === 'active' && vip.updateType === 'quota') {
+                const used = vip.updatesUsed || 0;
+                const total = vip.updateQuota || 0;
+                const percent = total > 0 ? (used / total) * 100 : 0;
             
-            console.log('User panel initialized - V1.0.0 with Real-Time Notifications & Deposit Photo Upload');
-        }
-        init();
-    </script>
-    </body>
-    </html>
+                const progressFill = document.querySelector('#vipCounterCard .progress-bar-fill.quota');
+                const percentText = document.querySelector('#vipCounterCard .progress-label span:last-child');
+            
+                if (progressFill) {
+                    progressFill.style.width = percent + '%';
+                }
+                if (percentText) {
+                    percentText.innerHTML = `${used}/${total} (${percent.toFixed(1)}%)`;
+                }
+            
+                const usedEl = document.querySelector('#vipCounterCard .vip-stat-item:first-child .vip-stat-value');
+                const totalEl = document.querySelector('#vipCounterCard .vip-stat-item:nth-child(2) .vip-stat-value');
+                const remainingEl = document.querySelector('#vipCounterCard .vip-stat-item:last-child .vip-stat-value');
+            
+                if (usedEl) usedEl.innerHTML = used;
+                if (totalEl) totalEl.innerHTML = total;
+                if (remainingEl) remainingEl.innerHTML = total - used;
+            }
+        });
+    }
+
+    // ==================== CHANGE PROFILE IMAGE ====================
+    function changeProfileImage() {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        input.onchange = async (e) => {
+            const file = e.target.files[0];
+            if(file) {
+                showLoading();
+                try {
+                    const url = await uploadToImgbb(file);
+                    document.getElementById('profileImage').src = url;
+                    document.getElementById('profileImageAccount').src = url;
+                    await database.ref('profiles/' + currentUID).set({ image: url, timestamp: Date.now() });
+                    hideLoading();
+                    showNeonToast('Profile updated!');
+                } catch(err) { hideLoading(); showNeonModal('Error', err.message, 'error'); }
+            }
+        };
+        input.click();
+    }
+
+    // ==================== COPY UID & LOGOUT ====================
+    function copyUID() { navigator.clipboard.writeText(currentUID); showNeonToast('UID copied!'); }
+    function logout() {
+        showConfirm('Logout', 'Apakah Anda yakin ingin logout?', () => {
+            showLoading();
+            if(currentUID) database.ref('users/' + currentUID + '/status').set('offline');
+            if(currentUID) database.ref('sessions/' + currentUID).remove();
+            localStorage.removeItem('vip_files_uid'); localStorage.removeItem('vip_uid');
+            currentUID = '';
+            document.getElementById('mainLayout').style.display = 'none';
+            document.getElementById('loginWrapper').classList.remove('hide');
+            clearLoginPin(); clearRegisterPin();
+            hideLoading();
+            showNeonToast('Logged out successfully!');
+        });
+    }
+    
+    function showConfirm(title, message, callback) {
+        const modal = document.createElement('div');
+        modal.className = 'confirm-modal active';
+        modal.innerHTML = `
+            <div class="confirm-content">
+                <div class="confirm-icon"><i class="fas fa-question-circle"></i></div>
+                <div class="confirm-title">${title}</div>
+                <div class="confirm-message">${message}</div>
+                <div class="confirm-actions">
+                    <button class="confirm-btn confirm-btn-yes" id="customConfirmYes">Ya</button>
+                    <button class="confirm-btn confirm-btn-no" id="customConfirmNo">Tidak</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        
+        document.getElementById('customConfirmYes').onclick = () => {
+            modal.remove();
+            callback();
+        };
+        document.getElementById('customConfirmNo').onclick = () => {
+            modal.remove();
+        };
+    }
+    
+    function showMyIP() { console.log('IP hidden'); }
+
+    // ==================== FEATURES ====================
+    const features = ['AimAssist','No Recoil','ESP','Wallhack','Speed Hack','Anti Ban','Aimbot','Triggerbot'];
+    let fHtml = '';
+    features.forEach(f => { fHtml += `<div class="feature-item"><div class="feature-icon"><i class="fas fa-crosshairs"></i></div><div class="feature-name">${f}</div></div>`; });
+    document.getElementById('featuresGrid').innerHTML = fHtml;
+
+    // ==================== INIT ====================
+    async function init() {
+        loadAdminConfig();
+        loadBackgroundVideo();
+        checkMaintenance();
+        setupUserChatFileUpload();
+        await loadGlobalDiscount();
+        setInterval(checkMaintenance, 30000);
+        const savedUID = localStorage.getItem('vip_uid');
+        if(savedUID) document.getElementById('loginUID').value = savedUID;
+        monitorAdminStatus();
+        console.log('User panel initialized - V1.0.0 with Real-Time Notifications & Deposit Photo Upload');
+    }
+    init();
+</script>
+</body>
+</html>
