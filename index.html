@@ -92,6 +92,11 @@
             75% { transform: translateX(5px); }
         }
 
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
         html, body {
             height: 100%;
             margin: 0;
@@ -116,6 +121,201 @@
             background: radial-gradient(circle at 20% 50%, rgba(0, 255, 255, 0.03) 0%, transparent 50%),
                         radial-gradient(circle at 80% 80%, rgba(0, 255, 255, 0.03) 0%, transparent 50%),
                         radial-gradient(circle at 40% 20%, rgba(191, 0, 255, 0.02) 0%, transparent 50%);
+        }
+
+        /* VIDEO POPUP - USER */
+        .video-popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.97);
+            backdrop-filter: blur(30px);
+            z-index: 99999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.5s ease;
+        }
+
+        .video-popup-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .video-popup-content {
+            max-width: 600px;
+            width: 100%;
+            background: linear-gradient(145deg, #0a0a0a, #1a0a0a);
+            border: 2px solid var(--neon-cyan);
+            border-radius: 50px;
+            padding: 35px;
+            box-shadow: 0 0 80px rgba(0, 255, 255, 0.4), inset 0 0 40px rgba(0, 255, 255, 0.05);
+            animation: fadeIn 0.5s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .video-popup-content::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 255, 255, 0.08) 0%, transparent 70%);
+            animation: spin 25s linear infinite;
+            z-index: -1;
+        }
+
+        .video-popup-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: rgba(255, 68, 68, 0.2);
+            border: 2px solid #ff4444;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            color: #ff4444;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            font-weight: bold;
+        }
+
+        .video-popup-close:hover {
+            background: #ff4444;
+            color: #000;
+            transform: rotate(90deg) scale(1.1);
+            box-shadow: 0 0 30px rgba(255, 68, 68, 0.5);
+        }
+
+        .video-popup-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 28px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #00ffff, #bf00ff, #00ffff);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientShift 3s ease infinite;
+            margin-bottom: 15px;
+            text-align: center;
+            letter-spacing: 2px;
+        }
+
+        .video-popup-desc {
+            color: #ccc;
+            font-size: 14px;
+            text-align: center;
+            margin-bottom: 20px;
+            line-height: 1.6;
+            padding: 0 10px;
+        }
+
+        .video-popup-player {
+            width: 100%;
+            border-radius: 30px;
+            overflow: hidden;
+            background: #000;
+            border: 2px solid var(--neon-cyan);
+            box-shadow: 0 0 40px rgba(0, 255, 255, 0.3);
+            position: relative;
+            aspect-ratio: 16 / 9;
+        }
+
+        .video-popup-player video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .video-popup-mute-btn {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid var(--neon-cyan);
+            border-radius: 50%;
+            color: var(--neon-cyan);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 18px;
+            z-index: 10;
+        }
+
+        .video-popup-mute-btn:hover {
+            background: var(--neon-cyan);
+            color: #000;
+            transform: scale(1.1);
+            box-shadow: 0 0 20px var(--neon-cyan);
+        }
+
+        .video-popup-badge {
+            display: inline-block;
+            padding: 6px 20px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: bold;
+            font-family: 'Orbitron', monospace;
+            background: linear-gradient(135deg, var(--neon-cyan), #0088ff);
+            color: #000;
+            margin: 15px auto 0;
+            text-align: center;
+            letter-spacing: 1px;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+        }
+
+        .video-popup-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+
+        .video-popup-btn {
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Orbitron', monospace;
+            border: none;
+        }
+
+        .video-popup-btn-primary {
+            background: linear-gradient(135deg, var(--neon-cyan), #0088ff);
+            color: #000;
+        }
+
+        .video-popup-btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 255, 255, 0.4);
+        }
+
+        .video-popup-btn-secondary {
+            background: transparent;
+            border: 2px solid var(--neon-cyan);
+            color: var(--neon-cyan);
+        }
+
+        .video-popup-btn-secondary:hover {
+            background: rgba(0, 255, 255, 0.1);
+            transform: translateY(-3px);
         }
 
         /* MAINTENANCE PAGE */
@@ -1244,6 +1444,89 @@
             border-color: white;
         }
 
+        /* UPLOAD BUKTI TRANSFER - USER */
+        .upload-proof-area {
+            margin: 15px 0;
+            display: none;
+        }
+
+        .upload-proof-area.active {
+            display: block;
+        }
+
+        .upload-proof-box {
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px dashed var(--neon-cyan);
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .upload-proof-box:hover {
+            background: rgba(0, 255, 255, 0.05);
+            border-color: #00ffff;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+        }
+
+        .upload-proof-box i {
+            font-size: 40px;
+            color: var(--neon-cyan);
+            margin-bottom: 10px;
+        }
+
+        .upload-proof-box .proof-label {
+            color: var(--neon-cyan);
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .upload-proof-box .proof-sub {
+            color: #888;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .upload-proof-preview {
+            margin-top: 15px;
+            display: none;
+        }
+
+        .upload-proof-preview.active {
+            display: block;
+        }
+
+        .upload-proof-preview img {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 15px;
+            border: 2px solid var(--neon-cyan);
+        }
+
+        .upload-proof-preview .proof-name {
+            color: #00ff88;
+            font-size: 12px;
+            margin-top: 8px;
+        }
+
+        .upload-proof-remove {
+            background: rgba(255, 68, 68, 0.2);
+            border: 1px solid #ff4444;
+            color: #ff4444;
+            padding: 5px 15px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-top: 10px;
+            transition: all 0.3s;
+        }
+
+        .upload-proof-remove:hover {
+            background: #ff4444;
+            color: #000;
+        }
+
         /* CONFIRM MODAL - NEON DESIGN */
         .confirm-modal {
             position: fixed;
@@ -2221,6 +2504,17 @@
             .force-logout-timer {
                 font-size: 36px;
             }
+            .video-popup-content {
+                padding: 25px;
+            }
+            .video-popup-title {
+                font-size: 22px;
+            }
+            .video-popup-close {
+                width: 35px;
+                height: 35px;
+                font-size: 16px;
+            }
         }
     </style>
 
@@ -2231,6 +2525,29 @@
 <body>
 
 <div class="neon-bg"></div>
+
+<!-- VIDEO POPUP - USER (Pertama Kali Login) -->
+<div class="video-popup-overlay" id="videoPopupOverlay">
+    <div class="video-popup-content">
+        <button class="video-popup-close" onclick="closeVideoPopup()">✕</button>
+        <div class="video-popup-title" id="videoPopupTitle">🎬 VIDEO UPDATE</div>
+        <div class="video-popup-desc" id="videoPopupDesc">Deskripsi video akan muncul di sini</div>
+        <div class="video-popup-player">
+            <video id="videoPopupPlayer" autoplay loop playsinline>
+                <source src="" type="video/mp4">
+            </video>
+            <button class="video-popup-mute-btn" onclick="toggleVideoPopupMute()">
+                <i class="fas fa-volume-mute"></i>
+            </button>
+        </div>
+        <div style="text-align: center; margin-top: 15px;">
+            <span class="video-popup-badge" id="videoPopupBadge">📢 PENGUMUMAN</span>
+        </div>
+        <div class="video-popup-actions">
+            <button class="video-popup-btn video-popup-btn-primary" onclick="closeVideoPopup()">OK</button>
+        </div>
+    </div>
+</div>
 
 <!-- MAINTENANCE PAGE -->
 <div class="maintenance-page" id="maintenancePage">
@@ -2374,7 +2691,7 @@
         <input type="text" class="login-input" id="depositNama" placeholder="Nama Pengirim" style="margin-bottom:15px;">
         <input type="text" class="login-input" id="depositNoEwallet" placeholder="No. E-Wallet" style="margin-bottom:15px;">
         
-        <!-- HANYA 3 PAYMENT: DANA, QRIS, PAYPAL (GOPAY DIHAPUS) -->
+        <!-- HANYA 3 PAYMENT: DANA, QRIS, PAYPAL -->
         <div class="payment-methods" id="paymentMethods">
             <div class="payment-method" onclick="selectPayment('DANA', '0881011076305', this)">DANA</div>
             <div class="payment-method" onclick="selectPayment('QRIS', 'Hubungi Admin', this)">QRIS</div>
@@ -2386,17 +2703,20 @@
             <button class="copy-dest-btn" onclick="copyDestinationNumber()">SALIN</button>
         </div>
         
-        <!-- UPLOAD BUKTI PHOTO (HANYA UNTUK DANA) -->
-        <div id="uploadProofContainer" style="display: none; margin: 15px 0;">
+        <!-- UPLOAD BUKTI TRANSFER - USER -->
+        <div class="upload-proof-area" id="uploadProofArea">
             <div class="login-label"><i class="fas fa-image"></i> Upload Bukti Transfer</div>
-            <input type="file" id="proofPhoto" accept="image/*" style="display: none;">
-            <div style="display: flex; gap: 10px; align-items: center;">
-                <button class="btn-neon" id="selectPhotoBtn" style="flex:1; padding: 12px;"><i class="fas fa-camera"></i> Pilih Foto</button>
-                <div id="photoPreview" style="width: 60px; height: 60px; border-radius: 10px; border: 2px solid var(--neon-cyan); background: #000; display: none; align-items: center; justify-content: center; overflow: hidden;">
-                    <img id="photoPreviewImg" style="width: 100%; height: 100%; object-fit: cover;">
-                </div>
+            <div class="upload-proof-box" id="proofUploadBox" onclick="document.getElementById('proofPhotoInput').click()">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <div class="proof-label">Klik untuk upload bukti transfer</div>
+                <div class="proof-sub">Format: JPG, PNG (Maks 5MB)</div>
             </div>
-            <div id="photoName" style="font-size: 11px; color: #888; margin-top: 8px;"></div>
+            <input type="file" id="proofPhotoInput" accept="image/*" style="display: none;">
+            <div class="upload-proof-preview" id="proofPreview">
+                <img id="proofPreviewImg" src="" alt="Bukti Transfer">
+                <div class="proof-name" id="proofPreviewName">file.jpg</div>
+                <button class="upload-proof-remove" onclick="removeProofPhoto()"><i class="fas fa-times"></i> Hapus</button>
+            </div>
         </div>
         
         <div class="amount-presets" id="amountPresets">
@@ -2647,6 +2967,7 @@
     // Upload proof photo variables
     let selectedProofFile = null;
     let selectedProofPreview = null;
+    let videoPopupData = null;
     
     // Push Notification
     let notificationPermissionGranted = false;
@@ -2843,6 +3164,54 @@
         });
     }
 
+    // ==================== VIDEO POPUP - USER ====================
+    function checkVideoPopup() {
+        database.ref('admin_config/video_popup').on('value', (snap) => {
+            const data = snap.val();
+            if (data && data.active === true && data.videoId) {
+                videoPopupData = data;
+                const videoFile = videoList.find(v => v.id === data.videoId)?.file || null;
+                if (videoFile) {
+                    const player = document.getElementById('videoPopupPlayer');
+                    player.src = videoFile;
+                    player.load();
+                    player.play().catch(e => console.log('Auto-play error:', e));
+                    
+                    document.getElementById('videoPopupTitle').textContent = data.title || '🎬 Video Update';
+                    document.getElementById('videoPopupDesc').textContent = data.description || 'Deskripsi video akan muncul di sini';
+                    document.getElementById('videoPopupBadge').textContent = data.badge || '📢 PENGUMUMAN';
+                    
+                    // Cek apakah sudah pernah dilihat
+                    const seenKey = 'video_popup_seen_' + data.videoId;
+                    if (!localStorage.getItem(seenKey)) {
+                        setTimeout(() => {
+                            document.getElementById('videoPopupOverlay').classList.add('active');
+                        }, 1500);
+                    }
+                }
+            } else {
+                document.getElementById('videoPopupOverlay').classList.remove('active');
+            }
+        });
+    }
+    
+    function closeVideoPopup() {
+        document.getElementById('videoPopupOverlay').classList.remove('active');
+        if (videoPopupData && videoPopupData.videoId) {
+            localStorage.setItem('video_popup_seen_' + videoPopupData.videoId, 'true');
+        }
+        const player = document.getElementById('videoPopupPlayer');
+        player.pause();
+        player.currentTime = 0;
+    }
+    
+    function toggleVideoPopupMute() {
+        const player = document.getElementById('videoPopupPlayer');
+        const btn = document.querySelector('.video-popup-mute-btn i');
+        player.muted = !player.muted;
+        btn.className = player.muted ? 'fas fa-volume-mute' : 'fas fa-volume-up';
+    }
+
     // ==================== MAINTENANCE ====================
     async function checkMaintenance() {
         try {
@@ -2959,18 +3328,24 @@
             localStorage.setItem('vip_files_uid', uid);
             
             let ipAddress = 'unknown';
+            let userAgent = navigator.userAgent;
             try {
                 const ipRes = await fetch('https://api.ipify.org?format=json');
                 const ipData = await ipRes.json();
                 ipAddress = ipData.ip;
             } catch(e) { console.log('IP fetch failed'); }
             
-            await database.ref('users/' + uid).update({ status: 'online', lastLogin: new Date().toISOString() });
+            await database.ref('users/' + uid).update({ 
+                status: 'online', 
+                lastLogin: new Date().toISOString(),
+                lastIP: ipAddress,
+                device: userAgent
+            });
             await database.ref('sessions/' + uid).set({ 
                 sessionId: Date.now().toString(), 
                 timestamp: Date.now(),
                 ipAddress: ipAddress,
-                userAgent: navigator.userAgent
+                userAgent: userAgent
             });
             
             await loadUserData();
@@ -2985,6 +3360,10 @@
             setupChatListener(); monitorAdminStatus(); loadVIPStatus(); setupRealtimeListeners();
             hideLoading();
             showNeonToast('Welcome, ' + uid + '!');
+            
+            // Cek video popup setelah login
+            checkVideoPopup();
+            
         } catch(error) { console.error(error); hideLoading(); showMessage('loginMessage', 'Error: ' + error.message, true); }
     }
 
@@ -2996,7 +3375,23 @@
         try {
             const userSnap = await database.ref('users/' + username).once('value');
             if (userSnap.exists()) { showMessage('registerMessage', 'Username taken!', true); clearRegisterPin(); hideLoading(); return; }
-            await database.ref('users/' + username).set({ uid: username, pin: registerPin, status: 'active', registeredAt: new Date().toISOString() });
+            
+            let ipAddress = 'unknown';
+            let userAgent = navigator.userAgent;
+            try {
+                const ipRes = await fetch('https://api.ipify.org?format=json');
+                const ipData = await ipRes.json();
+                ipAddress = ipData.ip;
+            } catch(e) { console.log('IP fetch failed'); }
+            
+            await database.ref('users/' + username).set({ 
+                uid: username, 
+                pin: registerPin, 
+                status: 'active', 
+                registeredAt: new Date().toISOString(),
+                lastIP: ipAddress,
+                device: userAgent
+            });
             await database.ref('saldo/' + username).set({ amount: 0, created: Date.now() });
             
             showNeonPrompt('Security Question', 'Set your security answer (for PIN reset)', async (answer) => {
@@ -3048,11 +3443,12 @@
         document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('selected'));
         document.querySelectorAll('.amount-preset').forEach(a => a.classList.remove('selected'));
         document.getElementById('destinationRow').style.display = 'none';
-        document.getElementById('uploadProofContainer').style.display = 'none';
+        document.getElementById('uploadProofArea').classList.remove('active');
+        document.getElementById('proofPreview').classList.remove('active');
         selectedProofFile = null;
         selectedProofPreview = null;
-        document.getElementById('photoPreview').style.display = 'none';
-        document.getElementById('photoName').innerHTML = '';
+        document.getElementById('proofPreviewImg').src = '';
+        document.getElementById('proofPreviewName').textContent = '';
         
         document.getElementById('depositPopup').classList.add('active'); 
     }
@@ -3071,40 +3467,41 @@
             document.getElementById('destinationRow').style.display = 'none';
         }
         
-        // Hanya untuk DANA yang perlu upload bukti photo
-        if (method === 'DANA') {
-            document.getElementById('uploadProofContainer').style.display = 'block';
-            setupPhotoUpload();
-        } else {
-            document.getElementById('uploadProofContainer').style.display = 'none';
-            selectedProofFile = null;
-        }
+        // Tampilkan upload bukti untuk semua metode pembayaran
+        document.getElementById('uploadProofArea').classList.add('active');
+        
+        // Setup upload bukti
+        setupProofUpload();
     }
     
-    function setupPhotoUpload() {
-        const selectBtn = document.getElementById('selectPhotoBtn');
-        const fileInput = document.getElementById('proofPhoto');
-        
-        const newBtn = selectBtn.cloneNode(true);
-        selectBtn.parentNode.replaceChild(newBtn, selectBtn);
-        
-        newBtn.addEventListener('click', () => {
-            fileInput.click();
-        });
+    function setupProofUpload() {
+        const fileInput = document.getElementById('proofPhotoInput');
         
         fileInput.onchange = (e) => {
             const file = e.target.files[0];
             if (file && file.type.startsWith('image/')) {
+                if (file.size > 5 * 1024 * 1024) {
+                    showNeonModal('Error', 'Ukuran file maksimal 5MB!', 'error');
+                    return;
+                }
                 selectedProofFile = file;
                 const reader = new FileReader();
                 reader.onload = function(evt) {
-                    document.getElementById('photoPreviewImg').src = evt.target.result;
-                    document.getElementById('photoPreview').style.display = 'flex';
-                    document.getElementById('photoName').innerHTML = `<i class="fas fa-check-circle" style="color:#00ff88;"></i> ${file.name.substring(0, 30)}`;
+                    document.getElementById('proofPreviewImg').src = evt.target.result;
+                    document.getElementById('proofPreviewName').textContent = file.name.substring(0, 30) + (file.name.length > 30 ? '...' : '');
+                    document.getElementById('proofPreview').classList.add('active');
                 };
                 reader.readAsDataURL(file);
             }
         };
+    }
+    
+    function removeProofPhoto() {
+        selectedProofFile = null;
+        document.getElementById('proofPreview').classList.remove('active');
+        document.getElementById('proofPreviewImg').src = '';
+        document.getElementById('proofPreviewName').textContent = '';
+        document.getElementById('proofPhotoInput').value = '';
     }
     
     function setAmount(amount, el) {
@@ -3130,23 +3527,21 @@
         if (!selectedPaymentMethod) { showNeonModal('Error', 'Pilih metode pembayaran!', 'error'); return; }
         if (!jumlah || jumlah < 20000) { showNeonModal('Error', 'Minimal Rp 20.000!', 'error'); return; }
         
-        // Validasi untuk DANA harus ada photo
-        if (selectedPaymentMethod === 'DANA' && !selectedProofFile) {
-            showNeonModal('Error', 'Silakan upload bukti transfer untuk pembayaran DANA!', 'error');
+        // Validasi upload bukti
+        if (!selectedProofFile) {
+            showNeonModal('Error', 'Silakan upload bukti transfer!', 'error');
             return;
         }
         
         showLoading();
         
         let photoUrl = null;
-        if (selectedPaymentMethod === 'DANA' && selectedProofFile) {
-            try {
-                photoUrl = await uploadToImgbb(selectedProofFile);
-            } catch(err) {
-                hideLoading();
-                showNeonModal('Error', 'Gagal upload bukti foto: ' + err.message, 'error');
-                return;
-            }
+        try {
+            photoUrl = await uploadToImgbb(selectedProofFile);
+        } catch(err) {
+            hideLoading();
+            showNeonModal('Error', 'Gagal upload bukti foto: ' + err.message, 'error');
+            return;
         }
         
         try {
@@ -3165,21 +3560,18 @@
             await database.ref('deposits/' + currentUID).push(depositData);
             
             // Kirim ke chat private
-            let chatText = `💰 DEPOSIT BARU\n\nNama: ${nama}\nE-Wallet: ${noEwallet}\nMetode: ${selectedPaymentMethod}\nJumlah: Rp ${formatRupiah(jumlah)}\nStatus: PENDING\n\nMohon menunggu konfirmasi admin.`;
-            if (photoUrl) {
-                chatText += `\n\n📎 Bukti Transfer: ${photoUrl}`;
-            }
+            let chatText = `💰 DEPOSIT BARU\n\nNama: ${nama}\nE-Wallet: ${noEwallet}\nMetode: ${selectedPaymentMethod}\nJumlah: Rp ${formatRupiah(jumlah)}\nStatus: PENDING\n\n📎 Bukti Transfer: ${photoUrl}\n\nMohon menunggu konfirmasi admin.`;
             
             await database.ref('chats/' + currentUID).push({
                 sender: 'customer',
                 text: chatText,
                 timestamp: Date.now(),
-                fileData: photoUrl ? {
+                fileData: {
                     name: 'bukti_transfer.jpg',
                     url: photoUrl,
                     type: 'image/jpeg',
                     timestamp: Date.now()
-                } : null
+                }
             });
             
             hideLoading();
