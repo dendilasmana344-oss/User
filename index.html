@@ -317,6 +317,222 @@
             background: rgba(0, 255, 255, 0.1);
             transform: translateY(-3px);
         }
+        
+        .video-popup-login {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.97);
+            backdrop-filter: blur(30px);
+            z-index: 99998;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.5s ease;
+        }
+        
+        .video-popup-login.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .video-popup-login .video-popup-content {
+            max-width: 600px;
+            width: 100%;
+            background: linear-gradient(145deg, #0a0a0a, #1a0a0a);
+            border: 2px solid var(--neon-cyan);
+            border-radius: 50px;
+            padding: 35px;
+            box-shadow: 0 0 80px rgba(0, 255, 255, 0.4), inset 0 0 40px rgba(0, 255, 255, 0.05);
+            animation: fadeIn 0.5s ease;
+            position: relative;
+            overflow: hidden;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .video-popup-login .video-popup-content::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 255, 255, 0.08) 0%, transparent 70%);
+            animation: spin 25s linear infinite;
+            z-index: -1;
+        }
+        
+        .video-popup-login .video-popup-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: rgba(255, 68, 68, 0.2);
+            border: 2px solid #ff4444;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            color: #ff4444;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            font-weight: bold;
+        }
+        
+        .video-popup-login .video-popup-close:hover {
+            background: #ff4444;
+            color: #000;
+            transform: rotate(90deg) scale(1.1);
+            box-shadow: 0 0 30px rgba(255, 68, 68, 0.5);
+        }
+        
+        .video-popup-login .video-popup-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 28px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #00ffff, #bf00ff, #00ffff);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientShift 3s ease infinite;
+            margin-bottom: 15px;
+            text-align: center;
+            letter-spacing: 2px;
+        }
+        
+        .video-popup-login .video-popup-desc {
+            color: #ccc;
+            font-size: 14px;
+            text-align: center;
+            margin-bottom: 20px;
+            line-height: 1.6;
+            padding: 0 10px;
+        }
+        
+        .video-popup-login .video-popup-player {
+            width: 100%;
+            border-radius: 30px;
+            overflow: hidden;
+            background: #000;
+            border: 2px solid var(--neon-cyan);
+            box-shadow: 0 0 40px rgba(0, 255, 255, 0.3);
+            position: relative;
+            aspect-ratio: 16 / 9;
+        }
+        
+        .video-popup-login .video-popup-player video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .video-popup-login .video-popup-mute-btn {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid var(--neon-cyan);
+            border-radius: 50%;
+            color: var(--neon-cyan);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 18px;
+            z-index: 10;
+        }
+        
+        .video-popup-login .video-popup-mute-btn:hover {
+            background: var(--neon-cyan);
+            color: #000;
+            transform: scale(1.1);
+            box-shadow: 0 0 20px var(--neon-cyan);
+        }
+        
+        .video-popup-login .video-popup-badge {
+            display: inline-block;
+            padding: 6px 20px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: bold;
+            font-family: 'Orbitron', monospace;
+            background: linear-gradient(135deg, var(--neon-cyan), #0088ff);
+            color: #000;
+            margin: 15px auto 0;
+            text-align: center;
+            letter-spacing: 1px;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+        }
+        
+        .video-popup-login .video-popup-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+        
+        .video-popup-login .video-popup-btn {
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Orbitron', monospace;
+            border: none;
+        }
+        
+        .video-popup-login .video-popup-btn-primary {
+            background: linear-gradient(135deg, var(--neon-cyan), #0088ff);
+            color: #000;
+        }
+        
+        .video-popup-login .video-popup-btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 255, 255, 0.4);
+        }
+        
+        /* Video Popup Type Badge */
+        .video-popup-type-badge {
+            display: inline-block;
+            padding: 4px 15px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+            background: rgba(255, 170, 0, 0.2);
+            border: 1px solid #ffaa00;
+            color: #ffaa00;
+            margin-bottom: 10px;
+        }
+        
+        .video-popup-type-badge.tutorial {
+            background: rgba(0, 255, 136, 0.2);
+            border-color: #00ff88;
+            color: #00ff88;
+        }
+        
+        .video-popup-type-badge.announcement {
+            background: rgba(0, 255, 255, 0.2);
+            border-color: #00ffff;
+            color: #00ffff;
+        }
+        
+        .video-popup-type-badge.promo {
+            background: rgba(255, 215, 0, 0.2);
+            border-color: #ffd700;
+            color: #ffd700;
+        }
 
         /* MAINTENANCE PAGE */
         .maintenance-page {
@@ -2526,6 +2742,30 @@
 
 <div class="neon-bg"></div>
 
+<!-- VIDEO POPUP LOGIN - SEBELUM LOGIN -->
+<div class="video-popup-login" id="videoPopupLogin">
+    <div class="video-popup-content">
+        <button class="video-popup-close" onclick="closeVideoPopupLogin()">✕</button>
+        <div class="video-popup-type-badge tutorial" id="videoPopupLoginType">📖 TUTORIAL</div>
+        <div class="video-popup-title" id="videoPopupLoginTitle">🎬 Video Tutorial</div>
+        <div class="video-popup-desc" id="videoPopupLoginDesc">Deskripsi tutorial akan muncul di sini</div>
+        <div class="video-popup-player">
+            <video id="videoPopupLoginPlayer" autoplay loop playsinline>
+                <source src="" type="video/mp4">
+            </video>
+            <button class="video-popup-mute-btn" onclick="toggleVideoPopupLoginMute()">
+                <i class="fas fa-volume-mute"></i>
+            </button>
+        </div>
+        <div style="text-align: center; margin-top: 15px;">
+            <span class="video-popup-badge" id="videoPopupLoginBadge">📢 PENGUMUMAN</span>
+        </div>
+        <div class="video-popup-actions">
+            <button class="video-popup-btn video-popup-btn-primary" onclick="closeVideoPopupLogin()">OK, Saya Mengerti</button>
+        </div>
+    </div>
+</div>
+
 <!-- VIDEO POPUP - USER (Pertama Kali Login) -->
 <div class="video-popup-overlay" id="videoPopupOverlay">
     <div class="video-popup-content">
@@ -2951,6 +3191,7 @@
     let selectedPackage = null;
     let loadingLogoUrl = '';
     let activeBackgroundVideo = 1;
+    let videoPopupLoginData = null;
     let maintenanceEndTime = null;
     let maintenanceInterval = null;
     let selectedPaymentMethod = '';
@@ -3221,6 +3462,81 @@
         player.muted = !player.muted;
         btn.className = player.muted ? 'fas fa-volume-mute' : 'fas fa-volume-up';
     }
+    
+    // Tambahkan fungsi untuk video popup login
+    function checkVideoPopupLogin() {
+        database.ref('admin_config/video_popup').on('value', (snap) => {
+            const data = snap.val();
+            const overlay = document.getElementById('videoPopupLogin');
+            
+            if (data && data.active === true && data.videoId) {
+                videoPopupLoginData = data;
+                const videoFile = videoPopupList.find(v => v.id === data.videoId)?.file || null;
+                
+                if (videoFile) {
+                    const player = document.getElementById('videoPopupLoginPlayer');
+                    player.src = videoFile;
+                    player.load();
+                    player.play().catch(e => console.log('Auto-play error:', e));
+                    
+                    document.getElementById('videoPopupLoginTitle').textContent = data.title || '🎬 Video Tutorial';
+                    document.getElementById('videoPopupLoginDesc').textContent = data.description || 'Deskripsi tutorial akan muncul di sini';
+                    document.getElementById('videoPopupLoginBadge').textContent = data.badge || '📢 PENGUMUMAN';
+                    
+                    // Tentukan type badge
+                    const typeBadge = document.getElementById('videoPopupLoginType');
+                    if (data.type === 'tutorial') {
+                        typeBadge.textContent = '📖 TUTORIAL';
+                        typeBadge.className = 'video-popup-type-badge tutorial';
+                    } else if (data.type === 'promo') {
+                        typeBadge.textContent = '🎁 PROMO';
+                        typeBadge.className = 'video-popup-type-badge promo';
+                    } else {
+                        typeBadge.textContent = '📢 PENGUMUMAN';
+                        typeBadge.className = 'video-popup-type-badge announcement';
+                    }
+                    
+                    // Tampilkan popup di atas login (sebelum login)
+                    // Cek apakah sudah pernah dilihat
+                    const seenKey = 'video_popup_login_seen_' + data.videoId;
+                    if (!localStorage.getItem(seenKey)) {
+                        setTimeout(() => {
+                            overlay.classList.add('active');
+                            // Sembunyikan login wrapper sementara
+                            document.getElementById('loginWrapper').style.opacity = '0.3';
+                        }, 1000);
+                    }
+                }
+            } else {
+                overlay.classList.remove('active');
+                document.getElementById('loginWrapper').style.opacity = '1';
+            }
+        });
+    }
+    
+    function closeVideoPopupLogin() {
+        const overlay = document.getElementById('videoPopupLogin');
+        overlay.classList.remove('active');
+        document.getElementById('loginWrapper').style.opacity = '1';
+        
+        if (videoPopupLoginData && videoPopupLoginData.videoId) {
+            localStorage.setItem('video_popup_login_seen_' + videoPopupLoginData.videoId, 'true');
+        }
+        
+        const player = document.getElementById('videoPopupLoginPlayer');
+        player.pause();
+        player.currentTime = 0;
+    }
+    
+    function toggleVideoPopupLoginMute() {
+        const player = document.getElementById('videoPopupLoginPlayer');
+        const btn = document.querySelector('.video-popup-login .video-popup-mute-btn i');
+        player.muted = !player.muted;
+        btn.className = player.muted ? 'fas fa-volume-mute' : 'fas fa-volume-up';
+    }
+    
+    // Panggil di init()
+    checkVideoPopupLogin();
 
     // ==================== MAINTENANCE ====================
     async function checkMaintenance() {
@@ -4538,4 +4854,3 @@
     init();
 </script>
 </body>
-</html>
