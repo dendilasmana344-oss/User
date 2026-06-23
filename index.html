@@ -3165,22 +3165,32 @@
     }
 
     // ==================== VIDEO POPUP - USER ====================
+    const videoPopupList = [
+        { id: 1, file: 'game1.mp4' },
+        { id: 2, file: 'game2.mp4' },
+        { id: 3, file: 'game3.mp4' },
+        { id: 4, file: 'game4.mp4' },
+        { id: 5, file: 'game5.mp4' }
+    ];
+
+    // Ganti fungsi checkVideoPopup() menjadi:
     function checkVideoPopup() {
         database.ref('admin_config/video_popup').on('value', (snap) => {
             const data = snap.val();
             if (data && data.active === true && data.videoId) {
                 videoPopupData = data;
-                const videoFile = videoList.find(v => v.id === data.videoId)?.file || null;
+                // Gunakan videoPopupList, bukan videoList
+                const videoFile = videoPopupList.find(v => v.id === data.videoId)?.file || null;
                 if (videoFile) {
                     const player = document.getElementById('videoPopupPlayer');
                     player.src = videoFile;
                     player.load();
                     player.play().catch(e => console.log('Auto-play error:', e));
-                    
+                
                     document.getElementById('videoPopupTitle').textContent = data.title || '🎬 Video Update';
                     document.getElementById('videoPopupDesc').textContent = data.description || 'Deskripsi video akan muncul di sini';
                     document.getElementById('videoPopupBadge').textContent = data.badge || '📢 PENGUMUMAN';
-                    
+                
                     // Cek apakah sudah pernah dilihat
                     const seenKey = 'video_popup_seen_' + data.videoId;
                     if (!localStorage.getItem(seenKey)) {
