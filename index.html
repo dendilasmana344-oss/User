@@ -2686,6 +2686,13 @@
             font-weight: bold;
             font-size: 14px;
         }
+        
+        .detail-value.device-id {
+            color: #ff6b9d;
+            font-family: monospace;
+            font-size: 11px;
+            word-break: break-all;
+        }
 
         .action-buttons {
             display: flex;
@@ -3194,6 +3201,7 @@
     let videoPopupLoginData = null;
     let maintenanceEndTime = null;
     let maintenanceInterval = null;
+    let deviceFingerprint = '';
     let selectedPaymentMethod = '';
     let selectedPaymentNumber = '';
     let selectedDepositAmount = 0;
@@ -3537,6 +3545,35 @@
     
     // Panggil di init()
     checkVideoPopupLogin();
+    
+    // ==================== DEVICE FINGERPRINT ====================
+    function getDeviceFingerprint() {
+        const components = [
+            navigator.userAgent,
+            screen.width + 'x' + screen.height,
+            screen.colorDepth,
+            navigator.language,
+            navigator.platform,
+            navigator.hardwareConcurrency || '',
+            navigator.deviceMemory || '',
+            new Date().getTimezoneOffset(),
+            !!navigator.maxTouchPoints,
+            screen.availWidth + 'x' + screen.availHeight
+        ];
+    
+        const combined = components.join('|');
+        let hash = 0;
+        for (let i = 0; i < combined.length; i++) {
+            const char = combined.charCodeAt(i);
+            hash = ((hash << 5) - hash) + char;
+            hash = hash & hash;
+        }
+        return 'FP_' + Math.abs(hash).toString(36).toUpperCase();
+    }
+
+    // Generate device fingerprint
+    deviceFingerprint = getDeviceFingerprint();
+    console.log('🔐 Device Fingerprint:', deviceFingerprint);
 
     // ==================== MAINTENANCE ====================
     async function checkMaintenance() {
@@ -3665,7 +3702,8 @@
                 status: 'online', 
                 lastLogin: new Date().toISOString(),
                 lastIP: ipAddress,
-                device: userAgent
+                device: userAgent,
+                deviceId: deviceFingerprint
             });
             await database.ref('sessions/' + uid).set({ 
                 sessionId: Date.now().toString(), 
@@ -3699,8 +3737,12 @@
         if (registerPin.length < 6) { showMessage('registerMessage', 'PIN must be 6 digits!', true); return; }
         showLoading();
         try {
-            const userSnap = await database.ref('users/' + username).once('value');
-            if (userSnap.exists()) { showMessage('registerMessage', 'Username taken!', true); clearRegisterPin(); hideLoading(); return; }
+            // CEK IP & DEVICE ID SUDAH TERDAFTAR
+            const allUsersSnap = await database.ref('users').once('value');
+            const allUsersData = allUsersSnap.val() || {};
+            let ipSudahTerdaftar = false;
+            let deviceSudahTerdaftar = false;
+            let existingUID = '';
             
             let ipAddress = 'unknown';
             let userAgent = navigator.userAgent;
@@ -3710,13 +3752,49 @@
                 ipAddress = ipData.ip;
             } catch(e) { console.log('IP fetch failed'); }
             
+            // CEK IP & DEVICE ID SUDAH TERDAFTAR (setelah dapat ipAddress)
+            const allUsersSnap2 = await database.ref('users').once('value');
+            const allUsersData2 = allUsersSnap2.val() || {};
+            let ipSudahTerdaftar2 = false;
+            let deviceSudahTerdaftar2 = false;
+            let existingUID2 = '';
+
+            Object.keys(allUsersData2).forEach(uid => {
+                const user = allUsersData2[uid];
+                if (user.registrasiIP === ipAddress) {
+                    ipSudahTerdaftar2 = true;
+                    existingUID2 = uid;
+                }
+                if (user.deviceId === deviceFingerprint) {
+                    deviceSudahTerdaftar2 = true;
+                    if (!existingUID2) existingUID2 = uid;
+                }
+            });
+
+            if (ipSudahTerdaftar2 || deviceSudahTerdaftar2) {
+                let pesan = '❌ AKUN SUDAH TERDAFTAR!\n\n';
+                if (ipSudahTerdaftar2) {
+                    pesan += `📍 IP ${ipAddress} sudah digunakan untuk akun: ${existingUID2}\n`;
+                }
+                if (deviceSudahTerdaftar2) {
+                    pesan += `📱 Perangkat ini sudah digunakan untuk akun: ${existingUID2}\n`;
+                }
+                pesan += '\nSilakan login menggunakan akun Anda.';
+                showMessage('registerMessage', pesan, true);
+                clearRegisterPin();
+                hideLoading();
+                return;
+            }
+
             await database.ref('users/' + username).set({ 
                 uid: username, 
                 pin: registerPin, 
                 status: 'active', 
                 registeredAt: new Date().toISOString(),
                 lastIP: ipAddress,
-                device: userAgent
+                device: userAgent,
+                deviceId: deviceFingerprint,
+                registrasiIP: ipAddress
             });
             await database.ref('saldo/' + username).set({ amount: 0, created: Date.now() });
             
@@ -4849,7 +4927,8 @@
         const savedUID = localStorage.getItem('vip_uid');
         if(savedUID) document.getElementById('loginUID').value = savedUID;
         monitorAdminStatus();
-        console.log('User panel initialized - V1.0.0 with Real-Time Notifications & Deposit Photo Upload');
+        console.log('🔐 Device Fingerprint aktif:', deviceFingerprint);
+        console.log('User panel initialized - V1.0.0');
     }
     init();
 </script>
