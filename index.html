@@ -1659,6 +1659,358 @@
             color: #000;
             border-color: white;
         }
+        
+        /* ===== CHAT SUPPORT FLOATING BUTTON ===== */
+        .chat-support-float {
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 10px;
+        }
+        
+        .chat-support-toggle {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--neon-cyan), #0088ff);
+            border: 2px solid var(--neon-cyan);
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+            color: #000;
+            font-size: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            animation: neonPulse 2s infinite;
+        }
+        
+        .chat-support-toggle:hover {
+            transform: scale(1.1) rotate(10deg);
+            box-shadow: 0 0 50px rgba(0, 255, 255, 0.8);
+        }
+        
+        .chat-support-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ff4444;
+            color: white;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            display: none;
+            animation: pulse 1s infinite;
+        }
+        
+        .chat-support-badge.show {
+            display: flex;
+        }
+        
+        /* ===== CHAT SUPPORT POPUP ===== */
+        .chat-support-popup {
+            position: fixed;
+            bottom: 180px;
+            right: 20px;
+            width: 380px;
+            max-width: 92vw;
+            height: 520px;
+            max-height: 70vh;
+            background: linear-gradient(145deg, #0a0a0a, #1a0a0a);
+            border: 2px solid var(--neon-cyan);
+            border-radius: 30px;
+            box-shadow: 0 0 60px rgba(0, 255, 255, 0.3);
+            z-index: 10000;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            animation: slideInUp 0.3s ease;
+        }
+        
+        .chat-support-popup.active {
+            display: flex;
+        }
+        
+        .chat-support-header {
+            padding: 15px 20px;
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(0, 0, 0, 0.5));
+            border-bottom: 2px solid var(--neon-cyan);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        
+        .chat-support-header-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 16px;
+            color: var(--neon-cyan);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .chat-support-header-status {
+            font-size: 12px;
+            color: #00ff88;
+        }
+        
+        .chat-support-close {
+            background: rgba(255, 68, 68, 0.2);
+            border: 1px solid #ff4444;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            color: #ff4444;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            font-size: 16px;
+        }
+        
+        .chat-support-close:hover {
+            background: #ff4444;
+            color: #000;
+            transform: rotate(90deg);
+        }
+        
+        /* ===== CHAT SUPPORT MESSAGES ===== */
+        .chat-support-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        .chat-support-messages::-webkit-scrollbar {
+            width: 4px;
+        }
+        
+        .chat-support-messages::-webkit-scrollbar-track {
+            background: rgba(0, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        
+        .chat-support-messages::-webkit-scrollbar-thumb {
+            background: var(--neon-cyan);
+            border-radius: 10px;
+        }
+        
+        .chat-support-msg {
+            padding: 10px 14px;
+            border-radius: 18px;
+            max-width: 85%;
+            word-wrap: break-word;
+            font-size: 13px;
+            animation: slideInUp 0.3s;
+        }
+        
+        .chat-support-msg.user {
+            background: linear-gradient(135deg, var(--neon-cyan), #0088ff);
+            align-self: flex-end;
+            color: #000;
+        }
+        
+        .chat-support-msg.admin {
+            background: linear-gradient(135deg, #ff4444, #cc0000);
+            align-self: flex-start;
+            color: #fff;
+        }
+        
+        .chat-support-msg.system {
+            background: rgba(255, 170, 0, 0.2);
+            border: 1px solid #ffaa00;
+            align-self: center;
+            color: #ffaa00;
+            font-size: 12px;
+            text-align: center;
+            max-width: 90%;
+        }
+        
+        .chat-support-msg-time {
+            font-size: 9px;
+            opacity: 0.6;
+            margin-top: 4px;
+            text-align: right;
+        }
+        
+        /* ===== CHAT SUPPORT INPUT ===== */
+        .chat-support-input-area {
+            padding: 12px 15px;
+            background: rgba(0, 0, 0, 0.8);
+            border-top: 2px solid rgba(0, 255, 255, 0.3);
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-shrink: 0;
+            flex-wrap: wrap;
+        }
+        
+        .chat-support-input {
+            flex: 1;
+            padding: 10px 15px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid var(--neon-cyan);
+            border-radius: 25px;
+            color: white;
+            font-size: 13px;
+            outline: none;
+            min-width: 120px;
+        }
+        
+        .chat-support-input:focus {
+            border-color: #00ffff;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+        }
+        
+        .chat-support-input:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .chat-support-send {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00ff88, #00cc66);
+            border: none;
+            color: #000;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.3s;
+            flex-shrink: 0;
+        }
+        
+        .chat-support-send:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 15px #00ff88;
+        }
+        
+        .chat-support-send:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .chat-support-upload {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--neon-cyan), #0088ff);
+            border: none;
+            color: #000;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.3s;
+            flex-shrink: 0;
+        }
+        
+        .chat-support-upload:hover {
+            transform: scale(1.1) rotate(15deg);
+            box-shadow: 0 0 15px var(--neon-cyan);
+        }
+        
+        .chat-support-upload:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* ===== CHAT SUPPORT QUICK COMPLAINT ===== */
+        .chat-support-complaints {
+            padding: 10px 15px;
+            background: rgba(0, 0, 0, 0.4);
+            border-top: 1px solid rgba(0, 255, 255, 0.2);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            flex-shrink: 0;
+            max-height: 120px;
+            overflow-y: auto;
+        }
+        
+        .chat-support-complaints::-webkit-scrollbar {
+            width: 3px;
+        }
+        
+        .chat-support-complaints::-webkit-scrollbar-track {
+            background: rgba(0, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+        
+        .chat-support-complaints::-webkit-scrollbar-thumb {
+            background: var(--neon-cyan);
+            border-radius: 10px;
+        }
+        
+        .chat-complaint-btn {
+            padding: 5px 14px;
+            border-radius: 20px;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            background: rgba(0, 255, 255, 0.1);
+            color: var(--neon-cyan);
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+        
+        .chat-complaint-btn:hover {
+            background: rgba(0, 255, 255, 0.2);
+            transform: translateY(-2px);
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+        }
+        
+        .chat-complaint-btn.other {
+            border-color: rgba(255, 170, 0, 0.4);
+            color: #ffaa00;
+        }
+        
+        .chat-complaint-btn.other:hover {
+            background: rgba(255, 170, 0, 0.2);
+            border-color: #ffaa00;
+        }
+        
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 500px) {
+            .chat-support-popup {
+                bottom: 100px;
+                right: 10px;
+                width: calc(100vw - 20px);
+                height: 60vh;
+                max-height: 60vh;
+            }
+            .chat-support-toggle {
+                width: 55px;
+                height: 55px;
+                font-size: 24px;
+            }
+            .chat-support-complaints {
+                max-height: 80px;
+                padding: 8px 10px;
+            }
+            .chat-complaint-btn {
+                font-size: 10px;
+                padding: 4px 10px;
+            }
+            .chat-support-input-area {
+                padding: 8px 10px;
+            }
+        }
 
         /* UPLOAD BUKTI TRANSFER - USER */
         .upload-proof-area {
@@ -3054,6 +3406,52 @@
 <!-- TOAST -->
 <div class="toast-neon" id="toastNeon"></div>
 
+<!-- ===== CHAT SUPPORT FLOATING BUTTON ===== -->
+<div class="chat-support-float" id="chatSupportFloat">
+    <div class="chat-support-toggle" id="chatSupportToggle" onclick="toggleChatSupport()">
+        <i class="fas fa-headset"></i>
+        <span class="chat-support-badge" id="chatSupportBadge">0</span>
+    </div>
+</div>
+
+<!-- ===== CHAT SUPPORT POPUP ===== -->
+<div class="chat-support-popup" id="chatSupportPopup">
+    <div class="chat-support-header">
+        <div class="chat-support-header-title">
+            <i class="fas fa-headset"></i> Chat Support
+            <span class="chat-support-header-status" id="chatSupportStatus">🟢 Online</span>
+        </div>
+        <button class="chat-support-close" onclick="toggleChatSupport()">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+    
+    <div class="chat-support-messages" id="chatSupportMessages">
+        <div class="chat-support-msg system">Selamat datang di Chat Support!</div>
+        <div class="chat-support-msg system">Silakan pilih keluhan di bawah atau ketik pesan.</div>
+    </div>
+    
+    <div class="chat-support-complaints" id="chatSupportComplaints">
+        <button class="chat-complaint-btn" onclick="sendComplaint('Ganti Password')">🔑 Ganti Password</button>
+        <button class="chat-complaint-btn" onclick="sendComplaint('Lupa Password')">❓ Lupa Password</button>
+        <button class="chat-complaint-btn" onclick="sendComplaint('Cara Registrasi')">📝 Cara Registrasi</button>
+        <button class="chat-complaint-btn" onclick="sendComplaint('Cara Deposit')">💰 Cara Deposit</button>
+        <button class="chat-complaint-btn" onclick="sendComplaint('Cara Buy VIP')">👑 Cara Buy VIP</button>
+        <button class="chat-complaint-btn" onclick="sendComplaint('Cara Mendapatkan Files Free')">📥 Cara Files Free</button>
+        <button class="chat-complaint-btn other" onclick="openCustomComplaint()">✏️ Lainnya</button>
+    </div>
+    
+    <div class="chat-support-input-area">
+        <button class="chat-support-upload" id="chatSupportUploadBtn" onclick="uploadSupportFile()">
+            <i class="fas fa-paperclip"></i>
+        </button>
+        <input type="text" class="chat-support-input" id="chatSupportInput" placeholder="Tulis pesan..." disabled>
+        <button class="chat-support-send" id="chatSupportSendBtn" onclick="sendSupportMessage()" disabled>
+            <i class="fas fa-paper-plane"></i>
+        </button>
+    </div>
+</div>
+
 <!-- MAIN LAYOUT -->
 <div class="main-layout" id="mainLayout" style="display: none;">
     <div class="content-row">
@@ -3204,6 +3602,10 @@
     let deviceFingerprint = '';
     let selectedPaymentMethod = '';
     let selectedPaymentNumber = '';
+    let supportDeviceId = '';
+    let supportUID = '';
+    let supportChatListener = null;
+    let supportIsLoggedIn = false;
     let selectedDepositAmount = 0;
     let pendingSecurityCallback = null;
     let globalDiscount = { active: false, percentage: 0, minPurchase: 0 };
@@ -3985,6 +4387,374 @@
             hideLoading(); 
             showNeonModal('Error', error.message, 'error'); 
         }
+    }
+    
+    // ==================== CHAT SUPPORT ====================
+
+    function checkSupportStatus() {
+        supportUID = currentUID || localStorage.getItem('vip_uid') || '';
+        supportDeviceId = deviceFingerprint || localStorage.getItem('device_fingerprint') || '';
+        
+        // Jika belum ada device fingerprint, generate
+        if (!supportDeviceId) {
+            supportDeviceId = getDeviceFingerprint();
+            localStorage.setItem('device_fingerprint', supportDeviceId);
+        }
+        
+        // Cek apakah user sudah login
+        supportIsLoggedIn = !!currentUID;
+        
+        const input = document.getElementById('chatSupportInput');
+        const sendBtn = document.getElementById('chatSupportSendBtn');
+        const uploadBtn = document.getElementById('chatSupportUploadBtn');
+        
+        if (supportIsLoggedIn) {
+            input.disabled = false;
+            sendBtn.disabled = false;
+            uploadBtn.disabled = false;
+            input.placeholder = 'Tulis pesan...';
+        } else {
+            input.disabled = true;
+            sendBtn.disabled = true;
+            uploadBtn.disabled = true;
+            input.placeholder = 'Silakan login terlebih dahulu...';
+        }
+    }
+    
+    // Buka/tutup chat support
+    function toggleChatSupport() {
+        const popup = document.getElementById('chatSupportPopup');
+        const isOpen = popup.classList.contains('active');
+        
+        if (!isOpen) {
+            // Cek status sebelum buka
+            checkSupportStatus();
+            popup.classList.add('active');
+            document.getElementById('chatSupportInput').focus();
+            loadSupportMessages();
+        } else {
+            popup.classList.remove('active');
+            if (supportChatListener) {
+                database.ref('support_chats/' + supportDeviceId).off('value', supportChatListener);
+                supportChatListener = null;
+            }
+        }
+    }
+    
+    // Kirim keluhan cepat
+    function sendComplaint(complaint) {
+        if (!supportIsLoggedIn) {
+            showNeonModal('Info', 'Silakan login terlebih dahulu untuk menggunakan Chat Support!', 'info');
+            return;
+        }
+        
+        const text = `📋 KELUHAN: ${complaint}\n\nSaya mengalami masalah dengan: ${complaint}. Mohon bantuannya.`;
+        sendSupportMessageText(text);
+    }
+    
+    // Buka custom complaint
+    function openCustomComplaint() {
+        if (!supportIsLoggedIn) {
+            showNeonModal('Info', 'Silakan login terlebih dahulu untuk menggunakan Chat Support!', 'info');
+            return;
+        }
+        
+        showNeonPrompt('Keluhan Lainnya', 'Tulis keluhan Anda secara detail...', (value) => {
+            if (value && value.trim()) {
+                const text = `📋 KELUHAN LAINNYA:\n\n${value.trim()}\n\nMohon bantuannya.`;
+                sendSupportMessageText(text);
+            }
+        });
+    }
+    
+    // Kirim pesan chat support
+    function sendSupportMessageText(text) {
+        if (!text || !text.trim()) return;
+        if (!supportIsLoggedIn) {
+            showNeonModal('Info', 'Silakan login terlebih dahulu!', 'info');
+            return;
+        }
+        
+        const msgData = {
+            uid: supportUID,
+            deviceId: supportDeviceId,
+            text: text.trim(),
+            sender: 'user',
+            timestamp: Date.now(),
+            isSupport: true
+        };
+        
+        database.ref('support_chats/' + supportDeviceId + '/messages').push(msgData);
+        database.ref('support_chats/' + supportDeviceId).update({
+            lastMessage: text.trim(),
+            lastSender: 'user',
+            lastTimestamp: Date.now(),
+            uid: supportUID,
+            deviceId: supportDeviceId,
+            isActive: true
+        });
+        
+        document.getElementById('chatSupportInput').value = '';
+    }
+    
+    // Kirim pesan dari input
+    function sendSupportMessage() {
+        const input = document.getElementById('chatSupportInput');
+        const text = input.value.trim();
+        sendSupportMessageText(text);
+    }
+    
+    // Upload file di chat support
+    function uploadSupportFile() {
+        if (!supportIsLoggedIn) {
+            showNeonModal('Info', 'Silakan login terlebih dahulu!', 'info');
+            return;
+        }
+        
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain';
+        input.onchange = async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            showLoading();
+            try {
+                const fileUrl = await uploadToImgbb(file);
+                const fileSize = formatFileSize(file.size);
+                
+                const msgData = {
+                    uid: supportUID,
+                    deviceId: supportDeviceId,
+                    text: `📎 Mengirim file: ${file.name}`,
+                    sender: 'user',
+                    timestamp: Date.now(),
+                    isSupport: true,
+                    fileData: {
+                        name: file.name,
+                        url: fileUrl,
+                        size: file.size,
+                        sizeFormatted: fileSize,
+                        type: file.type,
+                        timestamp: Date.now()
+                    }
+                };
+                
+                await database.ref('support_chats/' + supportDeviceId + '/messages').push(msgData);
+                await database.ref('support_chats/' + supportDeviceId).update({
+                    lastMessage: `📎 ${file.name}`,
+                    lastSender: 'user',
+                    lastTimestamp: Date.now(),
+                    uid: supportUID,
+                    deviceId: supportDeviceId,
+                    isActive: true
+                });
+                
+                hideLoading();
+                showNeonToast('File terkirim!');
+            } catch (error) {
+                hideLoading();
+                showNeonModal('Error', 'Gagal upload file: ' + error.message, 'error');
+            }
+        };
+        input.click();
+    }
+    
+    // Load pesan chat support
+    function loadSupportMessages() {
+        if (!supportDeviceId) return;
+        
+        if (supportChatListener) {
+            database.ref('support_chats/' + supportDeviceId).off('value', supportChatListener);
+            supportChatListener = null;
+        }
+        
+        const messagesContainer = document.getElementById('chatSupportMessages');
+        
+        supportChatListener = database.ref('support_chats/' + supportDeviceId + '/messages')
+            .orderByChild('timestamp')
+            .limitToLast(50)
+            .on('value', (snap) => {
+                const messages = snap.val() || {};
+                
+                // Hapus pesan system default
+                const systemMsgs = messagesContainer.querySelectorAll('.chat-support-msg.system');
+                if (systemMsgs.length > 0 && Object.keys(messages).length > 0) {
+                    systemMsgs.forEach(el => el.remove());
+                }
+                
+                // Jika tidak ada pesan, tampilkan default
+                if (Object.keys(messages).length === 0) {
+                    messagesContainer.innerHTML = `
+                        <div class="chat-support-msg system">Selamat datang di Chat Support!</div>
+                        <div class="chat-support-msg system">Silakan pilih keluhan di bawah atau ketik pesan.</div>
+                    `;
+                    return;
+                }
+                
+                // Tampilkan pesan
+                const sortedKeys = Object.keys(messages).sort((a, b) => messages[a].timestamp - messages[b].timestamp);
+                
+                // Hapus semua pesan kecuali system default jika ada
+                const existingMsgs = messagesContainer.querySelectorAll('.chat-support-msg:not(.system)');
+                existingMsgs.forEach(el => el.remove());
+                
+                // Tambahkan pesan system default jika belum ada
+                if (!messagesContainer.querySelector('.chat-support-msg.system')) {
+                    const sys1 = document.createElement('div');
+                    sys1.className = 'chat-support-msg system';
+                    sys1.textContent = 'Selamat datang di Chat Support!';
+                    messagesContainer.appendChild(sys1);
+                    const sys2 = document.createElement('div');
+                    sys2.className = 'chat-support-msg system';
+                    sys2.textContent = 'Silakan pilih keluhan di bawah atau ketik pesan.';
+                    messagesContainer.appendChild(sys2);
+                }
+                
+                sortedKeys.forEach(key => {
+                    const msg = messages[key];
+                    const div = document.createElement('div');
+                    div.className = `chat-support-msg ${msg.sender === 'admin' ? 'admin' : 'user'}`;
+                    
+                    let content = '';
+                    if (msg.sender === 'admin') {
+                        content = `<b>👑 Admin:</b> `;
+                    } else {
+                        content = `<b>👤 Anda:</b> `;
+                    }
+                    content += escapeHtml(msg.text || '');
+                    
+                    if (msg.fileData && msg.fileData.url) {
+                        const isImage = msg.fileData.type && msg.fileData.type.startsWith('image/');
+                        if (isImage) {
+                            content += `<div style="margin-top: 8px;">
+                                <img src="${msg.fileData.url}" style="max-width:150px; max-height:150px; border-radius:10px; cursor:pointer;" onclick="window.open('${msg.fileData.url}')">
+                                <div style="font-size:10px; color:#888;">${escapeHtml(msg.fileData.name || 'Image')}</div>
+                            </div>`;
+                        } else {
+                            content += `<div style="margin-top: 8px;">
+                                <a href="${msg.fileData.url}" target="_blank" style="color:#00ff88; text-decoration:none;">
+                                    <i class="fas fa-file"></i> ${escapeHtml(msg.fileData.name || 'File')}
+                                </a>
+                            </div>`;
+                        }
+                    }
+                    
+                    content += `<div class="chat-support-msg-time">${msg.timestamp ? new Date(msg.timestamp).toLocaleString() : '-'}</div>`;
+                    div.innerHTML = content;
+                    
+                    // Hapus system default jika ada pesan
+                    const systemEls = messagesContainer.querySelectorAll('.chat-support-msg.system');
+                    if (systemEls.length > 0 && sortedKeys.length > 0) {
+                        systemEls.forEach(el => el.remove());
+                    }
+                    
+                    messagesContainer.appendChild(div);
+                });
+                
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            });
+    }
+    
+    // Notifikasi chat support baru (untuk user)
+    let supportNotificationLast = 0;
+    
+    function checkSupportNotification() {
+        if (!supportDeviceId) return;
+        
+        database.ref('support_chats/' + supportDeviceId + '/messages')
+            .orderByChild('timestamp')
+            .limitToLast(1)
+            .on('child_added', (snap) => {
+                const msg = snap.val();
+                if (!msg) return;
+                
+                // Hanya notifikasi jika pesan dari admin dan popup tidak terbuka
+                if (msg.sender === 'admin') {
+                    const popup = document.getElementById('chatSupportPopup');
+                    const isOpen = popup.classList.contains('active');
+                    
+                    if (!isOpen) {
+                        // Tampilkan badge
+                        const badge = document.getElementById('chatSupportBadge');
+                        const currentCount = parseInt(badge.textContent) || 0;
+                        badge.textContent = currentCount + 1;
+                        badge.classList.add('show');
+                        
+                        // Notifikasi suara
+                        try {
+                            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                            const oscillator = audioCtx.createOscillator();
+                            const gainNode = audioCtx.createGain();
+                            oscillator.connect(gainNode);
+                            gainNode.connect(audioCtx.destination);
+                            oscillator.frequency.value = 880;
+                            gainNode.gain.value = 0.15;
+                            oscillator.start();
+                            gainNode.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.3);
+                            oscillator.stop(audioCtx.currentTime + 0.3);
+                        } catch(e) {}
+                    }
+                }
+            });
+    }
+    
+    // Reset badge saat popup dibuka
+    function resetSupportBadge() {
+        const badge = document.getElementById('chatSupportBadge');
+        badge.textContent = '0';
+        badge.classList.remove('show');
+    }
+    
+    // Override toggleChatSupport untuk reset badge
+    const originalToggle = toggleChatSupport;
+    toggleChatSupport = function() {
+        const popup = document.getElementById('chatSupportPopup');
+        const isOpen = popup.classList.contains('active');
+        
+        if (!isOpen) {
+            resetSupportBadge();
+            checkSupportStatus();
+            popup.classList.add('active');
+            document.getElementById('chatSupportInput').focus();
+            loadSupportMessages();
+        } else {
+            popup.classList.remove('active');
+            if (supportChatListener) {
+                database.ref('support_chats/' + supportDeviceId).off('value', supportChatListener);
+                supportChatListener = null;
+            }
+        }
+    };
+    
+    // Enter key untuk send
+    document.addEventListener('DOMContentLoaded', function() {
+        const input = document.getElementById('chatSupportInput');
+        if (input) {
+            input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendSupportMessage();
+                }
+            });
+        }
+    });
+    
+    // Inisialisasi chat support
+    function initChatSupport() {
+        // Generate device fingerprint jika belum ada
+        if (!deviceFingerprint) {
+            deviceFingerprint = getDeviceFingerprint();
+            localStorage.setItem('device_fingerprint', deviceFingerprint);
+        }
+        supportDeviceId = deviceFingerprint;
+        
+        // Cek status login
+        checkSupportStatus();
+        
+        // Mulai listen notifikasi
+        checkSupportNotification();
+        
+        console.log('💬 Chat Support initialized with Device ID:', supportDeviceId);
     }
 
     // ==================== RESET PIN ====================
@@ -4927,6 +5697,8 @@
         const savedUID = localStorage.getItem('vip_uid');
         if(savedUID) document.getElementById('loginUID').value = savedUID;
         monitorAdminStatus();
+        initChatSupport();
+        console.log('💬 Chat Support aktif dengan Device ID:', supportDeviceId);;
         console.log('🔐 Device Fingerprint aktif:', deviceFingerprint);
         console.log('User panel initialized - V1.0.0');
     }
