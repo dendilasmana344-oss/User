@@ -4394,31 +4394,25 @@
     function checkSupportStatus() {
         supportUID = currentUID || localStorage.getItem('vip_uid') || '';
         supportDeviceId = deviceFingerprint || localStorage.getItem('device_fingerprint') || '';
-        
+    
         // Jika belum ada device fingerprint, generate
         if (!supportDeviceId) {
             supportDeviceId = getDeviceFingerprint();
             localStorage.setItem('device_fingerprint', supportDeviceId);
         }
-        
+    
         // Cek apakah user sudah login
         supportIsLoggedIn = !!currentUID;
-        
+    
         const input = document.getElementById('chatSupportInput');
         const sendBtn = document.getElementById('chatSupportSendBtn');
         const uploadBtn = document.getElementById('chatSupportUploadBtn');
-        
-        if (supportIsLoggedIn) {
-            input.disabled = false;
-            sendBtn.disabled = false;
-            uploadBtn.disabled = false;
-            input.placeholder = 'Tulis pesan...';
-        } else {
-            input.disabled = true;
-            sendBtn.disabled = true;
-            uploadBtn.disabled = true;
-            input.placeholder = 'Silakan login terlebih dahulu...';
-        }
+    
+        // SELALU AKTIFKAN CHAT, TIDAK PEDULI LOGIN ATAU TIDAK
+        input.disabled = false;
+        sendBtn.disabled = false;
+        uploadBtn.disabled = false;
+        input.placeholder = supportIsLoggedIn ? 'Tulis pesan...' : 'Chat support (tanpa login)';
     }
     
     // Buka/tutup chat support
@@ -4443,57 +4437,40 @@
     
     // Kirim keluhan cepat
     function sendComplaint(complaint) {
-        if (!supportIsLoggedIn) {
-            showNeonModal('Info', 'Silakan login terlebih dahulu untuk menggunakan Chat Support!', 'info');
-            return;
-        }
-        
         const text = `📋 KELUHAN: ${complaint}\n\nSaya mengalami masalah dengan: ${complaint}. Mohon bantuannya.`;
         sendSupportMessageText(text);
     }
     
-    // Buka custom complaint
-    function openCustomComplaint() {
-        if (!supportIsLoggedIn) {
-            showNeonModal('Info', 'Silakan login terlebih dahulu untuk menggunakan Chat Support!', 'info');
-            return;
-        }
-        
-        showNeonPrompt('Keluhan Lainnya', 'Tulis keluhan Anda secara detail...', (value) => {
-            if (value && value.trim()) {
-                const text = `📋 KELUHAN LAINNYA:\n\n${value.trim()}\n\nMohon bantuannya.`;
-                sendSupportMessageText(text);
-            }
-        });
-    }
-    
-    // Kirim pesan chat support
     function sendSupportMessageText(text) {
         if (!text || !text.trim()) return;
-        if (!supportIsLoggedIn) {
-            showNeonModal('Info', 'Silakan login terlebih dahulu!', 'info');
-            return;
+    
+        // Cek apakah device ID sudah ada
+        if (!supportDeviceId) {
+            supportDeviceId = getDeviceFingerprint();
+            localStorage.setItem('device_fingerprint', supportDeviceId);
         }
-        
+    
         const msgData = {
-            uid: supportUID,
+            uid: supportUID || 'Guest',
             deviceId: supportDeviceId,
             text: text.trim(),
             sender: 'user',
             timestamp: Date.now(),
-            isSupport: true
+            isSupport: true,
+            isGuest: !supportIsLoggedIn  // Tandai sebagai guest jika belum login
         };
-        
+    
         database.ref('support_chats/' + supportDeviceId + '/messages').push(msgData);
         database.ref('support_chats/' + supportDeviceId).update({
             lastMessage: text.trim(),
             lastSender: 'user',
             lastTimestamp: Date.now(),
-            uid: supportUID,
+            uid: supportUID || 'Guest',
             deviceId: supportDeviceId,
-            isActive: true
+            isActive: true,
+            isGuest: !supportIsLoggedIn
         });
-        
+    
         document.getElementById('chatSupportInput').value = '';
     }
     
@@ -4504,32 +4481,27 @@
         sendSupportMessageText(text);
     }
     
-    // Upload file di chat support
     function uploadSupportFile() {
-        if (!supportIsLoggedIn) {
-            showNeonModal('Info', 'Silakan login terlebih dahulu!', 'info');
-            return;
-        }
-        
         const input = document.createElement('input');
         input.type = 'file';
         input.accept = 'image/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain';
         input.onchange = async (e) => {
             const file = e.target.files[0];
             if (!file) return;
-            
+        
             showLoading();
             try {
                 const fileUrl = await uploadToImgbb(file);
                 const fileSize = formatFileSize(file.size);
-                
+            
                 const msgData = {
-                    uid: supportUID,
+                    uid: supportUID || 'Guest',
                     deviceId: supportDeviceId,
                     text: `📎 Mengirim file: ${file.name}`,
                     sender: 'user',
                     timestamp: Date.now(),
                     isSupport: true,
+                    isGuest: !supportIsLoggedIn,
                     fileData: {
                         name: file.name,
                         url: fileUrl,
@@ -4539,17 +4511,18 @@
                         timestamp: Date.now()
                     }
                 };
-                
+            
                 await database.ref('support_chats/' + supportDeviceId + '/messages').push(msgData);
                 await database.ref('support_chats/' + supportDeviceId).update({
                     lastMessage: `📎 ${file.name}`,
                     lastSender: 'user',
                     lastTimestamp: Date.now(),
-                    uid: supportUID,
+                    uid: supportUID || 'Guest',
                     deviceId: supportDeviceId,
-                    isActive: true
+                    isActive: true,
+                    isGuest: !supportIsLoggedIn
                 });
-                
+            
                 hideLoading();
                 showNeonToast('File terkirim!');
             } catch (error) {
@@ -4563,42 +4536,46 @@
     // Load pesan chat support
     function loadSupportMessages() {
         if (!supportDeviceId) return;
-        
+    
         if (supportChatListener) {
             database.ref('support_chats/' + supportDeviceId).off('value', supportChatListener);
             supportChatListener = null;
         }
-        
+    
         const messagesContainer = document.getElementById('chatSupportMessages');
-        
+    
         supportChatListener = database.ref('support_chats/' + supportDeviceId + '/messages')
             .orderByChild('timestamp')
             .limitToLast(50)
             .on('value', (snap) => {
                 const messages = snap.val() || {};
-                
+            
                 // Hapus pesan system default
                 const systemMsgs = messagesContainer.querySelectorAll('.chat-support-msg.system');
                 if (systemMsgs.length > 0 && Object.keys(messages).length > 0) {
                     systemMsgs.forEach(el => el.remove());
                 }
-                
-                // Jika tidak ada pesan, tampilkan default
+            
+                // Jika tidak ada pesan, tampilkan default dengan info guest
                 if (Object.keys(messages).length === 0) {
+                    let welcomeMsg = 'Selamat datang di Chat Support!';
+                    if (!supportIsLoggedIn) {
+                        welcomeMsg = 'Selamat datang di Chat Support! 💬\nAnda chat sebagai GUEST. Admin akan merespon berdasarkan Device ID Anda.\nSilakan pilih keluhan di bawah atau ketik pesan.';
+                    }
                     messagesContainer.innerHTML = `
-                        <div class="chat-support-msg system">Selamat datang di Chat Support!</div>
-                        <div class="chat-support-msg system">Silakan pilih keluhan di bawah atau ketik pesan.</div>
+                        <div class="chat-support-msg system">${welcomeMsg}</div>
+                        <div class="chat-support-msg system">${!supportIsLoggedIn ? '🔐 Device ID: ' + supportDeviceId.substring(0, 15) + '...' : ''}</div>
                     `;
                     return;
                 }
-                
+            
                 // Tampilkan pesan
                 const sortedKeys = Object.keys(messages).sort((a, b) => messages[a].timestamp - messages[b].timestamp);
-                
+            
                 // Hapus semua pesan kecuali system default jika ada
                 const existingMsgs = messagesContainer.querySelectorAll('.chat-support-msg:not(.system)');
                 existingMsgs.forEach(el => el.remove());
-                
+            
                 // Tambahkan pesan system default jika belum ada
                 if (!messagesContainer.querySelector('.chat-support-msg.system')) {
                     const sys1 = document.createElement('div');
@@ -4610,12 +4587,12 @@
                     sys2.textContent = 'Silakan pilih keluhan di bawah atau ketik pesan.';
                     messagesContainer.appendChild(sys2);
                 }
-                
+            
                 sortedKeys.forEach(key => {
                     const msg = messages[key];
                     const div = document.createElement('div');
                     div.className = `chat-support-msg ${msg.sender === 'admin' ? 'admin' : 'user'}`;
-                    
+                
                     let content = '';
                     if (msg.sender === 'admin') {
                         content = `<b>👑 Admin:</b> `;
@@ -4623,7 +4600,7 @@
                         content = `<b>👤 Anda:</b> `;
                     }
                     content += escapeHtml(msg.text || '');
-                    
+                
                     if (msg.fileData && msg.fileData.url) {
                         const isImage = msg.fileData.type && msg.fileData.type.startsWith('image/');
                         if (isImage) {
@@ -4639,19 +4616,19 @@
                             </div>`;
                         }
                     }
-                    
+                
                     content += `<div class="chat-support-msg-time">${msg.timestamp ? new Date(msg.timestamp).toLocaleString() : '-'}</div>`;
                     div.innerHTML = content;
-                    
+                
                     // Hapus system default jika ada pesan
                     const systemEls = messagesContainer.querySelectorAll('.chat-support-msg.system');
                     if (systemEls.length > 0 && sortedKeys.length > 0) {
                         systemEls.forEach(el => el.remove());
                     }
-                    
+                
                     messagesContainer.appendChild(div);
                 });
-                
+            
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
             });
     }
@@ -4747,14 +4724,15 @@
             localStorage.setItem('device_fingerprint', deviceFingerprint);
         }
         supportDeviceId = deviceFingerprint;
-        
-        // Cek status login
+    
+        // Cek status (tidak perlu login)
         checkSupportStatus();
-        
+    
         // Mulai listen notifikasi
         checkSupportNotification();
-        
+    
         console.log('💬 Chat Support initialized with Device ID:', supportDeviceId);
+        console.log('👤 Guest mode:', !supportIsLoggedIn);
     }
 
     // ==================== RESET PIN ====================
