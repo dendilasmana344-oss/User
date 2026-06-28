@@ -5657,6 +5657,79 @@
     }
     
     function showMyIP() { console.log('IP hidden'); }
+    
+    // ==================== FREE UPDATE VIEWS ====================
+    // Fungsi untuk mencatat ketika user mengklik link download free update
+    function trackFreeUpdateClick(updateId, link) {
+        if (!currentUID && !deviceFingerprint) {
+            // Jika tidak login dan tidak ada device ID, jangan track
+            return;
+        }
+    
+        const uid = currentUID || deviceFingerprint || 'guest';
+    
+        // Cek apakah sudah pernah diklik sebelumnya (per session)
+        const sessionKey = 'free_update_viewed_' + updateId;
+        if (sessionStorage.getItem(sessionKey)) {
+            // Sudah dilihat di session ini, jangan double count
+            return;
+        }
+    
+        // Tandai sudah dilihat di session ini
+        sessionStorage.setItem(sessionKey, 'true');
+    
+        // Simpan ke database
+        const viewData = {
+            uid: uid,
+            updateId: updateId,
+            timestamp: Date.now(),
+            deviceId: deviceFingerprint || 'unknown'
+        };
+    
+        // Simpan di node views per user
+        database.ref('free_updates/views/' + uid + '/' + updateId).set(viewData);
+    
+        // Simpan juga di total views
+        database.ref('free_updates/total_views/' + updateId).push({
+            uid: uid,
+            timestamp: Date.now()
+        });
+    
+        // Buka link di tab baru
+        if (link && link !== '#') {
+            window.open(link, '_blank');
+        }
+    
+        console.log('📊 Free update view recorded for:', updateId);
+    }
+
+    // Update fungsi renderFreeUpdates untuk menambahkan track click
+    function renderFreeUpdates(updates) {
+        const cont = document.getElementById('freeUpdateList');
+        if (!cont) return;
+        const sorted = Object.keys(updates).map(k=>({...updates[k], key: k})).sort((a,b)=>(b.timestamp||0)-(a.timestamp||0));
+        if(sorted.length===0) { cont.innerHTML='<div style="padding:25px; text-align:center;">No updates</div>'; return; }
+        let html='';
+        sorted.slice(0,15).forEach(u => { 
+            const updateId = u.key || 'update_' + Date.now();
+            html += `
+                <div class="update-item">
+                    <div class="update-title">📢 ${escapeHtml(u.title||'Free Update')}</div>
+                    <div class="update-desc">${escapeHtml(u.description||'')}</div>
+                    <div class="update-meta">
+                        <span>${u.version||'v1.0'}</span>
+                        <span>${u.timestamp?new Date(u.timestamp).toLocaleString():'-'}</span>
+                    </div>
+                    <div>
+                        <a href="#" onclick="event.preventDefault(); trackFreeUpdateClick('${updateId}', '${u.link || '#'}'); return false;" class="update-link" target="_blank">
+                            <i class="fas fa-download"></i> Download
+                        </a>
+                    </div>
+                </div>
+            `; 
+        });
+        cont.innerHTML=html;
+    }
 
     // ==================== FEATURES ====================
     const features = ['AimAssist','No Recoil','ESP','Wallhack','Speed Hack','Anti Ban','Aimbot','Triggerbot'];
