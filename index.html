@@ -1190,10 +1190,7 @@
             transition: width 0.1s linear;
         }
         
-        /* ============================================================
-           NOTIFICATION TOAST - USER
-           ============================================================ */
-        
+        /* ===== NOTIFICATION CONTAINER ===== */
         .notification-container {
             position: fixed;
             top: 20px;
@@ -1212,13 +1209,12 @@
             border: 2px solid var(--neon-cyan);
             border-radius: 20px;
             padding: 16px 20px;
-            box-shadow: 0 0 40px rgba(0, 255, 255, 0.3), inset 0 0 30px rgba(0, 255, 255, 0.05);
+            box-shadow: 0 0 40px rgba(0, 255, 255, 0.3);
             animation: notifSlideIn 0.5s ease forwards;
             pointer-events: auto;
             position: relative;
             overflow: hidden;
             backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
         }
         
         .notification-toast::before {
@@ -1228,7 +1224,6 @@
             left: 0;
             width: 5px;
             height: 100%;
-            border-radius: 4px;
         }
         
         .notification-toast.info::before {
@@ -1256,25 +1251,13 @@
         }
         
         @keyframes notifSlideIn {
-            from {
-                transform: translateX(120%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
+            from { transform: translateX(120%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
         }
         
         @keyframes notifSlideOut {
-            from {
-                transform: translateX(0);
-                opacity: 1;
-            }
-            to {
-                transform: translateX(120%);
-                opacity: 0;
-            }
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(120%); opacity: 0; }
         }
         
         .notification-toast .notif-header {
@@ -1292,15 +1275,6 @@
             display: flex;
             align-items: center;
             gap: 8px;
-        }
-        
-        .notification-toast .notif-title .badge-count {
-            background: #ff4444;
-            color: white;
-            border-radius: 50%;
-            padding: 2px 8px;
-            font-size: 11px;
-            animation: pulse 1s infinite;
         }
         
         .notification-toast .notif-close {
@@ -1325,11 +1299,6 @@
             margin-top: 4px;
         }
         
-        .notification-toast .notif-body .highlight {
-            color: var(--neon-cyan);
-            font-weight: bold;
-        }
-        
         .notification-toast .notif-time {
             font-size: 10px;
             color: #666;
@@ -1337,25 +1306,36 @@
             text-align: right;
         }
         
-        /* ===== STATUS ONLINE/OFFLINE ===== */
+        /* Status dot */
         .status-dot {
             display: inline-block;
             width: 10px;
             height: 10px;
             border-radius: 50%;
             margin-right: 6px;
-            animation: pulse 1.5s infinite;
         }
         
         .status-dot.online {
             background: #00ff88;
             box-shadow: 0 0 15px #00ff88;
+            animation: pulse 1.5s infinite;
         }
         
         .status-dot.offline {
             background: #666;
             animation: none;
             box-shadow: none;
+        }
+        
+        @media (max-width: 500px) {
+            .notification-container {
+                top: 10px;
+                right: 10px;
+                max-width: calc(100vw - 20px);
+            }
+            .notification-toast {
+                padding: 12px 15px;
+            }
         }
         
         /* ===== RESPONSIVE NOTIFICATION ===== */
@@ -6116,18 +6096,31 @@
 
     // ==================== COPY UID & LOGOUT ====================
     function copyUID() { navigator.clipboard.writeText(currentUID); showNeonToast('UID copied!'); }
+
     function logout() {
         showConfirm('Logout', 'Apakah Anda yakin ingin logout?', () => {
+            // Tandai sebagai logout manual
+            isManualLogout = true;
+        
             showLoading();
-            if(currentUID) database.ref('users/' + currentUID + '/status').set('offline');
-            if(currentUID) database.ref('sessions/' + currentUID).remove();
-            localStorage.removeItem('vip_files_uid'); localStorage.removeItem('vip_uid');
+            if(currentUID) {
+                database.ref('users/' + currentUID + '/status').set('offline');
+                database.ref('sessions/' + currentUID).remove();
+            }
+            localStorage.removeItem('vip_files_uid');
+            localStorage.removeItem('vip_uid');
             currentUID = '';
             document.getElementById('mainLayout').style.display = 'none';
             document.getElementById('loginWrapper').classList.remove('hide');
-            clearLoginPin(); clearRegisterPin();
+            clearLoginPin();
+            clearRegisterPin();
             hideLoading();
             showNeonToast('Logged out successfully!');
+        
+            // Reset flag setelah beberapa saat
+            setTimeout(() => {
+                isManualLogout = false;
+            }, 1000);
         });
     }
     
@@ -6157,6 +6150,195 @@
     }
     
     function showMyIP() { console.log('IP hidden'); }
+    
+    let notifPermissionGranted = false;
+    
+    // Request permission notifikasi
+    function requestNotifPermission() {
+        if ('Notification' in window) {
+            Notification.requestPermission().then(permission => {
+                notifPermissionGranted = permission === 'granted';
+                console.log('📢 Notification permission:', permission);
+            });
+        }
+    }
+    
+    // Tampilkan toast notifikasi
+    function showNotifToast(title, message, type = 'info', duration = 5000) {
+        const container = document.getElementById('notificationContainer');
+        if (!container) return;
+        
+        // Hapus notifikasi lama jika lebih dari 3
+        const existing = container.querySelectorAll('.notification-toast');
+        if (existing.length >= 3) {
+            existing[0].classList.add('hide');
+            setTimeout(() => existing[0].remove(), 400);
+        }
+        
+        const toast = document.createElement('div');
+        toast.className = `notification-toast ${type}`;
+        const icons = {
+            info: 'fa-info-circle',
+            success: 'fa-check-circle',
+            warning: 'fa-exclamation-triangle',
+            error: 'fa-times-circle'
+        };
+        
+        toast.innerHTML = `
+            <div class="notif-header">
+                <div class="notif-title">
+                    <i class="fas ${icons[type] || icons.info}"></i>
+                    ${title}
+                </div>
+                <button class="notif-close" onclick="this.closest('.notification-toast').remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="notif-body">${message}</div>
+            <div class="notif-time">${new Date().toLocaleTimeString()}</div>
+        `;
+        
+        container.appendChild(toast);
+        
+        // Auto hide
+        setTimeout(() => {
+            if (toast.parentElement) {
+                toast.classList.add('hide');
+                setTimeout(() => toast.remove(), 400);
+            }
+        }, duration);
+        
+        // Browser notification
+        if (notifPermissionGranted) {
+            try {
+                new Notification(title, {
+                    body: message,
+                    icon: 'https://i.ibb.co.com/4wHZpnFB/IMG-20260610-WA0000.jpg',
+                    vibrate: [200, 100, 200]
+                });
+            } catch(e) {}
+        }
+        
+        // Play sound
+        try {
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.frequency.value = 880;
+            gain.gain.value = 0.15;
+            osc.start();
+            gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.3);
+            osc.stop(audioCtx.currentTime + 0.3);
+        } catch(e) {}
+    }
+    
+    // ===== LISTENER CHAT ADMIN =====
+    function setupChatNotifUser() {
+        if (!currentUID && !deviceFingerprint) return;
+        const uid = currentUID || deviceFingerprint;
+        
+        database.ref('chats/' + uid).orderByChild('timestamp').limitToLast(1).on('child_added', (snap) => {
+            const msg = snap.val();
+            if (!msg || msg.sender !== 'admin') return;
+            
+            const chatView = document.getElementById('chatAdminView');
+            const isOpen = chatView && chatView.classList.contains('active');
+            const lastNotif = localStorage.getItem('last_admin_notif_' + uid);
+            
+            if (!isOpen || Date.now() - parseInt(lastNotif || 0) > 5000) {
+                localStorage.setItem('last_admin_notif_' + uid, Date.now().toString());
+                const text = msg.text ? msg.text.substring(0, 100) : 'Ada pesan baru';
+                showNotifToast('💬 Pesan dari Admin', text, 'info');
+            }
+        });
+    }
+    
+    // ===== LISTENER PUBLIC CHAT =====
+    function setupPublicNotifUser() {
+        database.ref('all_comments').orderByChild('timestamp').limitToLast(1).on('child_added', (snap) => {
+            const msg = snap.val();
+            if (!msg || msg.uid === currentUID || msg.uid === 'ADMIN') return;
+            
+            const chatArea = document.getElementById('allCommentsArea');
+            const isVisible = chatArea && chatArea.offsetParent !== null;
+            const lastNotif = localStorage.getItem('last_public_notif');
+            
+            if (!isVisible || Date.now() - parseInt(lastNotif || 0) > 5000) {
+                localStorage.setItem('last_public_notif', Date.now().toString());
+                const text = msg.text ? msg.text.substring(0, 80) : 'Mengirim pesan';
+                showNotifToast('💬 Public Chat', `${msg.uid}: ${text}`, 'info');
+            }
+        });
+    }
+    
+    // ===== LISTENER SUPPORT CHAT =====
+    function setupSupportNotifUser() {
+        if (!supportDeviceId) return;
+        
+        database.ref('support_chats/' + supportDeviceId + '/messages').orderByChild('timestamp').limitToLast(1).on('child_added', (snap) => {
+            const msg = snap.val();
+            if (!msg || msg.sender !== 'admin') return;
+            
+            const popup = document.getElementById('chatSupportPopup');
+            const isOpen = popup && popup.classList.contains('active');
+            const lastNotif = localStorage.getItem('last_support_notif_' + supportDeviceId);
+            
+            if (!isOpen || Date.now() - parseInt(lastNotif || 0) > 5000) {
+                localStorage.setItem('last_support_notif_' + supportDeviceId, Date.now().toString());
+                const text = msg.text ? msg.text.substring(0, 100) : 'Ada balasan dari admin';
+                showNotifToast('💬 Support Admin', text, 'success');
+                
+                // Update badge
+                const badge = document.getElementById('chatSupportBadge');
+                if (badge) {
+                    const current = parseInt(badge.textContent) || 0;
+                    badge.textContent = current + 1;
+                    badge.classList.add('show');
+                }
+            }
+        });
+    }
+    
+    // ===== MONITOR ADMIN STATUS =====
+    function setupAdminStatusUser() {
+        database.ref('admin_status').on('value', (snap) => {
+            const status = snap.val();
+            const isOnline = status && status.status === 'online' && (Date.now() - (status.last_seen || 0) < 60000);
+            
+            // Update chat admin status
+            const chatStatus = document.getElementById('chatAdminStatus');
+            if (chatStatus) {
+                chatStatus.innerHTML = isOnline ? '🟢 Online' : '🔴 Offline';
+                chatStatus.style.color = isOnline ? '#00ff88' : '#666';
+            }
+            
+            // Update public chat status
+            const publicStatus = document.getElementById('publicChatStatus');
+            if (publicStatus) {
+                publicStatus.innerHTML = isOnline ? '● Online' : '○ Offline';
+                publicStatus.style.color = isOnline ? '#00ff88' : '#666';
+            }
+            
+            // Update support chat status
+            const supportStatus = document.getElementById('chatSupportStatus');
+            if (supportStatus) {
+                supportStatus.innerHTML = isOnline ? '🟢 Online' : '🔴 Offline';
+                supportStatus.style.color = isOnline ? '#00ff88' : '#666';
+            }
+        });
+    }
+    
+    // ===== INIT NOTIFICATIONS USER =====
+    function initNotifUser() {
+        requestNotifPermission();
+        setupChatNotifUser();
+        setupPublicNotifUser();
+        setupSupportNotifUser();
+        setupAdminStatusUser();
+        console.log('🔔 User notifications initialized');
+    }
     
     // ==================== FREE UPDATE VIEWS ====================
     // Fungsi untuk mencatat ketika user mengklik link download free update
@@ -6245,6 +6427,7 @@
         setupUserChatFileUpload();
         await loadGlobalDiscount();
         initNotifications();
+        initNotifUser();
         setInterval(checkMaintenance, 30000);
         const savedUID = localStorage.getItem('vip_uid');
         if(savedUID) document.getElementById('loginUID').value = savedUID;
