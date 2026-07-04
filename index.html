@@ -2400,6 +2400,122 @@
             border-radius: 40px;
             padding: 35px;
         }
+        
+        /* ===== NOTIFICATION CONTAINER ===== */
+        .notification-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 380px;
+            width: 100%;
+            pointer-events: none;
+        }
+
+        .notification-toast {
+            background: linear-gradient(145deg, #0a0a0a, #1a0a0a);
+            border: 2px solid var(--neon-cyan);
+            border-radius: 20px;
+            padding: 16px 20px;
+            box-shadow: 0 0 40px rgba(0, 255, 255, 0.3);
+            animation: notifSlideIn 0.5s ease forwards;
+            pointer-events: auto;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .notification-toast::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+        }
+
+        .notification-toast.info::before {
+            background: var(--neon-cyan);
+            box-shadow: 0 0 20px var(--neon-cyan);
+        }
+
+        .notification-toast.success::before {
+            background: #00ff88;
+            box-shadow: 0 0 20px #00ff88;
+        }
+
+        .notification-toast.warning::before {
+            background: #ffaa00;
+            box-shadow: 0 0 20px #ffaa00;
+        }
+
+        .notification-toast.error::before {
+            background: #ff4444;
+            box-shadow: 0 0 20px #ff4444;
+        }
+
+        .notification-toast.hide {
+            animation: notifSlideOut 0.4s ease forwards;
+        }
+
+        .notification-toast .notif-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .notification-toast .notif-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 13px;
+            font-weight: bold;
+            color: var(--neon-cyan);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .notification-toast .notif-close {
+            background: rgba(255, 255, 255, 0.05);
+            border: none;
+            color: #888;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 0 5px;
+            transition: all 0.3s;
+        }
+
+        .notification-toast .notif-close:hover {
+            color: #ff4444;
+            transform: rotate(90deg);
+        }
+
+        .notification-toast .notif-body {
+            font-size: 13px;
+            color: #ccc;
+            line-height: 1.5;
+            margin-top: 4px;
+        }
+
+        .notification-toast .notif-time {
+            font-size: 10px;
+            color: #666;
+            margin-top: 6px;
+            text-align: right;
+        }
+
+        @keyframes notifSlideIn {
+            from { transform: translateX(120%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes notifSlideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(120%); opacity: 0; }
+        }
 
         /* FORGOT PIN MODAL */
         .forgot-pin-modal {
@@ -3825,6 +3941,21 @@
         } catch(e) { console.log('Notifikasi error:', e); }
     }
     
+    function playNotificationSound() {
+        try {
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            oscillator.frequency.value = 880;
+            gainNode.gain.value = 0.15;
+            oscillator.start();
+            gainNode.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.3);
+            oscillator.stop(audioCtx.currentTime + 0.3);
+        } catch(e) {}
+    }
+    
     requestNotificationPermission();
 
     // Video list
@@ -3898,10 +4029,7 @@
     function closeNeonModal() { document.getElementById('neonModal').classList.remove('active'); }
     
     function showForceLogoutModal(message, durationSeconds = 3) {
-        if (isManualLogout) {
-            return;
-        }
-        
+        if (isManualLogout) return;
         if (forceLogoutBlocked) return;
         forceLogoutBlocked = true;
         
@@ -3937,9 +4065,7 @@
     }
     
     function executeForceLogout() {
-        // Reset flag manual logout
         isManualLogout = true;
-    
         if (currentUID) {
             database.ref('users/' + currentUID + '/status').set('offline');
             database.ref('sessions/' + currentUID).remove();
@@ -3952,10 +4078,7 @@
         clearLoginPin();
         clearRegisterPin();
         showNeonModal('Force Logout', 'Anda telah di-logout paksa oleh admin.', 'warning');
-    
-        setTimeout(() => {
-            isManualLogout = false;
-        }, 1000);
+        setTimeout(() => { isManualLogout = false; }, 1000);
     }
     
     function showNeonToast(msg) { const toast = document.getElementById('toastNeon'); toast.textContent = msg; toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 3000); }
@@ -4005,13 +4128,11 @@
         { id: 5, file: 'game5.mp4' }
     ];
 
-    // Ganti fungsi checkVideoPopup() menjadi:
     function checkVideoPopup() {
         database.ref('admin_config/video_popup').on('value', (snap) => {
             const data = snap.val();
             if (data && data.active === true && data.videoId) {
                 videoPopupData = data;
-                // Gunakan videoPopupList, bukan videoList
                 const videoFile = videoPopupList.find(v => v.id === data.videoId)?.file || null;
                 if (videoFile) {
                     const player = document.getElementById('videoPopupPlayer');
@@ -4023,7 +4144,6 @@
                     document.getElementById('videoPopupDesc').textContent = data.description || 'Deskripsi video akan muncul di sini';
                     document.getElementById('videoPopupBadge').textContent = data.badge || '📢 PENGUMUMAN';
                 
-                    // Cek apakah sudah pernah dilihat
                     const seenKey = 'video_popup_seen_' + data.videoId;
                     if (!localStorage.getItem(seenKey)) {
                         setTimeout(() => {
@@ -4054,7 +4174,6 @@
         btn.className = player.muted ? 'fas fa-volume-mute' : 'fas fa-volume-up';
     }
     
-    // Tambahkan fungsi untuk video popup login
     function checkVideoPopupLogin() {
         database.ref('admin_config/video_popup').on('value', (snap) => {
             const data = snap.val();
@@ -4074,7 +4193,6 @@
                     document.getElementById('videoPopupLoginDesc').textContent = data.description || 'Deskripsi tutorial akan muncul di sini';
                     document.getElementById('videoPopupLoginBadge').textContent = data.badge || '📢 PENGUMUMAN';
                     
-                    // Tentukan type badge
                     const typeBadge = document.getElementById('videoPopupLoginType');
                     if (data.type === 'tutorial') {
                         typeBadge.textContent = '📖 TUTORIAL';
@@ -4087,13 +4205,10 @@
                         typeBadge.className = 'video-popup-type-badge announcement';
                     }
                     
-                    // Tampilkan popup di atas login (sebelum login)
-                    // Cek apakah sudah pernah dilihat
                     const seenKey = 'video_popup_login_seen_' + data.videoId;
                     if (!localStorage.getItem(seenKey)) {
                         setTimeout(() => {
                             overlay.classList.add('active');
-                            // Sembunyikan login wrapper sementara
                             document.getElementById('loginWrapper').style.opacity = '0.3';
                         }, 1000);
                     }
@@ -4126,7 +4241,6 @@
         btn.className = player.muted ? 'fas fa-volume-mute' : 'fas fa-volume-up';
     }
     
-    // Panggil di init()
     checkVideoPopupLogin();
     
     // ==================== DEVICE FINGERPRINT ====================
@@ -4143,7 +4257,6 @@
             !!navigator.maxTouchPoints,
             screen.availWidth + 'x' + screen.availHeight
         ];
-    
         const combined = components.join('|');
         let hash = 0;
         for (let i = 0; i < combined.length; i++) {
@@ -4154,7 +4267,6 @@
         return 'FP_' + Math.abs(hash).toString(36).toUpperCase();
     }
 
-    // Generate device fingerprint
     deviceFingerprint = getDeviceFingerprint();
     console.log('🔐 Device Fingerprint:', deviceFingerprint);
 
@@ -4251,6 +4363,82 @@
     function updateRegisterPinDisplay() { const chars = document.querySelectorAll('#registerPinPreview .pin-char'); for(let i=0;i<6;i++) { if(i<registerPin.length) { chars[i].innerText='●'; chars[i].classList.add('filled'); } else { chars[i].innerText='-'; chars[i].classList.remove('filled'); } } }
     function showMessage(el, msg, isError) { const elem = document.getElementById(el); elem.innerHTML = '<i class="fas fa-' + (isError ? 'exclamation-triangle' : 'check-circle') + '"></i> ' + msg; elem.classList.add('show'); if(!isError) elem.classList.add('success'); setTimeout(() => elem.classList.remove('show'), 3000); }
 
+    // AUTO LOGIN - CEK SESSION
+    async function checkAutoLogin() {
+        const savedUID = localStorage.getItem('vip_files_uid') || localStorage.getItem('vip_uid');
+        if (!savedUID) {
+            return;
+        }
+    
+        showLoading();
+        try {
+            const userSnap = await database.ref('users/' + savedUID).once('value');
+            const user = userSnap.val();
+            if (!user) {
+                localStorage.removeItem('vip_files_uid');
+                localStorage.removeItem('vip_uid');
+                hideLoading();
+                return;
+            }
+    
+            const bannedSnap = await database.ref('banned_users/' + savedUID).once('value');
+            if (bannedSnap.exists() && bannedSnap.val().status === 'banned') {
+                localStorage.removeItem('vip_files_uid');
+                localStorage.removeItem('vip_uid');
+                hideLoading();
+                showForceLogoutModal('⚠️ AKUN ANDA DIBLOKIR ⚠️\n\nAkun Anda telah diblokir oleh admin.\nHubungi admin untuk informasi lebih lanjut.', 5);
+                return;
+            }
+    
+            currentUID = savedUID;
+    
+            let ipAddress = 'unknown';
+            let userAgent = navigator.userAgent;
+            try {
+                const ipRes = await fetch('https://api.ipify.org?format=json');
+                const ipData = await ipRes.json();
+                ipAddress = ipData.ip;
+            } catch(e) { console.log('IP fetch failed'); }
+    
+            await database.ref('users/' + currentUID).update({
+                status: 'online',
+                lastLogin: new Date().toISOString(),
+                lastIP: ipAddress,
+                device: userAgent,
+                deviceId: deviceFingerprint
+            });
+            await database.ref('sessions/' + currentUID).set({
+                sessionId: Date.now().toString(),
+                timestamp: Date.now(),
+                ipAddress: ipAddress,
+                userAgent: userAgent
+            });
+    
+            await loadUserData();
+            
+            setupAnnouncementListener();
+            setupChatNotifUser();
+            setupPublicNotifUser();
+            setupSupportChatNotif();
+        
+            document.getElementById('loginWrapper').classList.add('hide');
+            document.getElementById('mainLayout').style.display = 'block';
+            document.getElementById('uidDisplay').textContent = 'UID: ' + currentUID;
+            document.getElementById('uidDisplayRight').textContent = currentUID;
+            let cardNum = currentUID.replace(/[^A-Za-z0-9]/g, '').slice(-16).padStart(16, 'X');
+            document.getElementById('cardNumber').textContent = cardNum.replace(/(.{4})/g, '$1 ');
+            document.getElementById('cardName').textContent = currentUID;
+            loadAllComments(); loadLeaderboard(); loadTransactionHistory(); loadPurchaseHistory();
+            setupChatListener(); monitorAdminStatus(); loadVIPStatus(); setupRealtimeListeners();
+            hideLoading();
+            showNeonToast('Welcome back, ' + currentUID + '!');
+            checkVideoPopup();
+        } catch(error) {
+            console.error('Auto login error:', error);
+            hideLoading();
+        }
+    }
+
     async function submitLogin() {
         isManualLogout = false;
         forceLogoutCount = 0;
@@ -4310,8 +4498,6 @@
             setupChatListener(); monitorAdminStatus(); loadVIPStatus(); setupRealtimeListeners();
             hideLoading();
             showNeonToast('Welcome, ' + uid + '!');
-            
-            // Cek video popup setelah login
             checkVideoPopup();
             
         } catch(error) { console.error(error); hideLoading(); showMessage('loginMessage', 'Error: ' + error.message, true); }
@@ -4323,12 +4509,11 @@
         if (registerPin.length < 6) { showMessage('registerMessage', 'PIN must be 6 digits!', true); return; }
         showLoading();
         try {
-            // CEK IP & DEVICE ID SUDAH TERDAFTAR
             const allUsersSnap = await database.ref('users').once('value');
             const allUsersData = allUsersSnap.val() || {};
-            let ipSudahTerdaftar = false;
-            let deviceSudahTerdaftar = false;
-            let existingUID = '';
+            let ipSudahTerdaftar2 = false;
+            let deviceSudahTerdaftar2 = false;
+            let existingUID2 = '';
             
             let ipAddress = 'unknown';
             let userAgent = navigator.userAgent;
@@ -4337,16 +4522,9 @@
                 const ipData = await ipRes.json();
                 ipAddress = ipData.ip;
             } catch(e) { console.log('IP fetch failed'); }
-            
-            // CEK IP & DEVICE ID SUDAH TERDAFTAR (setelah dapat ipAddress)
-            const allUsersSnap2 = await database.ref('users').once('value');
-            const allUsersData2 = allUsersSnap2.val() || {};
-            let ipSudahTerdaftar2 = false;
-            let deviceSudahTerdaftar2 = false;
-            let existingUID2 = '';
 
-            Object.keys(allUsersData2).forEach(uid => {
-                const user = allUsersData2[uid];
+            Object.keys(allUsersData).forEach(uid => {
+                const user = allUsersData[uid];
                 if (user.registrasiIP === ipAddress) {
                     ipSudahTerdaftar2 = true;
                     existingUID2 = uid;
@@ -4389,17 +4567,17 @@
                     await database.ref('security_answers/' + username).set(answer.toLowerCase().trim());
                     showNeonModal('Success', 'Registration successful! Please login.', 'success');
                     clearRegisterPin();
-                    setTimeout(() => { 
-                        document.getElementById('loginUID').value = username; 
-                        switchAuthTab('login'); 
-                    }, 2000);
+                    
+                    // LANGSUNG LOGIN OTOMATIS
+                    document.getElementById('loginUID').value = username;
+                    loginPin = registerPin;
+                    submitLogin();
                 } else {
                     showNeonModal('Info', 'Registration successful! You can set security answer later via admin.', 'info');
                     clearRegisterPin();
-                    setTimeout(() => { 
-                        document.getElementById('loginUID').value = username; 
-                        switchAuthTab('login'); 
-                    }, 2000);
+                    document.getElementById('loginUID').value = username;
+                    loginPin = registerPin;
+                    submitLogin();
                 }
                 hideLoading();
             });
@@ -4426,7 +4604,6 @@
 
     // ==================== DEPOSIT POPUP WITH PHOTO UPLOAD ====================
     function showDepositPopup() { 
-        // Reset form
         document.getElementById('depositNama').value = '';
         document.getElementById('depositNoEwallet').value = '';
         document.getElementById('depositJumlah').value = '';
@@ -4439,7 +4616,6 @@
         selectedProofPreview = null;
         document.getElementById('proofPreviewImg').src = '';
         document.getElementById('proofPreviewName').textContent = '';
-        
         document.getElementById('depositPopup').classList.add('active'); 
     }
     function closeDepositPopup() { document.getElementById('depositPopup').classList.remove('active'); }
@@ -4457,16 +4633,12 @@
             document.getElementById('destinationRow').style.display = 'none';
         }
         
-        // Tampilkan upload bukti untuk semua metode pembayaran
         document.getElementById('uploadProofArea').classList.add('active');
-        
-        // Setup upload bukti
         setupProofUpload();
     }
     
     function setupProofUpload() {
         const fileInput = document.getElementById('proofPhotoInput');
-        
         fileInput.onchange = (e) => {
             const file = e.target.files[0];
             if (file && file.type.startsWith('image/')) {
@@ -4516,15 +4688,12 @@
         if (!noEwallet) { showNeonModal('Error', 'Masukkan no E-Wallet!', 'error'); return; }
         if (!selectedPaymentMethod) { showNeonModal('Error', 'Pilih metode pembayaran!', 'error'); return; }
         if (!jumlah || jumlah < 20000) { showNeonModal('Error', 'Minimal Rp 20.000!', 'error'); return; }
-        
-        // Validasi upload bukti
         if (!selectedProofFile) {
             showNeonModal('Error', 'Silakan upload bukti transfer!', 'error');
             return;
         }
         
         showLoading();
-        
         let photoUrl = null;
         try {
             photoUrl = await uploadToImgbb(selectedProofFile);
@@ -4549,7 +4718,6 @@
             
             await database.ref('deposits/' + currentUID).push(depositData);
             
-            // Kirim ke chat private
             let chatText = `💰 DEPOSIT BARU\n\nNama: ${nama}\nE-Wallet: ${noEwallet}\nMetode: ${selectedPaymentMethod}\nJumlah: Rp ${formatRupiah(jumlah)}\nStatus: PENDING\n\n📎 Bukti Transfer: ${photoUrl}\n\nMohon menunggu konfirmasi admin.`;
             
             await database.ref('chats/' + currentUID).push({
@@ -4579,33 +4747,28 @@
         supportUID = currentUID || localStorage.getItem('vip_uid') || '';
         supportDeviceId = deviceFingerprint || localStorage.getItem('device_fingerprint') || '';
     
-        // Jika belum ada device fingerprint, generate
         if (!supportDeviceId) {
             supportDeviceId = getDeviceFingerprint();
             localStorage.setItem('device_fingerprint', supportDeviceId);
         }
     
-        // Cek apakah user sudah login
         supportIsLoggedIn = !!currentUID;
     
         const input = document.getElementById('chatSupportInput');
         const sendBtn = document.getElementById('chatSupportSendBtn');
         const uploadBtn = document.getElementById('chatSupportUploadBtn');
     
-        // SELALU AKTIFKAN CHAT, TIDAK PEDULI LOGIN ATAU TIDAK
         input.disabled = false;
         sendBtn.disabled = false;
         uploadBtn.disabled = false;
         input.placeholder = supportIsLoggedIn ? 'Tulis pesan...' : 'Chat support (tanpa login)';
     }
     
-    // Buka/tutup chat support
     function toggleChatSupport() {
         const popup = document.getElementById('chatSupportPopup');
         const isOpen = popup.classList.contains('active');
         
         if (!isOpen) {
-            // Cek status sebelum buka
             checkSupportStatus();
             popup.classList.add('active');
             document.getElementById('chatSupportInput').focus();
@@ -4619,7 +4782,6 @@
         }
     }
     
-    // Kirim keluhan cepat
     function sendComplaint(complaint) {
         const text = `📋 KELUHAN: ${complaint}\n\nSaya mengalami masalah dengan: ${complaint}. Mohon bantuannya.`;
         sendSupportMessageText(text);
@@ -4628,7 +4790,6 @@
     function sendSupportMessageText(text) {
         if (!text || !text.trim()) return;
     
-        // Cek apakah device ID sudah ada
         if (!supportDeviceId) {
             supportDeviceId = getDeviceFingerprint();
             localStorage.setItem('device_fingerprint', supportDeviceId);
@@ -4641,7 +4802,7 @@
             sender: 'user',
             timestamp: Date.now(),
             isSupport: true,
-            isGuest: !supportIsLoggedIn  // Tandai sebagai guest jika belum login
+            isGuest: !supportIsLoggedIn
         };
     
         database.ref('support_chats/' + supportDeviceId + '/messages').push(msgData);
@@ -4658,7 +4819,6 @@
         document.getElementById('chatSupportInput').value = '';
     }
     
-    // Kirim pesan dari input
     function sendSupportMessage() {
         const input = document.getElementById('chatSupportInput');
         const text = input.value.trim();
@@ -4717,7 +4877,6 @@
         input.click();
     }
     
-    // Load pesan chat support
     function loadSupportMessages() {
         if (!supportDeviceId) return;
     
@@ -4734,13 +4893,11 @@
             .on('value', (snap) => {
                 const messages = snap.val() || {};
             
-                // Hapus pesan system default
                 const systemMsgs = messagesContainer.querySelectorAll('.chat-support-msg.system');
                 if (systemMsgs.length > 0 && Object.keys(messages).length > 0) {
                     systemMsgs.forEach(el => el.remove());
                 }
             
-                // Jika tidak ada pesan, tampilkan default dengan info guest
                 if (Object.keys(messages).length === 0) {
                     let welcomeMsg = 'Selamat datang di Chat Support!';
                     if (!supportIsLoggedIn) {
@@ -4753,14 +4910,11 @@
                     return;
                 }
             
-                // Tampilkan pesan
                 const sortedKeys = Object.keys(messages).sort((a, b) => messages[a].timestamp - messages[b].timestamp);
             
-                // Hapus semua pesan kecuali system default jika ada
                 const existingMsgs = messagesContainer.querySelectorAll('.chat-support-msg:not(.system)');
                 existingMsgs.forEach(el => el.remove());
             
-                // Tambahkan pesan system default jika belum ada
                 if (!messagesContainer.querySelector('.chat-support-msg.system')) {
                     const sys1 = document.createElement('div');
                     sys1.className = 'chat-support-msg system';
@@ -4804,7 +4958,6 @@
                     content += `<div class="chat-support-msg-time">${msg.timestamp ? new Date(msg.timestamp).toLocaleString() : '-'}</div>`;
                     div.innerHTML = content;
                 
-                    // Hapus system default jika ada pesan
                     const systemEls = messagesContainer.querySelectorAll('.chat-support-msg.system');
                     if (systemEls.length > 0 && sortedKeys.length > 0) {
                         systemEls.forEach(el => el.remove());
@@ -4817,10 +4970,8 @@
             });
     }
     
-    // Notifikasi chat support baru (untuk user)
-    let supportNotificationLast = 0;
-    
-    function checkSupportNotification() {
+    // NOTIFICATION SUPPORT CHAT
+    function setupSupportChatNotif() {
         if (!supportDeviceId) return;
         
         database.ref('support_chats/' + supportDeviceId + '/messages')
@@ -4828,96 +4979,395 @@
             .limitToLast(1)
             .on('child_added', (snap) => {
                 const msg = snap.val();
-                if (!msg) return;
+                if (!msg || msg.sender !== 'admin') return;
                 
-                // Hanya notifikasi jika pesan dari admin dan popup tidak terbuka
-                if (msg.sender === 'admin') {
-                    const popup = document.getElementById('chatSupportPopup');
-                    const isOpen = popup.classList.contains('active');
+                const popup = document.getElementById('chatSupportPopup');
+                const isOpen = popup && popup.classList.contains('active');
+                const lastNotif = localStorage.getItem('last_support_notif_' + supportDeviceId);
+                
+                if (!isOpen || Date.now() - parseInt(lastNotif || 0) > 5000) {
+                    localStorage.setItem('last_support_notif_' + supportDeviceId, Date.now().toString());
                     
-                    if (!isOpen) {
-                        // Tampilkan badge
-                        const badge = document.getElementById('chatSupportBadge');
-                        const currentCount = parseInt(badge.textContent) || 0;
-                        badge.textContent = currentCount + 1;
+                    const text = msg.text ? msg.text.substring(0, 100) + (msg.text.length > 100 ? '...' : '') : 'Ada balasan dari admin';
+                    showNotificationToast('💬 Support Admin', text, 'success');
+                    
+                    const badge = document.getElementById('chatSupportBadge');
+                    if (badge) {
+                        const current = parseInt(badge.textContent) || 0;
+                        badge.textContent = current + 1;
                         badge.classList.add('show');
-                        
-                        // Notifikasi suara
-                        try {
-                            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                            const oscillator = audioCtx.createOscillator();
-                            const gainNode = audioCtx.createGain();
-                            oscillator.connect(gainNode);
-                            gainNode.connect(audioCtx.destination);
-                            oscillator.frequency.value = 880;
-                            gainNode.gain.value = 0.15;
-                            oscillator.start();
-                            gainNode.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.3);
-                            oscillator.stop(audioCtx.currentTime + 0.3);
-                        } catch(e) {}
                     }
                 }
             });
     }
     
-    // Reset badge saat popup dibuka
-    function resetSupportBadge() {
-        const badge = document.getElementById('chatSupportBadge');
-        badge.textContent = '0';
-        badge.classList.remove('show');
-    }
-    
-    // Override toggleChatSupport untuk reset badge
-    const originalToggle = toggleChatSupport;
-    toggleChatSupport = function() {
-        const popup = document.getElementById('chatSupportPopup');
-        const isOpen = popup.classList.contains('active');
+    // ==================== NOTIFICATION LISTENERS ====================
+    function setupChatNotifUser() {
+        if (!currentUID && !deviceFingerprint) return;
+        const uid = currentUID || deviceFingerprint;
         
-        if (!isOpen) {
-            resetSupportBadge();
-            checkSupportStatus();
-            popup.classList.add('active');
-            document.getElementById('chatSupportInput').focus();
-            loadSupportMessages();
-        } else {
-            popup.classList.remove('active');
-            if (supportChatListener) {
-                database.ref('support_chats/' + supportDeviceId).off('value', supportChatListener);
-                supportChatListener = null;
+        database.ref('chats/' + uid).orderByChild('timestamp').limitToLast(1).on('child_added', (snap) => {
+            const msg = snap.val();
+            if (!msg || msg.sender !== 'admin') return;
+            
+            const chatView = document.getElementById('chatAdminView');
+            const isOpen = chatView && chatView.classList.contains('active');
+            const lastNotif = localStorage.getItem('last_admin_notif_' + uid);
+            
+            if (!isOpen || Date.now() - parseInt(lastNotif || 0) > 5000) {
+                localStorage.setItem('last_admin_notif_' + uid, Date.now().toString());
+                const text = msg.text ? msg.text.substring(0, 100) + (msg.text.length > 100 ? '...' : '') : 'Ada pesan baru';
+                showNotificationToast('💬 Pesan dari Admin', text, 'info');
             }
-        }
-    };
-    
-    // Enter key untuk send
-    document.addEventListener('DOMContentLoaded', function() {
-        const input = document.getElementById('chatSupportInput');
-        if (input) {
-            input.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    sendSupportMessage();
-                }
-            });
-        }
-    });
-    
-    // Inisialisasi chat support
-    function initChatSupport() {
-        // Generate device fingerprint jika belum ada
-        if (!deviceFingerprint) {
-            deviceFingerprint = getDeviceFingerprint();
-            localStorage.setItem('device_fingerprint', deviceFingerprint);
-        }
-        supportDeviceId = deviceFingerprint;
-    
-        // Cek status (tidak perlu login)
-        checkSupportStatus();
-    
-        // Mulai listen notifikasi
-        checkSupportNotification();
-    
-        console.log('💬 Chat Support initialized with Device ID:', supportDeviceId);
-        console.log('👤 Guest mode:', !supportIsLoggedIn);
+        });
     }
+    
+    function setupPublicNotifUser() {
+        database.ref('all_comments').orderByChild('timestamp').limitToLast(1).on('child_added', (snap) => {
+            const msg = snap.val();
+            if (!msg || msg.uid === currentUID || msg.uid === 'ADMIN') return;
+            
+            const chatArea = document.getElementById('allCommentsArea');
+            const isVisible = chatArea && chatArea.offsetParent !== null;
+            const lastNotif = localStorage.getItem('last_public_notif');
+            
+            if (!isVisible || Date.now() - parseInt(lastNotif || 0) > 5000) {
+                localStorage.setItem('last_public_notif', Date.now().toString());
+                const text = msg.text ? msg.text.substring(0, 80) + (msg.text.length > 80 ? '...' : '') : 'Mengirim pesan';
+                showNotificationToast('💬 Public Chat', `${msg.uid}: ${text}`, 'info');
+            }
+        });
+    }
+    
+    // ==================== ADMIN STATUS ====================
+    function monitorAdminStatus() {
+        database.ref('admin_status').on('value', s => {
+            const st = s.val();
+            if (st && st.status === 'online' && (Date.now() - (st.last_seen||0) < 300000)) {
+                document.getElementById('chatAdminStatus').innerHTML = '🟢 Online';
+                document.getElementById('publicChatStatus').innerHTML = '● Online';
+            } else {
+                document.getElementById('chatAdminStatus').innerHTML = '🔴 Offline';
+                document.getElementById('publicChatStatus').innerHTML = '○ Offline';
+            }
+        });
+    }
+
+    // ==================== NAVIGATION ====================
+    function navigateWithLoading(view) {
+        document.querySelectorAll('.view-container').forEach(v => v.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        if (view === 'dashboard') { document.getElementById('dashboardView').classList.add('active'); document.querySelectorAll('.nav-item')[0].classList.add('active'); }
+        else if (view === 'account') { document.getElementById('accountView').classList.add('active'); document.querySelectorAll('.nav-item')[1].classList.add('active'); }
+        else if (view === 'chat') { document.getElementById('chatAdminView').classList.add('active'); document.querySelectorAll('.nav-item')[2].classList.add('active'); }
+    }
+
+    // ==================== UPDATE HISTORY ====================
+    function renderFreeUpdates(updates) {
+        const cont = document.getElementById('freeUpdateList');
+        if (!cont) return;
+        const sorted = Object.keys(updates).map(k=>({...updates[k], key: k})).sort((a,b)=>(b.timestamp||0)-(a.timestamp||0));
+        if(sorted.length===0) { cont.innerHTML='<div style="padding:25px; text-align:center;">No updates</div>'; return; }
+        let html='';
+        sorted.slice(0,15).forEach(u => { 
+            const updateId = u.key || 'update_' + Date.now();
+            html += `
+                <div class="update-item">
+                    <div class="update-title">📢 ${escapeHtml(u.title||'Free Update')}</div>
+                    <div class="update-desc">${escapeHtml(u.description||'')}</div>
+                    <div class="update-meta">
+                        <span>${u.version||'v1.0'}</span>
+                        <span>${u.timestamp?new Date(u.timestamp).toLocaleString():'-'}</span>
+                    </div>
+                    <div>
+                        <a href="#" onclick="event.preventDefault(); trackFreeUpdateClick('${updateId}', '${u.link || '#'}'); return false;" class="update-link" target="_blank">
+                            <i class="fas fa-download"></i> Download
+                        </a>
+                    </div>
+                </div>
+            `; 
+        });
+        cont.innerHTML=html;
+    }
+    
+    function renderVipUpdates(updates) {
+        const cont = document.getElementById('vipUpdateList');
+        if (!cont) return;
+        if(!isVIP) { cont.innerHTML=`<div style="padding:25px; text-align:center; color:#ffaa00;"><i class="fas fa-crown" style="font-size:48px;"></i><p>VIP only feature</p><button class="btn-neon" onclick="buyVIP()">Upgrade to VIP</button></div>`; return; }
+        const sorted = Object.keys(updates).map(k=>({...updates[k]})).sort((a,b)=>(b.created_at||0)-(a.created_at||0));
+        if(sorted.length===0) { cont.innerHTML='<div style="padding:25px; text-align:center;">No VIP updates</div>'; return; }
+        let html='';
+        sorted.slice(0,15).forEach(u => { 
+            html+=`<div class="update-item" style="border-color:#ffd700;"><div class="update-title" style="color:#ffd700;">👑 ${escapeHtml(u.title||'VIP Update')}</div><div class="update-desc">${escapeHtml(u.description||'')}</div><div class="update-meta"><span>${u.version||'v2.0'}</span><span>${u.created_at?new Date(u.created_at).toLocaleString():'-'}</span></div><div><a href="${u.link||'#'}" target="_blank" class="update-link" style="color:#ffd700;">Download</a></div></div>`;
+            
+            if (u.created_at && !localStorage.getItem(`vip_update_notified_${u.created_at}`)) {
+                localStorage.setItem(`vip_update_notified_${u.created_at}`, 'true');
+                sendUserNotification('👑 Update VIP Baru!', `${u.title} - ${u.version}\nKlik untuk lihat detail.`, `vip_update_${u.created_at}`);
+            }
+        });
+        cont.innerHTML=html;
+    }
+    function showUpdateTab(tab) {
+        const freeTab = document.getElementById('freeUpdateTab'), vipTab = document.getElementById('vipUpdateTab'), btns = document.querySelectorAll('.tab-btn');
+        btns.forEach(b=>b.classList.remove('active'));
+        if(tab==='free') { freeTab.classList.add('active'); vipTab.classList.remove('active'); btns[0].classList.add('active'); database.ref('free_updates/all').orderByChild('timestamp').limitToLast(20).once('value',s=>renderFreeUpdates(s.val()||{})); }
+        else { freeTab.classList.remove('active'); vipTab.classList.add('active'); btns[1].classList.add('active'); if(isVIP) database.ref('global_updates').orderByChild('created_at').limitToLast(20).once('value',s=>renderVipUpdates(s.val()||{})); else renderVipUpdates({}); }
+    }
+
+    // ==================== PACKAGES ====================
+    function loadAdminConfig() {
+        database.ref('admin_config/premium_packages').on('value', s => { if(s.exists()) { packages = s.val(); renderPackages(); } });
+        database.ref('admin_config/loading_logo_url').on('value', s => { if(s.exists()) loadingLogoUrl = s.val(); });
+        database.ref('free_updates/all').orderByChild('timestamp').limitToLast(20).on('value', s => renderFreeUpdates(s.val() || {}));
+        if (isVIP || currentUID) database.ref('global_updates').orderByChild('created_at').limitToLast(20).on('value', s => renderVipUpdates(s.val() || {}));
+    }
+    async function loadGlobalDiscount() {
+        try {
+            const snap = await database.ref('global_discount').once('value');
+            const discount = snap.val();
+            if (discount && discount.active === true && new Date(discount.expiryDate) > new Date()) {
+                globalDiscount = {
+                    active: true,
+                    percentage: discount.percentage,
+                    minPurchase: discount.minPurchase || 0
+                };
+                console.log(`🎫 Diskon global aktif: ${globalDiscount.percentage}%`);
+            } else {
+                globalDiscount = { active: false, percentage: 0, minPurchase: 0 };
+            }
+            renderPackages();
+        } catch (error) {
+            console.error('Error loading discount:', error);
+        }
+    }
+    function renderPackages() {
+        const grid = document.getElementById('priceGrid');
+        if (!grid) return;
+    
+        if (!packages || packages.length === 0) {
+            grid.innerHTML = '<div style="padding:25px; text-align:center;">No packages</div>';
+            return;
+        }
+    
+        let html = '<div class="price-grid">';
+        packages.forEach((pkg, idx) => {
+            let originalPrice = pkg.price;
+            let finalPrice = originalPrice;
+            let discountText = '';
+        
+            if (globalDiscount.active && (globalDiscount.minPurchase === 0 || originalPrice >= globalDiscount.minPurchase)) {
+                finalPrice = originalPrice - (originalPrice * globalDiscount.percentage / 100);
+                discountText = `<div style="font-size: 11px; color: #00ff88; margin-top: 5px;">
+                    <span style="text-decoration: line-through; color: #888;">Rp ${formatRupiah(originalPrice)}</span>
+                    → Rp ${formatRupiah(finalPrice)} <span style="color: #ffaa00;">(${globalDiscount.percentage}% OFF)</span>
+                </div>`;
+            }
+        
+            html += `
+                <div class="price-card" onclick="selectPackage(${idx})" data-original-price="${originalPrice}" data-final-price="${finalPrice}">
+                    <div class="price-amount">Rp ${formatRupiah(finalPrice)}</div>
+                    <div class="price-type">${escapeHtml(pkg.label)}</div>
+                    ${discountText}
+                    ${pkg.description ? `<div style="font-size: 11px; color: #aaa; margin-top: 8px;">${escapeHtml(pkg.description)}</div>` : ''}
+                </div>
+            `;
+        });
+        html += '</div>';
+        grid.innerHTML = html;
+    }
+    function selectPackage(idx) {
+        selectedPackage = packages[idx];
+        const priceCard = document.querySelectorAll('.price-card')[idx];
+        let finalPrice = parseInt(priceCard?.getAttribute('data-final-price') || selectedPackage.price);
+    
+        document.querySelectorAll('.price-card').forEach(c => c.classList.remove('selected'));
+        if (event?.currentTarget) event.currentTarget.classList.add('selected');
+    
+        document.getElementById('summaryPackageName').textContent = selectedPackage.label;
+        document.getElementById('summaryPrice').textContent = 'Rp ' + formatRupiah(finalPrice);
+        document.getElementById('summaryTotal').textContent = 'Rp ' + formatRupiah(finalPrice);
+    
+        selectedPackage.finalPrice = finalPrice;
+    }
+
+    // ==================== REALTIME LISTENERS ====================
+    function setupRealtimeListeners() {
+        if(!currentUID) return;
+    
+        database.ref('saldo/' + currentUID).on('value', s => { 
+            if(s.exists()) { 
+                currentSaldo = s.val().amount || 0; 
+                updateSaldoDisplay(); 
+            } 
+        });
+    
+        database.ref('vip_members/' + currentUID).on('value', () => { 
+            loadVIPStatus(); 
+        });
+    
+        database.ref('deposits/' + currentUID).on('child_added', () => { 
+            loadTransactionHistory(); 
+        });
+    
+        database.ref('purchases/' + currentUID).on('child_added', () => { 
+            loadPurchaseHistory(); 
+        });
+    
+        database.ref('sessions/' + currentUID).on('value', (snap) => {
+            const session = snap.val();
+            if (isManualLogout) return;
+            if (!session && currentUID) {
+                forceLogoutCount++;
+                if (forceLogoutCount <= 3) {
+                    showForceLogoutModal('⚠️ AKUN ANDA SEMENTARA KAMI TANGGUHKAN ⚠️\n\nAkun Anda sementara kami tangguhkan karena ada aktivitas mencurigakan.\nHarap bersabar dan hubungi admin untuk informasi lebih lanjut.\n\nAnda akan diarahkan ke halaman login.', 5);
+                } else {
+                    showForceLogoutModal('⚠️ AKUN ANDA DIBLOKIR SEMENTARA ⚠️\n\nTerjadi aktivitas mencurigakan berulang kali.\nAkun Anda akan diblokir sementara.\nHubungi admin untuk informasi lebih lanjut.', 5);
+                }
+            }
+        });
+    
+        database.ref('banned_users/' + currentUID).on('value', (snap) => {
+            if (snap.exists() && snap.val().status === 'banned' && currentUID) {
+                forceLogoutCount = 0;
+                showForceLogoutModal('⚠️ AKUN ANDA DIBLOKIR ⚠️\n\nAkun Anda telah diblokir oleh admin karena melanggar aturan.\nHubungi admin untuk informasi lebih lanjut.\n\nAnda akan diarahkan ke halaman login.', 5);
+            }
+        });
+    
+        database.ref('vip_members/' + currentUID).on('value', (snap) => {
+            const vip = snap.val();
+            if (vip && vip.status === 'active' && vip.updateType === 'quota') {
+                const used = vip.updatesUsed || 0;
+                const total = vip.updateQuota || 0;
+                const percent = total > 0 ? (used / total) * 100 : 0;
+            
+                const progressFill = document.querySelector('#vipCounterCard .progress-bar-fill.quota');
+                const percentText = document.querySelector('#vipCounterCard .progress-label span:last-child');
+            
+                if (progressFill) {
+                    progressFill.style.width = percent + '%';
+                }
+                if (percentText) {
+                    percentText.innerHTML = `${used}/${total} (${percent.toFixed(1)}%)`;
+                }
+            
+                const usedEl = document.querySelector('#vipCounterCard .vip-stat-item:first-child .vip-stat-value');
+                const totalEl = document.querySelector('#vipCounterCard .vip-stat-item:nth-child(2) .vip-stat-value');
+                const remainingEl = document.querySelector('#vipCounterCard .vip-stat-item:last-child .vip-stat-value');
+            
+                if (usedEl) usedEl.innerHTML = used;
+                if (totalEl) totalEl.innerHTML = total;
+                if (remainingEl) remainingEl.innerHTML = total - used;
+            }
+        });
+    }
+    
+    // ==================== LISTENER PENGUMUMAN USER ====================
+
+    function setupAnnouncementListener() {
+        if (!currentUID && !deviceFingerprint) return;
+        const uid = currentUID || deviceFingerprint;
+    
+        database.ref('user_notifications/' + uid).on('child_added', (snap) => {
+            const notif = snap.val();
+            if (!notif) return;
+        
+            console.log('📢 PENGUMUMAN DITERIMA:', notif);
+        
+            // ✅ TAMPILKAN POP UP
+            showNotificationToast(
+                notif.title || '📢 Pengumuman',
+                notif.message || '',
+                notif.type || 'info',
+                (notif.duration || 5) * 1000
+            );
+        
+            // Browser notification
+            if (notificationPermissionGranted) {
+                try {
+                    new Notification(notif.title || '📢 Pengumuman', {
+                        body: notif.message || '',
+                        icon: userIcon,
+                        vibrate: [200, 100, 200]
+                    });
+                } catch(e) {}
+            }
+        
+            database.ref('user_notifications/' + uid + '/' + snap.key + '/read').set(true);
+        });
+    }
+
+    // ==================== CHANGE PROFILE IMAGE ====================
+    function changeProfileImage() {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        input.onchange = async (e) => {
+            const file = e.target.files[0];
+            if(file) {
+                showLoading();
+                try {
+                    const url = await uploadToImgbb(file);
+                    document.getElementById('profileImage').src = url;
+                    document.getElementById('profileImageAccount').src = url;
+                    await database.ref('profiles/' + currentUID).set({ image: url, timestamp: Date.now() });
+                    hideLoading();
+                    showNeonToast('Profile updated!');
+                } catch(err) { hideLoading(); showNeonModal('Error', err.message, 'error'); }
+            }
+        };
+        input.click();
+    }
+
+    // ==================== COPY UID & LOGOUT ====================
+    function copyUID() { navigator.clipboard.writeText(currentUID); showNeonToast('UID copied!'); }
+
+    function logout() {
+        showConfirm('Logout', 'Apakah Anda yakin ingin logout?', () => {
+            isManualLogout = true;
+            showLoading();
+            if(currentUID) {
+                database.ref('users/' + currentUID + '/status').set('offline');
+                database.ref('sessions/' + currentUID).remove();
+            }
+            localStorage.removeItem('vip_files_uid');
+            localStorage.removeItem('vip_uid');
+            currentUID = '';
+            document.getElementById('mainLayout').style.display = 'none';
+            document.getElementById('loginWrapper').classList.remove('hide');
+            clearLoginPin();
+            clearRegisterPin();
+            hideLoading();
+            showNeonToast('Logged out successfully!');
+            setTimeout(() => { isManualLogout = false; }, 1000);
+        });
+    }
+    
+    function showConfirm(title, message, callback) {
+        const modal = document.createElement('div');
+        modal.className = 'confirm-modal active';
+        modal.innerHTML = `
+            <div class="confirm-content">
+                <div class="confirm-icon"><i class="fas fa-question-circle"></i></div>
+                <div class="confirm-title">${title}</div>
+                <div class="confirm-message">${message}</div>
+                <div class="confirm-actions">
+                    <button class="confirm-btn confirm-btn-yes" id="customConfirmYes">Ya</button>
+                    <button class="confirm-btn confirm-btn-no" id="customConfirmNo">Tidak</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        
+        document.getElementById('customConfirmYes').onclick = () => {
+            modal.remove();
+            callback();
+        };
+        document.getElementById('customConfirmNo').onclick = () => {
+            modal.remove();
+        };
+    }
+    
+    function showMyIP() { console.log('IP hidden'); }
 
     // ==================== RESET PIN ====================
     function openResetPin() { document.getElementById('resetPinModal').classList.add('active'); }
@@ -5125,7 +5575,6 @@
             </div>
         `;
         
-        // Kirim notifikasi jika quota mendekati habis
         if (remaining <= 2 && remaining > 0) {
             sendUserNotification('⚠️ Peringatan Quota', `Sisa ${remaining} update lagi! Segera perpanjang VIP.`, `quota_warning_${currentUID}`);
         } else if (used >= total) {
@@ -5425,9 +5874,9 @@
             }
         }
         
-        // Notifikasi chat dari admin
         if (m.sender === 'admin' && m.text) {
             sendUserNotification('💬 Pesan dari Admin', m.text.substring(0, 100), `admin_chat_${Date.now()}`);
+            showNotificationToast('💬 Pesan dari Admin', m.text.substring(0, 100), 'info');
         }
     
         content += `<div class="message-time">${m.timestamp ? new Date(m.timestamp).toLocaleString() : '-'}</div>`;
@@ -5442,6 +5891,68 @@
         document.getElementById('chatInputFull').value = '';
     }
     function openChatAdmin() { navigateWithLoading('chat'); }
+    
+    function showNotificationToast(title, message, type = 'info', duration = 5000) {
+        const container = document.getElementById('notificationContainer');
+        if (!container) {
+            console.log('❌ Container notifikasi tidak ditemukan!');
+            return;
+        }
+    
+        const existing = container.querySelectorAll('.notification-toast');
+        if (existing.length >= 3) {
+            existing[0].classList.add('hide');
+            setTimeout(() => existing[0].remove(), 400);
+        }
+    
+        const toast = document.createElement('div');
+        toast.className = `notification-toast ${type}`;
+        const icons = {
+            info: 'fa-info-circle',
+            success: 'fa-check-circle',
+            warning: 'fa-exclamation-triangle',
+            error: 'fa-times-circle'
+        };
+    
+        toast.innerHTML = `
+            <div class="notif-header">
+                <div class="notif-title">
+                    <i class="fas ${icons[type] || icons.info}"></i>
+                    ${title}
+                </div>
+                <button class="notif-close" onclick="this.closest('.notification-toast').remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="notif-body">${message}</div>
+            <div class="notif-time">${new Date().toLocaleTimeString()}</div>
+        `;
+    
+        container.appendChild(toast);
+    
+        setTimeout(() => {
+            if (toast.parentElement) {
+                toast.classList.add('hide');
+                setTimeout(() => toast.remove(), 400);
+            }
+        }, duration);
+    
+        // Play sound
+        try {
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            oscillator.frequency.value = 880;
+            gainNode.gain.value = 0.15;
+            oscillator.start();
+            gainNode.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.3);
+            oscillator.stop(audioCtx.currentTime + 0.3);
+        } catch(e) {}
+    
+        console.log('📢 Notifikasi ditampilkan:', title, message);
+    }
     
     // ==================== CHAT FILE UPLOAD ====================
     function formatFileSize(bytes) {
@@ -5529,296 +6040,6 @@
         } catch(e) { console.error(e); }
     }
     
-    // ============================================================
-    // NOTIFICATION SYSTEM - USER
-    // ============================================================
-    
-    // Request permission notifikasi
-    async function requestNotificationPermission() {
-        if ('Notification' in window) {
-            const permission = await Notification.requestPermission();
-            notificationPermissionGranted = permission === 'granted';
-            if (notificationPermissionGranted && 'serviceWorker' in navigator) {
-                try {
-                    await navigator.serviceWorker.register('/sw.js');
-                    console.log('✅ Notification permission granted');
-                } catch(err) { console.log('Service Worker error:', err); }
-            }
-        }
-    }
-    
-    // Tampilkan notifikasi di layar (toast)
-    function showNotificationToast(title, message, type = 'info', duration = 5000) {
-        const container = document.getElementById('notificationContainer');
-        if (!container) return;
-        
-        const toast = document.createElement('div');
-        toast.className = `notification-toast ${type}`;
-        const icons = {
-            info: 'fa-info-circle',
-            success: 'fa-check-circle',
-            warning: 'fa-exclamation-triangle',
-            error: 'fa-times-circle'
-        };
-        
-        toast.innerHTML = `
-            <div class="notif-header">
-                <div class="notif-title">
-                    <i class="fas ${icons[type] || icons.info}"></i>
-                    ${title}
-                </div>
-                <button class="notif-close" onclick="this.closest('.notification-toast').remove()">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="notif-body">${message}</div>
-            <div class="notif-time">${new Date().toLocaleTimeString()}</div>
-        `;
-        
-        container.appendChild(toast);
-        
-        // Auto hide
-        setTimeout(() => {
-            if (toast.parentElement) {
-                toast.classList.add('hide');
-                setTimeout(() => toast.remove(), 400);
-            }
-        }, duration);
-        
-        // Play sound
-        playNotificationSound();
-    }
-    
-    // Play notification sound
-    function playNotificationSound() {
-        try {
-            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            const oscillator = audioCtx.createOscillator();
-            const gainNode = audioCtx.createGain();
-            oscillator.connect(gainNode);
-            gainNode.connect(audioCtx.destination);
-            oscillator.frequency.value = 880;
-            gainNode.gain.value = 0.15;
-            oscillator.start();
-            gainNode.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.3);
-            oscillator.stop(audioCtx.currentTime + 0.3);
-        } catch(e) {}
-    }
-    
-    // ===== LISTENER CHAT ADMIN =====
-    let chatAdminNotificationListener = null;
-    
-    function setupChatAdminNotification() {
-        if (!currentUID && !deviceFingerprint) return;
-        
-        const uid = currentUID || deviceFingerprint;
-        
-        if (chatAdminNotificationListener) {
-            database.ref('chats/' + uid).off('value', chatAdminNotificationListener);
-            chatAdminNotificationListener = null;
-        }
-        
-        chatAdminNotificationListener = database.ref('chats/' + uid)
-            .orderByChild('timestamp')
-            .limitToLast(1)
-            .on('child_added', (snap) => {
-                const msg = snap.val();
-                if (!msg) return;
-                
-                // Hanya notifikasi jika pesan dari admin dan popup chat tidak terbuka
-                if (msg.sender === 'admin') {
-                    const chatPopup = document.getElementById('chatAdminView');
-                    const isOpen = chatPopup && chatPopup.classList.contains('active');
-                    const lastNotif = localStorage.getItem('last_admin_chat_notif_' + uid);
-                    
-                    if (!isOpen || Date.now() - parseInt(lastNotif || 0) > 5000) {
-                        localStorage.setItem('last_admin_chat_notif_' + uid, Date.now().toString());
-                        
-                        // Toast notification
-                        showNotificationToast(
-                            '💬 Pesan dari Admin',
-                            `${msg.text ? msg.text.substring(0, 100) + (msg.text.length > 100 ? '...' : '') : 'Ada pesan baru'}`,
-                            'info'
-                        );
-                        
-                        // Browser notification
-                        if (notificationPermissionGranted) {
-                            new Notification('💬 Pesan dari Admin', {
-                                body: msg.text ? msg.text.substring(0, 100) : 'Ada pesan baru',
-                                icon: userIcon,
-                                vibrate: [200, 100, 200]
-                            });
-                        }
-                    }
-                }
-            });
-    }
-    
-    // ===== LISTENER PUBLIC CHAT =====
-    let publicChatNotificationListener = null;
-    
-    function setupPublicChatNotification() {
-        if (publicChatNotificationListener) {
-            database.ref('all_comments').off('value', publicChatNotificationListener);
-            publicChatNotificationListener = null;
-        }
-        
-        publicChatNotificationListener = database.ref('all_comments')
-            .orderByChild('timestamp')
-            .limitToLast(1)
-            .on('child_added', (snap) => {
-                const msg = snap.val();
-                if (!msg) return;
-                
-                // Hanya notifikasi jika bukan dari user sendiri dan bukan dari admin
-                if (msg.uid !== currentUID && msg.uid !== 'ADMIN') {
-                    const chatArea = document.getElementById('allCommentsArea');
-                    const isVisible = chatArea && chatArea.offsetParent !== null;
-                    const lastNotif = localStorage.getItem('last_public_chat_notif');
-                    
-                    if (!isVisible || Date.now() - parseInt(lastNotif || 0) > 5000) {
-                        localStorage.setItem('last_public_chat_notif', Date.now().toString());
-                        
-                        showNotificationToast(
-                            '💬 Public Chat',
-                            `${msg.uid}: ${msg.text ? msg.text.substring(0, 80) + (msg.text.length > 80 ? '...' : '') : 'Mengirim pesan'}`,
-                            'info'
-                        );
-                    }
-                }
-            });
-    }
-    
-    // ===== LISTENER SUPPORT CHAT =====
-    let supportChatNotificationListener = null;
-    
-    function setupSupportChatNotification() {
-        if (!supportDeviceId) return;
-        
-        if (supportChatNotificationListener) {
-            database.ref('support_chats/' + supportDeviceId + '/messages').off('value', supportChatNotificationListener);
-            supportChatNotificationListener = null;
-        }
-        
-        supportChatNotificationListener = database.ref('support_chats/' + supportDeviceId + '/messages')
-            .orderByChild('timestamp')
-            .limitToLast(1)
-            .on('child_added', (snap) => {
-                const msg = snap.val();
-                if (!msg) return;
-                
-                // Hanya notifikasi jika pesan dari admin
-                if (msg.sender === 'admin') {
-                    const popup = document.getElementById('chatSupportPopup');
-                    const isOpen = popup && popup.classList.contains('active');
-                    const lastNotif = localStorage.getItem('last_support_chat_notif_' + supportDeviceId);
-                    
-                    if (!isOpen || Date.now() - parseInt(lastNotif || 0) > 5000) {
-                        localStorage.setItem('last_support_chat_notif_' + supportDeviceId, Date.now().toString());
-                        
-                        showNotificationToast(
-                            '💬 Support Admin',
-                            `${msg.text ? msg.text.substring(0, 100) + (msg.text.length > 100 ? '...' : '') : 'Ada balasan dari admin'}`,
-                            'success'
-                        );
-                        
-                        if (notificationPermissionGranted) {
-                            new Notification('💬 Support Admin', {
-                                body: msg.text ? msg.text.substring(0, 100) : 'Ada balasan dari admin',
-                                icon: userIcon,
-                                vibrate: [200, 100, 200]
-                            });
-                        }
-                        
-                        // Update badge
-                        const badge = document.getElementById('chatSupportBadge');
-                        if (badge) {
-                            const current = parseInt(badge.textContent) || 0;
-                            badge.textContent = current + 1;
-                            badge.classList.add('show');
-                        }
-                    }
-                }
-            });
-    }
-    
-    // ===== MONITOR ADMIN STATUS =====
-    function monitorAdminStatusRealtime() {
-        database.ref('admin_status').on('value', (snap) => {
-            const status = snap.val();
-            const isOnline = status && status.status === 'online' && (Date.now() - (status.last_seen || 0) < 60000);
-            
-            // Update status di chat admin
-            const chatStatus = document.getElementById('chatAdminStatus');
-            if (chatStatus) {
-                if (isOnline) {
-                    chatStatus.innerHTML = '🟢 Online';
-                    chatStatus.style.color = '#00ff88';
-                } else {
-                    chatStatus.innerHTML = '🔴 Offline';
-                    chatStatus.style.color = '#666';
-                }
-            }
-            
-            // Update status di public chat
-            const publicStatus = document.getElementById('publicChatStatus');
-            if (publicStatus) {
-                if (isOnline) {
-                    publicStatus.innerHTML = '● Online';
-                    publicStatus.style.color = '#00ff88';
-                } else {
-                    publicStatus.innerHTML = '○ Offline';
-                    publicStatus.style.color = '#666';
-                }
-            }
-            
-            // Update status di support chat
-            const supportStatus = document.getElementById('chatSupportStatus');
-            if (supportStatus) {
-                if (isOnline) {
-                    supportStatus.innerHTML = '🟢 Online';
-                    supportStatus.style.color = '#00ff88';
-                } else {
-                    supportStatus.innerHTML = '🔴 Offline';
-                    supportStatus.style.color = '#666';
-                }
-            }
-        });
-    }
-    
-    // ===== UPDATE USER STATUS =====
-    function updateUserStatus() {
-        if (!currentUID) return;
-        
-        // Update status setiap 30 detik
-        setInterval(() => {
-            database.ref('users/' + currentUID + '/status').set('online');
-            database.ref('users/' + currentUID + '/last_active').set(Date.now());
-        }, 30000);
-        
-        // Saat halaman ditutup, set offline
-        window.addEventListener('beforeunload', () => {
-            if (currentUID) {
-                database.ref('users/' + currentUID + '/status').set('offline');
-                database.ref('users/' + currentUID + '/last_active').set(Date.now());
-            }
-        });
-    }
-    
-    function initNotifications() {
-        // Request permission
-        requestNotificationPermission();
-        
-        // Setup listeners
-        setupChatAdminNotification();
-        setupPublicChatNotification();
-        setupSupportChatNotification();
-        monitorAdminStatusRealtime();
-        updateUserStatus();
-        
-        console.log('🔔 Notification system initialized');
-    }
-
     // ==================== HISTORY ====================
     async function loadTransactionHistory() {
         try {
@@ -5830,7 +6051,6 @@
             document.getElementById('totalDepositAmount').innerHTML = 'Rp ' + formatRupiah(total);
             document.getElementById('totalDepositRight').innerHTML = 'Rp ' + formatRupiah(total);
             
-            // Notifikasi status deposit
             const pendingDeposits = items.filter(d => d.status === 'pending').length;
             const approvedDeposits = items.filter(d => d.status === 'approved').length;
             if (approvedDeposits > 0) {
@@ -5886,10 +6106,27 @@
     function renderFreeUpdates(updates) {
         const cont = document.getElementById('freeUpdateList');
         if (!cont) return;
-        const sorted = Object.keys(updates).map(k=>({...updates[k]})).sort((a,b)=>(b.timestamp||0)-(a.timestamp||0));
+        const sorted = Object.keys(updates).map(k=>({...updates[k], key: k})).sort((a,b)=>(b.timestamp||0)-(a.timestamp||0));
         if(sorted.length===0) { cont.innerHTML='<div style="padding:25px; text-align:center;">No updates</div>'; return; }
         let html='';
-        sorted.slice(0,15).forEach(u => { html+=`<div class="update-item"><div class="update-title">📢 ${escapeHtml(u.title||'Free Update')}</div><div class="update-desc">${escapeHtml(u.description||'')}</div><div class="update-meta"><span>${u.version||'v1.0'}</span><span>${u.timestamp?new Date(u.timestamp).toLocaleString():'-'}</span></div><div><a href="${u.link||'#'}" target="_blank" class="update-link">Download</a></div></div>`; });
+        sorted.slice(0,15).forEach(u => { 
+            const updateId = u.key || 'update_' + Date.now();
+            html += `
+                <div class="update-item">
+                    <div class="update-title">📢 ${escapeHtml(u.title||'Free Update')}</div>
+                    <div class="update-desc">${escapeHtml(u.description||'')}</div>
+                    <div class="update-meta">
+                        <span>${u.version||'v1.0'}</span>
+                        <span>${u.timestamp?new Date(u.timestamp).toLocaleString():'-'}</span>
+                    </div>
+                    <div>
+                        <a href="#" onclick="event.preventDefault(); trackFreeUpdateClick('${updateId}', '${u.link || '#'}'); return false;" class="update-link" target="_blank">
+                            <i class="fas fa-download"></i> Download
+                        </a>
+                    </div>
+                </div>
+            `; 
+        });
         cont.innerHTML=html;
     }
     function renderVipUpdates(updates) {
@@ -5902,7 +6139,6 @@
         sorted.slice(0,15).forEach(u => { 
             html+=`<div class="update-item" style="border-color:#ffd700;"><div class="update-title" style="color:#ffd700;">👑 ${escapeHtml(u.title||'VIP Update')}</div><div class="update-desc">${escapeHtml(u.description||'')}</div><div class="update-meta"><span>${u.version||'v2.0'}</span><span>${u.created_at?new Date(u.created_at).toLocaleString():'-'}</span></div><div><a href="${u.link||'#'}" target="_blank" class="update-link" style="color:#ffd700;">Download</a></div></div>`;
             
-            // Notifikasi update VIP baru (hanya sekali per update)
             if (u.created_at && !localStorage.getItem(`vip_update_notified_${u.created_at}`)) {
                 localStorage.setItem(`vip_update_notified_${u.created_at}`, 'true');
                 sendUserNotification('👑 Update VIP Baru!', `${u.title} - ${u.version}\nKlik untuk lihat detail.`, `vip_update_${u.created_at}`);
@@ -6016,15 +6252,9 @@
             loadPurchaseHistory(); 
         });
     
-        // Deteksi session dihapus (force logout)
         database.ref('sessions/' + currentUID).on('value', (snap) => {
             const session = snap.val();
-    
-            // Jangan proses jika ini adalah logout manual
-            if (isManualLogout) {
-                return;
-            }
-    
+            if (isManualLogout) return;
             if (!session && currentUID) {
                 forceLogoutCount++;
                 if (forceLogoutCount <= 3) {
@@ -6035,7 +6265,6 @@
             }
         });
     
-        // Deteksi banned
         database.ref('banned_users/' + currentUID).on('value', (snap) => {
             if (snap.exists() && snap.val().status === 'banned' && currentUID) {
                 forceLogoutCount = 0;
@@ -6043,7 +6272,6 @@
             }
         });
     
-        // Update quota real-time
         database.ref('vip_members/' + currentUID).on('value', (snap) => {
             const vip = snap.val();
             if (vip && vip.status === 'active' && vip.updateType === 'quota') {
@@ -6099,9 +6327,7 @@
 
     function logout() {
         showConfirm('Logout', 'Apakah Anda yakin ingin logout?', () => {
-            // Tandai sebagai logout manual
             isManualLogout = true;
-        
             showLoading();
             if(currentUID) {
                 database.ref('users/' + currentUID + '/status').set('offline');
@@ -6116,11 +6342,7 @@
             clearRegisterPin();
             hideLoading();
             showNeonToast('Logged out successfully!');
-        
-            // Reset flag setelah beberapa saat
-            setTimeout(() => {
-                isManualLogout = false;
-            }, 1000);
+            setTimeout(() => { isManualLogout = false; }, 1000);
         });
     }
     
@@ -6150,268 +6372,6 @@
     }
     
     function showMyIP() { console.log('IP hidden'); }
-    
-    let notifPermissionGranted = false;
-    
-    // Request permission notifikasi
-    function requestNotifPermission() {
-        if ('Notification' in window) {
-            Notification.requestPermission().then(permission => {
-                notifPermissionGranted = permission === 'granted';
-                console.log('📢 Notification permission:', permission);
-            });
-        }
-    }
-    
-    // Tampilkan toast notifikasi
-    function showNotifToast(title, message, type = 'info', duration = 5000) {
-        const container = document.getElementById('notificationContainer');
-        if (!container) return;
-        
-        // Hapus notifikasi lama jika lebih dari 3
-        const existing = container.querySelectorAll('.notification-toast');
-        if (existing.length >= 3) {
-            existing[0].classList.add('hide');
-            setTimeout(() => existing[0].remove(), 400);
-        }
-        
-        const toast = document.createElement('div');
-        toast.className = `notification-toast ${type}`;
-        const icons = {
-            info: 'fa-info-circle',
-            success: 'fa-check-circle',
-            warning: 'fa-exclamation-triangle',
-            error: 'fa-times-circle'
-        };
-        
-        toast.innerHTML = `
-            <div class="notif-header">
-                <div class="notif-title">
-                    <i class="fas ${icons[type] || icons.info}"></i>
-                    ${title}
-                </div>
-                <button class="notif-close" onclick="this.closest('.notification-toast').remove()">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="notif-body">${message}</div>
-            <div class="notif-time">${new Date().toLocaleTimeString()}</div>
-        `;
-        
-        container.appendChild(toast);
-        
-        // Auto hide
-        setTimeout(() => {
-            if (toast.parentElement) {
-                toast.classList.add('hide');
-                setTimeout(() => toast.remove(), 400);
-            }
-        }, duration);
-        
-        // Browser notification
-        if (notifPermissionGranted) {
-            try {
-                new Notification(title, {
-                    body: message,
-                    icon: 'https://i.ibb.co.com/4wHZpnFB/IMG-20260610-WA0000.jpg',
-                    vibrate: [200, 100, 200]
-                });
-            } catch(e) {}
-        }
-        
-        // Play sound
-        try {
-            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.frequency.value = 880;
-            gain.gain.value = 0.15;
-            osc.start();
-            gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.3);
-            osc.stop(audioCtx.currentTime + 0.3);
-        } catch(e) {}
-    }
-    
-    // ===== LISTENER CHAT ADMIN =====
-    function setupChatNotifUser() {
-        if (!currentUID && !deviceFingerprint) return;
-        const uid = currentUID || deviceFingerprint;
-        
-        database.ref('chats/' + uid).orderByChild('timestamp').limitToLast(1).on('child_added', (snap) => {
-            const msg = snap.val();
-            if (!msg || msg.sender !== 'admin') return;
-            
-            const chatView = document.getElementById('chatAdminView');
-            const isOpen = chatView && chatView.classList.contains('active');
-            const lastNotif = localStorage.getItem('last_admin_notif_' + uid);
-            
-            if (!isOpen || Date.now() - parseInt(lastNotif || 0) > 5000) {
-                localStorage.setItem('last_admin_notif_' + uid, Date.now().toString());
-                const text = msg.text ? msg.text.substring(0, 100) : 'Ada pesan baru';
-                showNotifToast('💬 Pesan dari Admin', text, 'info');
-            }
-        });
-    }
-    
-    // ===== LISTENER PUBLIC CHAT =====
-    function setupPublicNotifUser() {
-        database.ref('all_comments').orderByChild('timestamp').limitToLast(1).on('child_added', (snap) => {
-            const msg = snap.val();
-            if (!msg || msg.uid === currentUID || msg.uid === 'ADMIN') return;
-            
-            const chatArea = document.getElementById('allCommentsArea');
-            const isVisible = chatArea && chatArea.offsetParent !== null;
-            const lastNotif = localStorage.getItem('last_public_notif');
-            
-            if (!isVisible || Date.now() - parseInt(lastNotif || 0) > 5000) {
-                localStorage.setItem('last_public_notif', Date.now().toString());
-                const text = msg.text ? msg.text.substring(0, 80) : 'Mengirim pesan';
-                showNotifToast('💬 Public Chat', `${msg.uid}: ${text}`, 'info');
-            }
-        });
-    }
-    
-    // ===== LISTENER SUPPORT CHAT =====
-    function setupSupportNotifUser() {
-        if (!supportDeviceId) return;
-        
-        database.ref('support_chats/' + supportDeviceId + '/messages').orderByChild('timestamp').limitToLast(1).on('child_added', (snap) => {
-            const msg = snap.val();
-            if (!msg || msg.sender !== 'admin') return;
-            
-            const popup = document.getElementById('chatSupportPopup');
-            const isOpen = popup && popup.classList.contains('active');
-            const lastNotif = localStorage.getItem('last_support_notif_' + supportDeviceId);
-            
-            if (!isOpen || Date.now() - parseInt(lastNotif || 0) > 5000) {
-                localStorage.setItem('last_support_notif_' + supportDeviceId, Date.now().toString());
-                const text = msg.text ? msg.text.substring(0, 100) : 'Ada balasan dari admin';
-                showNotifToast('💬 Support Admin', text, 'success');
-                
-                // Update badge
-                const badge = document.getElementById('chatSupportBadge');
-                if (badge) {
-                    const current = parseInt(badge.textContent) || 0;
-                    badge.textContent = current + 1;
-                    badge.classList.add('show');
-                }
-            }
-        });
-    }
-    
-    // ===== MONITOR ADMIN STATUS =====
-    function setupAdminStatusUser() {
-        database.ref('admin_status').on('value', (snap) => {
-            const status = snap.val();
-            const isOnline = status && status.status === 'online' && (Date.now() - (status.last_seen || 0) < 60000);
-            
-            // Update chat admin status
-            const chatStatus = document.getElementById('chatAdminStatus');
-            if (chatStatus) {
-                chatStatus.innerHTML = isOnline ? '🟢 Online' : '🔴 Offline';
-                chatStatus.style.color = isOnline ? '#00ff88' : '#666';
-            }
-            
-            // Update public chat status
-            const publicStatus = document.getElementById('publicChatStatus');
-            if (publicStatus) {
-                publicStatus.innerHTML = isOnline ? '● Online' : '○ Offline';
-                publicStatus.style.color = isOnline ? '#00ff88' : '#666';
-            }
-            
-            // Update support chat status
-            const supportStatus = document.getElementById('chatSupportStatus');
-            if (supportStatus) {
-                supportStatus.innerHTML = isOnline ? '🟢 Online' : '🔴 Offline';
-                supportStatus.style.color = isOnline ? '#00ff88' : '#666';
-            }
-        });
-    }
-    
-    // ===== INIT NOTIFICATIONS USER =====
-    function initNotifUser() {
-        requestNotifPermission();
-        setupChatNotifUser();
-        setupPublicNotifUser();
-        setupSupportNotifUser();
-        setupAdminStatusUser();
-        console.log('🔔 User notifications initialized');
-    }
-    
-    // ==================== FREE UPDATE VIEWS ====================
-    // Fungsi untuk mencatat ketika user mengklik link download free update
-    function trackFreeUpdateClick(updateId, link) {
-        if (!currentUID && !deviceFingerprint) {
-            // Jika tidak login dan tidak ada device ID, jangan track
-            return;
-        }
-    
-        const uid = currentUID || deviceFingerprint || 'guest';
-    
-        // Cek apakah sudah pernah diklik sebelumnya (per session)
-        const sessionKey = 'free_update_viewed_' + updateId;
-        if (sessionStorage.getItem(sessionKey)) {
-            // Sudah dilihat di session ini, jangan double count
-            return;
-        }
-    
-        // Tandai sudah dilihat di session ini
-        sessionStorage.setItem(sessionKey, 'true');
-    
-        // Simpan ke database
-        const viewData = {
-            uid: uid,
-            updateId: updateId,
-            timestamp: Date.now(),
-            deviceId: deviceFingerprint || 'unknown'
-        };
-    
-        // Simpan di node views per user
-        database.ref('free_updates/views/' + uid + '/' + updateId).set(viewData);
-    
-        // Simpan juga di total views
-        database.ref('free_updates/total_views/' + updateId).push({
-            uid: uid,
-            timestamp: Date.now()
-        });
-    
-        // Buka link di tab baru
-        if (link && link !== '#') {
-            window.open(link, '_blank');
-        }
-    
-        console.log('📊 Free update view recorded for:', updateId);
-    }
-
-    // Update fungsi renderFreeUpdates untuk menambahkan track click
-    function renderFreeUpdates(updates) {
-        const cont = document.getElementById('freeUpdateList');
-        if (!cont) return;
-        const sorted = Object.keys(updates).map(k=>({...updates[k], key: k})).sort((a,b)=>(b.timestamp||0)-(a.timestamp||0));
-        if(sorted.length===0) { cont.innerHTML='<div style="padding:25px; text-align:center;">No updates</div>'; return; }
-        let html='';
-        sorted.slice(0,15).forEach(u => { 
-            const updateId = u.key || 'update_' + Date.now();
-            html += `
-                <div class="update-item">
-                    <div class="update-title">📢 ${escapeHtml(u.title||'Free Update')}</div>
-                    <div class="update-desc">${escapeHtml(u.description||'')}</div>
-                    <div class="update-meta">
-                        <span>${u.version||'v1.0'}</span>
-                        <span>${u.timestamp?new Date(u.timestamp).toLocaleString():'-'}</span>
-                    </div>
-                    <div>
-                        <a href="#" onclick="event.preventDefault(); trackFreeUpdateClick('${updateId}', '${u.link || '#'}'); return false;" class="update-link" target="_blank">
-                            <i class="fas fa-download"></i> Download
-                        </a>
-                    </div>
-                </div>
-            `; 
-        });
-        cont.innerHTML=html;
-    }
 
     // ==================== FEATURES ====================
     const features = ['AimAssist','No Recoil','ESP','Wallhack','Speed Hack','Anti Ban','Aimbot','Triggerbot'];
@@ -6426,17 +6386,18 @@
         checkMaintenance();
         setupUserChatFileUpload();
         await loadGlobalDiscount();
-        initNotifications();
-        initNotifUser();
+        monitorAdminStatus();
         setInterval(checkMaintenance, 30000);
         const savedUID = localStorage.getItem('vip_uid');
         if(savedUID) document.getElementById('loginUID').value = savedUID;
-        monitorAdminStatus();
         initChatSupport();
-        console.log('💬 Chat Support aktif dengan Device ID:', supportDeviceId);;
+        // AUTO LOGIN
+        checkAutoLogin();
+        console.log('💬 Chat Support aktif dengan Device ID:', supportDeviceId);
         console.log('🔐 Device Fingerprint aktif:', deviceFingerprint);
         console.log('User panel initialized - V1.0.0');
     }
     init();
 </script>
 </body>
+</html>
