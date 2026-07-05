@@ -5348,6 +5348,7 @@
     let notificationAudio = null;
     let maintenanceKey = '';
     let isMaintenanceOverridden = false;
+    let maintenanceKeyLoaded = false;
     let supportIsLoggedIn = false;
     let selectedDepositAmount = 0;
     let pendingSecurityCallback = null;
@@ -5885,6 +5886,7 @@
                 userAgent: userAgent
             });
     
+            await loadMaintenanceKey();
             await loadUserData();
             
             setupAnnouncementListener();
@@ -5905,6 +5907,7 @@
             showNeonToast('Welcome back, ' + currentUID + '!');
             checkVideoPopup();
             showWelcomePopup();
+            await checkMaintenance();
         } catch(error) {
             console.error('Auto login error:', error);
             hideLoading();
@@ -5958,6 +5961,7 @@
                 userAgent: userAgent
             });
             
+            await loadMaintenanceKey();
             await loadUserData();
             document.getElementById('loginWrapper').classList.add('hide');
             document.getElementById('mainLayout').style.display = 'block';
@@ -5972,6 +5976,7 @@
             showNeonToast('Welcome, ' + uid + '!');
             checkVideoPopup();
             showWelcomePopup();
+            await loadMaintenanceKey();
             
         } catch(error) { console.error(error); hideLoading(); showMessage('loginMessage', 'Error: ' + error.message, true); }
     }
@@ -7565,23 +7570,32 @@
             showNeonModal('Error', error.message, 'error');
         }
     }
-    
-    // ============================================================
-    // MAINTENANCE OVERRIDE - KUNCI AKSES
+        
+        // ============================================================
+    // MAINTENANCE OVERRIDE - KUNCI AKSES (USER)
     // ============================================================
     
     // Ambil kunci dari Admin Panel (disimpan di Firebase)
-    function loadMaintenanceKey() {
-        database.ref('admin_config/maintenance_key').once('value', (snap) => {
+    async function loadMaintenanceKey() {
+        try {
+            const snap = await database.ref('admin_config/maintenance_key').once('value');
             if (snap.exists()) {
                 maintenanceKey = snap.val();
-                console.log('🔑 Maintenance key loaded');
+                console.log('🔑 Maintenance key loaded:', maintenanceKey);
             } else {
                 // Default key jika belum di-set admin
                 maintenanceKey = 'PhantomStore2026';
-                database.ref('admin_config/maintenance_key').set(maintenanceKey);
+                await database.ref('admin_config/maintenance_key').set(maintenanceKey);
+                console.log('🔑 Default maintenance key set:', maintenanceKey);
             }
-        });
+            maintenanceKeyLoaded = true;
+            return maintenanceKey;
+        } catch (error) {
+            console.error('Error loading maintenance key:', error);
+            maintenanceKey = 'PhantomStore2026'; // Fallback
+            maintenanceKeyLoaded = true;
+            return maintenanceKey;
+        }
     }
     
     function openKeyPopup() {
@@ -7589,7 +7603,9 @@
         document.getElementById('keyInput').value = '';
         document.getElementById('keyStatus').className = 'key-status';
         document.getElementById('keyStatus').textContent = '';
-        document.getElementById('keyInput').focus();
+        setTimeout(() => {
+            document.getElementById('keyInput').focus();
+        }, 300);
         document.body.style.overflow = 'hidden';
     }
     
@@ -7607,6 +7623,9 @@
             status.textContent = '❌ Masukkan kunci terlebih dahulu!';
             return;
         }
+        
+        console.log('🔑 Input key:', input);
+        console.log('🔑 Stored key:', maintenanceKey);
         
         if (input === maintenanceKey) {
             status.className = 'key-status success';
@@ -7630,7 +7649,9 @@
             status.className = 'key-status error';
             status.textContent = '❌ Kunci salah! Coba lagi.';
             document.getElementById('keyInput').value = '';
-            document.getElementById('keyInput').focus();
+            setTimeout(() => {
+                document.getElementById('keyInput').focus();
+            }, 300);
         }
     }
     
@@ -7641,11 +7662,17 @@
         }
     });
     
-    // Override fungsi checkMaintenance() untuk mengecek override
-    // Cari fungsi checkMaintenance() dan TAMBAHKAN ini di dalamnya:
+    // ============================================================
+    // UPDATE FUNGSI CHECKMAINTENANCE()
+    // ============================================================
     
     async function checkMaintenance() {
         try {
+            // PASTIKAN kunci sudah dimuat
+            if (!maintenanceKeyLoaded) {
+                await loadMaintenanceKey();
+            }
+            
             const snap = await database.ref('maintenance').once('value');
             const m = snap.val();
             
@@ -7678,7 +7705,9 @@
                 document.getElementById('maintenancePage').classList.remove('active');
                 if (maintenanceInterval) { clearInterval(maintenanceInterval); maintenanceInterval = null; }
             }
-        } catch (error) { console.error(error); }
+        } catch (error) { 
+            console.error('checkMaintenance error:', error); 
+        }
     }
 
     // ==================== CHAT ====================
@@ -8245,6 +8274,7 @@
     async function init() {
         loadAdminConfig();
         loadBackgroundVideo();
+        await loadMaintenanceKey();
         checkMaintenance();
         setupUserChatFileUpload();
         await loadGlobalDiscount();
