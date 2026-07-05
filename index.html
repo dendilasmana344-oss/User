@@ -1455,6 +1455,350 @@
             transform: translateY(-3px);
         }
         
+        /* ============================================================
+           PERBAIKAN TAMPILAN PACKAGES & CARD
+           ============================================================ */
+        
+        /* --- PRICE CARD - RAPI --- */
+        .price-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 16px;
+            margin: 15px 0;
+        }
+        
+        .price-card {
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 18px 14px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            min-height: 160px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .price-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 255, 255, 0.05) 0%, transparent 70%);
+            animation: spin 20s linear infinite;
+            z-index: 0;
+        }
+        
+        .price-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--neon-cyan);
+            box-shadow: 0 12px 30px rgba(0, 255, 255, 0.3);
+        }
+        
+        .price-card.selected {
+            border-color: #00ff88;
+            background: rgba(0, 255, 136, 0.15);
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.3);
+        }
+        
+        .price-card .price-amount {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--neon-cyan);
+            font-family: 'Orbitron', monospace;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .price-card .price-type {
+            font-size: 14px;
+            font-weight: bold;
+            color: #fff;
+            margin-top: 6px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .price-card .price-desc {
+            font-size: 11px;
+            color: #aaa;
+            margin-top: 8px;
+            line-height: 1.4;
+            position: relative;
+            z-index: 1;
+            max-width: 100%;
+            word-wrap: break-word;
+        }
+        
+        .price-card .price-badge {
+            display: inline-block;
+            padding: 3px 12px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: bold;
+            margin-top: 8px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .price-card .price-badge.popular {
+            background: linear-gradient(135deg, #ffd700, #ffaa00);
+            color: #000;
+        }
+        
+        .price-card .price-badge.best-value {
+            background: linear-gradient(135deg, #00ff88, #00cc66);
+            color: #000;
+        }
+        
+        .price-card .price-badge.limited {
+            background: linear-gradient(135deg, #ff4444, #cc0000);
+            color: #fff;
+        }
+        
+        .price-card .price-badge.lifetime {
+            background: linear-gradient(135deg, #bf00ff, #8b00ff);
+            color: #fff;
+        }
+        
+        /* --- ORDER SUMMARY --- */
+        .order-summary {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 20px;
+            padding: 18px 20px;
+            margin-top: 18px;
+            border: 1px solid rgba(0, 255, 255, 0.2);
+        }
+        
+        .order-summary .summary-title {
+            font-family: 'Orbitron', monospace;
+            color: var(--neon-cyan);
+            font-size: 14px;
+            margin-bottom: 12px;
+            letter-spacing: 1px;
+        }
+        
+        .order-summary .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.1);
+            font-size: 13px;
+        }
+        
+        .order-summary .summary-item:last-child {
+            border-bottom: none;
+        }
+        
+        .order-summary .summary-label {
+            color: #aaa;
+        }
+        
+        .order-summary .summary-value {
+            color: #fff;
+            font-weight: bold;
+        }
+        
+        .order-summary .summary-total {
+            font-size: 18px;
+            color: var(--neon-cyan);
+            font-family: 'Orbitron', monospace;
+        }
+        
+        /* --- VIP COUNTER CARD --- */
+        .vip-counter-card {
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 20px;
+            padding: 20px;
+            margin-top: 15px;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            transition: all 0.3s;
+        }
+        
+        .vip-counter-card:hover {
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.15);
+        }
+        
+        /* --- UPDATE ITEM --- */
+        .update-item {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(0, 255, 255, 0.15);
+            border-radius: 16px;
+            padding: 16px 18px;
+            margin-bottom: 12px;
+            transition: all 0.3s;
+        }
+        
+        .update-item:hover {
+            border-color: var(--neon-cyan);
+            transform: translateX(5px);
+        }
+        
+        .update-item .update-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--neon-cyan);
+            margin-bottom: 6px;
+        }
+        
+        .update-item .update-desc {
+            font-size: 13px;
+            color: #ccc;
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+        
+        .update-item .update-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 11px;
+            color: #888;
+            flex-wrap: wrap;
+        }
+        
+        .update-item .update-link {
+            color: #00ff88;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 13px;
+        }
+        
+        .update-item .update-link:hover {
+            text-decoration: underline;
+        }
+        
+        /* --- CARD TITLE --- */
+        .card-title {
+            font-family: 'Orbitron', monospace;
+            color: var(--neon-cyan);
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 2px solid rgba(0, 255, 255, 0.2);
+            padding-bottom: 12px;
+        }
+        
+        .card-title i {
+            font-size: 20px;
+        }
+        
+        /* --- BADGE UMUM --- */
+        .badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+            display: inline-block;
+        }
+        
+        .badge.online {
+            background: rgba(0, 255, 136, 0.2);
+            color: #00ff88;
+            border: 1px solid #00ff88;
+            animation: pulse 1.5s infinite;
+        }
+        
+        .badge.offline {
+            background: rgba(158, 158, 158, 0.2);
+            color: #9e9e9e;
+            border: 1px solid #9e9e9e;
+        }
+        
+        .badge.vip {
+            background: rgba(255, 215, 0, 0.2);
+            color: #ffd700;
+            border: 1px solid #ffd700;
+            animation: pulse 1.5s infinite;
+        }
+        
+        .badge.banned {
+            background: rgba(244, 67, 54, 0.2);
+            color: #ff4444;
+            border: 1px solid #ff4444;
+        }
+        
+        /* --- RESPONSIVE --- */
+        @media (max-width: 768px) {
+            .price-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+            
+            .price-card {
+                min-height: 140px;
+                padding: 14px 10px;
+            }
+            
+            .price-card .price-amount {
+                font-size: 20px;
+            }
+            
+            .price-card .price-type {
+                font-size: 12px;
+            }
+            
+            .price-card .price-desc {
+                font-size: 10px;
+            }
+            
+            .order-summary {
+                padding: 14px 16px;
+            }
+            
+            .card-title {
+                font-size: 16px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .price-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+            
+            .price-card {
+                min-height: 120px;
+                padding: 12px 8px;
+                border-radius: 16px;
+            }
+            
+            .price-card .price-amount {
+                font-size: 17px;
+            }
+            
+            .price-card .price-type {
+                font-size: 11px;
+            }
+            
+            .price-card .price-desc {
+                font-size: 9px;
+            }
+            
+            .vip-counter-card {
+                padding: 14px;
+            }
+            
+            .update-item {
+                padding: 12px 14px;
+            }
+            
+            .update-item .update-title {
+                font-size: 14px;
+            }
+        }
+        
         /* ===== POP UP WARNING DUPLIKAT AKUN ===== */
         .duplicate-account-popup {
             position: fixed;
@@ -3967,18 +4311,26 @@
 
                 <div class="card"><div class="card-title"><i class="fas fa-trophy"></i> LEADERBOARD <span style="color:#ffaa00; font-size:12px; margin-left:auto;">Top 5 Depositors</span></div><div id="leaderboardList"></div></div>
 
-                <div class="card" id="premiumPackagesCard">
-                    <div class="card-title"><i class="fas fa-crown"></i> PREMIUM PACKAGES</div>
-                    <div id="premiumPackagesContent">
-                        <div class="price-grid" id="priceGrid"></div>
-                        <div class="order-summary">
-                            <div class="summary-title">📋 ORDER SUMMARY</div>
-                            <div class="summary-item"><span class="summary-label">Package</span><span class="summary-value" id="summaryPackageName">-</span></div>
-                            <div class="summary-item"><span class="summary-label">Price</span><span class="summary-value" id="summaryPrice">-</span></div>
-                            <div class="summary-item"><span class="summary-label">TOTAL</span><span class="summary-value" id="summaryTotal">-</span></div>
+                <div id="premiumPackagesContent">
+                    <div class="price-grid" id="priceGrid"></div>
+                    <div class="order-summary">
+                        <div class="summary-title">📋 ORDER SUMMARY</div>
+                        <div class="summary-item">
+                            <span class="summary-label">Package</span>
+                            <span class="summary-value" id="summaryPackageName">-</span>
                         </div>
-                        <button class="btn-neon" style="width:100%; margin-top:15px;" onclick="buyVIPPackage()"><i class="fas fa-shopping-cart"></i> BUY NOW</button>
+                        <div class="summary-item">
+                            <span class="summary-label">Price</span>
+                            <span class="summary-value" id="summaryPrice">-</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">TOTAL</span>
+                            <span class="summary-value summary-total" id="summaryTotal">-</span>
+                        </div>
                     </div>
+                    <button class="btn-neon" style="width:100%; margin-top:15px; padding:14px;" onclick="buyVIPPackage()">
+                        <i class="fas fa-shopping-cart"></i> BUY NOW
+                    </button>
                 </div>
 
                 <div class="card">
@@ -5469,34 +5821,60 @@
         if (!grid) return;
     
         if (!packages || packages.length === 0) {
-            grid.innerHTML = '<div style="padding:25px; text-align:center;">No packages</div>';
+            grid.innerHTML = '<div style="padding:25px; text-align:center; color:#888;">No packages available</div>';
             return;
         }
     
-        let html = '<div class="price-grid">';
+        let html = '';
         packages.forEach((pkg, idx) => {
             let originalPrice = pkg.price;
             let finalPrice = originalPrice;
             let discountText = '';
-        
+            let badgeHtml = '';
+    
+            // Diskon
             if (globalDiscount.active && (globalDiscount.minPurchase === 0 || originalPrice >= globalDiscount.minPurchase)) {
                 finalPrice = originalPrice - (originalPrice * globalDiscount.percentage / 100);
-                discountText = `<div style="font-size: 11px; color: #00ff88; margin-top: 5px;">
+                discountText = `<div style="font-size: 11px; color: #00ff88; margin-top: 6px;">
                     <span style="text-decoration: line-through; color: #888;">Rp ${formatRupiah(originalPrice)}</span>
                     → Rp ${formatRupiah(finalPrice)} <span style="color: #ffaa00;">(${globalDiscount.percentage}% OFF)</span>
                 </div>`;
             }
-        
+    
+            // Badge
+            if (pkg.type === 'lifetime') {
+                badgeHtml = `<span class="price-badge lifetime">👑 LIFETIME</span>`;
+            } else if (pkg.type === 'quota' && pkg.quota >= 10) {
+                badgeHtml = `<span class="price-badge best-value">💎 BEST VALUE</span>`;
+            } else if (pkg.type === 'quota' && pkg.quota >= 6) {
+                badgeHtml = `<span class="price-badge popular">🔥 POPULAR</span>`;
+            } else if (pkg.type === 'unlimited' && pkg.durationMonths >= 4) {
+                badgeHtml = `<span class="price-badge best-value">💎 BEST VALUE</span>`;
+            } else if (pkg.type === 'unlimited' && pkg.durationMonths >= 2) {
+                badgeHtml = `<span class="price-badge popular">🔥 POPULAR</span>`;
+            }
+    
+            // Deskripsi
+            let descText = pkg.description || '';
+            if (pkg.type === 'quota' && pkg.quota) {
+                descText = `${pkg.quota}x Update VIP`;
+            } else if (pkg.type === 'unlimited' && pkg.durationMonths) {
+                descText = `Unlimited Update ${pkg.durationMonths} Bulan`;
+            } else if (pkg.type === 'lifetime') {
+                descText = '✨ Unlimited Update - Seumur Hidup!';
+            }
+    
             html += `
                 <div class="price-card" onclick="selectPackage(${idx})" data-original-price="${originalPrice}" data-final-price="${finalPrice}">
                     <div class="price-amount">Rp ${formatRupiah(finalPrice)}</div>
                     <div class="price-type">${escapeHtml(pkg.label)}</div>
+                    <div class="price-desc">${escapeHtml(descText)}</div>
                     ${discountText}
-                    ${pkg.description ? `<div style="font-size: 11px; color: #aaa; margin-top: 8px;">${escapeHtml(pkg.description)}</div>` : ''}
+                    ${badgeHtml}
                 </div>
             `;
         });
-        html += '</div>';
+    
         grid.innerHTML = html;
     }
     function selectPackage(idx) {
@@ -6724,4 +7102,3 @@
     init();
 </script>
 </body>
-</html>
