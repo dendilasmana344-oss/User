@@ -1454,6 +1454,154 @@
             background: rgba(0, 255, 255, 0.1);
             transform: translateY(-3px);
         }
+        
+        /* ===== POP UP WARNING DUPLIKAT AKUN ===== */
+        .duplicate-account-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.97);
+            backdrop-filter: blur(30px);
+            z-index: 99999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.5s ease;
+        }
+
+        .duplicate-account-popup.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .duplicate-account-popup .popup-content {
+            max-width: 500px;
+            width: 100%;
+            background: linear-gradient(145deg, #0a0a0a, #1a0a0a);
+            border: 3px solid #ff4444;
+            border-radius: 50px;
+            padding: 40px 35px;
+            box-shadow: 0 0 80px rgba(255, 68, 68, 0.4), inset 0 0 40px rgba(255, 68, 68, 0.05);
+            animation: fadeIn 0.5s ease;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .duplicate-account-popup .popup-content::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 68, 68, 0.08) 0%, transparent 70%);
+            animation: spin 25s linear infinite;
+            z-index: -1;
+        }
+
+        .duplicate-account-popup .popup-icon {
+            font-size: 70px;
+            color: #ff4444;
+            margin-bottom: 20px;
+            text-shadow: 0 0 30px #ff4444;
+            animation: pulse 1s infinite;
+        }
+
+        .duplicate-account-popup .popup-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 24px;
+            font-weight: 900;
+            color: #ff4444;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px #ff4444;
+            letter-spacing: 2px;
+        }
+
+        .duplicate-account-popup .popup-message {
+            color: #ccc;
+            font-size: 15px;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            background: rgba(255, 68, 68, 0.08);
+            padding: 20px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 68, 68, 0.2);
+        }
+
+        .duplicate-account-popup .popup-uid-box {
+            background: rgba(0, 255, 255, 0.1);
+            border: 2px solid var(--neon-cyan);
+            border-radius: 15px;
+            padding: 15px;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .duplicate-account-popup .popup-uid-box .uid-label {
+            color: #aaa;
+            font-size: 13px;
+        }
+
+        .duplicate-account-popup .popup-uid-box .uid-value {
+            color: var(--neon-cyan);
+            font-family: monospace;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .duplicate-account-popup .popup-uid-box .uid-value:hover {
+            text-shadow: 0 0 20px var(--neon-cyan);
+            transform: scale(1.05);
+        }
+
+        .duplicate-account-popup .popup-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+            justify-content: center;
+        }
+
+        .duplicate-account-popup .popup-btn {
+            padding: 14px 30px;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Orbitron', monospace;
+            border: none;
+            flex: 1;
+        }
+
+        .duplicate-account-popup .popup-btn-primary {
+            background: linear-gradient(135deg, var(--neon-cyan), #0088ff);
+            color: #000;
+        }
+
+        .duplicate-account-popup .popup-btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 255, 255, 0.4);
+        }
+
+        .duplicate-account-popup .popup-btn-danger {
+            background: linear-gradient(135deg, #ff4444, #cc0000);
+            color: white;
+        }
+
+        .duplicate-account-popup .popup-btn-danger:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 68, 68, 0.4);
+        }
 
         /* VIP COUNTER STYLES */
         .vip-counter-card {
@@ -3567,6 +3715,36 @@
     </div>
 </div>
 
+<!-- ===== POP UP WARNING DUPLIKAT AKUN ===== -->
+<div class="duplicate-account-popup" id="duplicateAccountPopup">
+    <div class="popup-content">
+        <div class="popup-icon"><i class="fas fa-exclamation-triangle"></i></div>
+        <div class="popup-title">⚠️ AKUN SUDAH TERDAFTAR!</div>
+        <div class="popup-message" id="duplicatePopupMessage">
+            Maaf, perangkat atau IP Anda sudah terdaftar dengan akun lain.
+            <br>Silakan gunakan akun yang sudah ada untuk login.
+        </div>
+        <div class="popup-uid-box">
+            <span class="uid-label"><i class="fas fa-user"></i> UID Terdaftar:</span>
+            <span class="uid-value" id="duplicatePopupUid" onclick="copyUIDFromPopup()">-</span>
+            <button class="copy-uid-btn" onclick="copyUIDFromPopup()" style="background:rgba(0,255,255,0.2); border:none; color:var(--neon-cyan); padding:5px 12px; border-radius:10px; cursor:pointer; font-size:12px;">
+                <i class="fas fa-copy"></i>
+            </button>
+        </div>
+        <div style="font-size:12px; color:#888; margin-top:10px;">
+            <i class="fas fa-info-circle"></i> IP: <span id="duplicatePopupIP">-</span> &nbsp;|&nbsp; Device ID: <span id="duplicatePopupDevice">-</span>
+        </div>
+        <div class="popup-actions">
+            <button class="popup-btn popup-btn-primary" onclick="closeDuplicatePopupAndLogin()">
+                <i class="fas fa-sign-in-alt"></i> Login Sekarang
+            </button>
+            <button class="popup-btn popup-btn-danger" onclick="closeDuplicatePopup()">
+                <i class="fas fa-times"></i> Tutup
+            </button>
+        </div>
+    </div>
+</div>
+
 <!-- DEPOSIT POPUP -->
 <div class="deposit-popup" id="depositPopup">
     <div class="deposit-content">
@@ -3874,6 +4052,9 @@
     // Global Variables
     let currentUID = '';
     let currentSaldo = 0;
+    let duplicateUID = '';
+    let duplicateIP = '';
+    let duplicateDevice = '';
     let loginPin = '';
     let registerPin = '';
     let isVIP = false;
@@ -4600,6 +4781,149 @@
     function updateSaldoDisplay() {
         document.getElementById('cardAmount').innerHTML = 'Rp ' + formatRupiah(currentSaldo);
         document.getElementById('saldoDisplayRight').innerHTML = 'Rp ' + formatRupiah(currentSaldo);
+    }
+    
+    // ==================== POP UP WARNING DUPLIKAT AKUN ====================
+
+    function showDuplicateAccountPopup(uid, ipAddress, deviceId) {
+        duplicateUID = uid;
+        duplicateIP = ipAddress || 'Tidak terdeteksi';
+        duplicateDevice = deviceId || 'Tidak terdeteksi';
+    
+        document.getElementById('duplicatePopupUid').textContent = uid;
+        document.getElementById('duplicatePopupIP').textContent = duplicateIP;
+        document.getElementById('duplicatePopupDevice').textContent = duplicateDevice;
+        document.getElementById('duplicateAccountPopup').classList.add('active');
+    
+        // Reset form register
+        document.getElementById('registerUID').value = '';
+        clearRegisterPin();
+    }
+
+    function closeDuplicatePopup() {
+        document.getElementById('duplicateAccountPopup').classList.remove('active');
+    }
+
+    function closeDuplicatePopupAndLogin() {
+        document.getElementById('duplicateAccountPopup').classList.remove('active');
+        // Isi UID di form login
+        document.getElementById('loginUID').value = duplicateUID;
+        // Switch ke tab login
+        switchAuthTab('login');
+        // Fokus ke PIN input
+        document.querySelector('#loginPinPreview').scrollIntoView({ behavior: 'smooth' });
+        showNeonToast('Silakan login dengan akun Anda');
+    }
+
+    function copyUIDFromPopup() {
+        if (duplicateUID) {
+            navigator.clipboard.writeText(duplicateUID);
+            showNeonToast('UID copied!');
+        }
+    }
+
+    // ==================== UPDATE FUNGSI REGISTER ====================
+
+    // Ganti fungsi submitRegister() yang lama dengan yang ini
+
+    async function submitRegister() {
+        let username = document.getElementById('registerUID').value.trim();
+        if (!username) { showMessage('registerMessage', 'Enter username!', true); return; }
+        if (registerPin.length < 6) { showMessage('registerMessage', 'PIN must be 6 digits!', true); return; }
+        showLoading();
+        try {
+            const allUsersSnap = await database.ref('users').once('value');
+            const allUsersData = allUsersSnap.val() || {};
+            let ipSudahTerdaftar = false;
+            let deviceSudahTerdaftar = false;
+            let existingUID = '';
+            let existingIP = '';
+            let existingDevice = '';
+        
+            let ipAddress = 'unknown';
+            let userAgent = navigator.userAgent;
+            try {
+                const ipRes = await fetch('https://api.ipify.org?format=json');
+                const ipData = await ipRes.json();
+                ipAddress = ipData.ip;
+            } catch(e) { console.log('IP fetch failed'); }
+
+            // CEK IP & DEVICE ID
+            Object.keys(allUsersData).forEach(uid => {
+                const user = allUsersData[uid];
+                // Cek IP
+                if (user.registrasiIP === ipAddress || user.lastIP === ipAddress) {
+                    ipSudahTerdaftar = true;
+                    existingUID = uid;
+                    existingIP = user.registrasiIP || user.lastIP || ipAddress;
+                    existingDevice = user.deviceId || 'Tidak terdeteksi';
+                }
+                // Cek Device ID
+                if (user.deviceId === deviceFingerprint) {
+                    deviceSudahTerdaftar = true;
+                    if (!existingUID) {
+                        existingUID = uid;
+                        existingIP = user.registrasiIP || user.lastIP || 'Tidak terdeteksi';
+                        existingDevice = user.deviceId || 'Tidak terdeteksi';
+                    }
+                }
+            });
+
+            // JIKA TERDETEKSI DUPLIKAT
+            if (ipSudahTerdaftar || deviceSudahTerdaftar) {
+                hideLoading();
+            
+                // Buat pesan pop up
+                let pesan = '';
+                if (ipSudahTerdaftar && deviceSudahTerdaftar) {
+                    pesan = 'IP dan Perangkat ini sudah terdaftar dengan akun lain.';
+                } else if (ipSudahTerdaftar) {
+                    pesan = 'IP ini sudah terdaftar dengan akun lain.';
+                } else if (deviceSudahTerdaftar) {
+                    pesan = 'Perangkat ini sudah terdaftar dengan akun lain.';
+                }
+            
+                // Tampilkan pop up warning
+                showDuplicateAccountPopup(existingUID, existingIP, existingDevice);
+                clearRegisterPin();
+                return;
+            }
+
+            // LANJUTKAN REGISTRASI (Jika tidak duplikat)
+            await database.ref('users/' + username).set({ 
+                uid: username, 
+                pin: registerPin, 
+                status: 'active', 
+                registeredAt: new Date().toISOString(),
+                lastIP: ipAddress,
+                device: userAgent,
+                deviceId: deviceFingerprint,
+                registrasiIP: ipAddress
+            });
+            await database.ref('saldo/' + username).set({ amount: 0, created: Date.now() });
+        
+            showNeonPrompt('Security Question', 'Set your security answer (for PIN reset)', async (answer) => {
+                if (answer && answer.trim()) {
+                    await database.ref('security_answers/' + username).set(answer.toLowerCase().trim());
+                    showNeonModal('Success', 'Registration successful! Please login.', 'success');
+                    clearRegisterPin();
+                    document.getElementById('loginUID').value = username;
+                    loginPin = registerPin;
+                    submitLogin();
+                } else {
+                    showNeonModal('Info', 'Registration successful! You can set security answer later via admin.', 'info');
+                    clearRegisterPin();
+                    document.getElementById('loginUID').value = username;
+                    loginPin = registerPin;
+                    submitLogin();
+                }
+                hideLoading();
+            });
+        } catch(error) { 
+            console.error(error); 
+            hideLoading(); 
+            showMessage('registerMessage', 'Error: ' + error.message, true); 
+        }
     }
 
     // ==================== DEPOSIT POPUP WITH PHOTO UPLOAD ====================
