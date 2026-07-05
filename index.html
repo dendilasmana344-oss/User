@@ -6312,8 +6312,6 @@
     // POP UP DETAIL PACKAGE - EYE ICON
     // ============================================================
     
-    let popupSelectedPackage = null;
-    
     function openPackageDetail(index) {
         const pkg = packages[index];
         if (!pkg) {
@@ -7376,82 +7374,6 @@
         btns.forEach(b=>b.classList.remove('active'));
         if(tab==='free') { freeTab.classList.add('active'); vipTab.classList.remove('active'); btns[0].classList.add('active'); database.ref('free_updates/all').orderByChild('timestamp').limitToLast(20).once('value',s=>renderFreeUpdates(s.val()||{})); }
         else { freeTab.classList.remove('active'); vipTab.classList.add('active'); btns[1].classList.add('active'); if(isVIP) database.ref('global_updates').orderByChild('created_at').limitToLast(20).once('value',s=>renderVipUpdates(s.val()||{})); else renderVipUpdates({}); }
-    }
-
-    // ==================== PACKAGES ====================
-    function loadAdminConfig() {
-        database.ref('admin_config/premium_packages').on('value', s => { if(s.exists()) { packages = s.val(); renderPackages(); } });
-        database.ref('admin_config/loading_logo_url').on('value', s => { if(s.exists()) loadingLogoUrl = s.val(); });
-        database.ref('free_updates/all').orderByChild('timestamp').limitToLast(20).on('value', s => renderFreeUpdates(s.val() || {}));
-        if (isVIP || currentUID) database.ref('global_updates').orderByChild('created_at').limitToLast(20).on('value', s => renderVipUpdates(s.val() || {}));
-    }
-    async function loadGlobalDiscount() {
-        try {
-            const snap = await database.ref('global_discount').once('value');
-            const discount = snap.val();
-            if (discount && discount.active === true && new Date(discount.expiryDate) > new Date()) {
-                globalDiscount = {
-                    active: true,
-                    percentage: discount.percentage,
-                    minPurchase: discount.minPurchase || 0
-                };
-                console.log(`🎫 Diskon global aktif: ${globalDiscount.percentage}%`);
-            } else {
-                globalDiscount = { active: false, percentage: 0, minPurchase: 0 };
-            }
-            renderPackages();
-        } catch (error) {
-            console.error('Error loading discount:', error);
-        }
-    }
-    function renderPackages() {
-        const grid = document.getElementById('priceGrid');
-        if (!grid) return;
-    
-        if (!packages || packages.length === 0) {
-            grid.innerHTML = '<div style="padding:25px; text-align:center;">No packages</div>';
-            return;
-        }
-    
-        let html = '<div class="price-grid">';
-        packages.forEach((pkg, idx) => {
-            let originalPrice = pkg.price;
-            let finalPrice = originalPrice;
-            let discountText = '';
-        
-            if (globalDiscount.active && (globalDiscount.minPurchase === 0 || originalPrice >= globalDiscount.minPurchase)) {
-                finalPrice = originalPrice - (originalPrice * globalDiscount.percentage / 100);
-                discountText = `<div style="font-size: 11px; color: #00ff88; margin-top: 5px;">
-                    <span style="text-decoration: line-through; color: #888;">Rp ${formatRupiah(originalPrice)}</span>
-                    → Rp ${formatRupiah(finalPrice)} <span style="color: #ffaa00;">(${globalDiscount.percentage}% OFF)</span>
-                </div>`;
-            }
-        
-            html += `
-                <div class="price-card" onclick="selectPackage(${idx})" data-original-price="${originalPrice}" data-final-price="${finalPrice}">
-                    <div class="price-amount">Rp ${formatRupiah(finalPrice)}</div>
-                    <div class="price-type">${escapeHtml(pkg.label)}</div>
-                    ${discountText}
-                    ${pkg.description ? `<div style="font-size: 11px; color: #aaa; margin-top: 8px;">${escapeHtml(pkg.description)}</div>` : ''}
-                </div>
-            `;
-        });
-        html += '</div>';
-        grid.innerHTML = html;
-    }
-    function selectPackage(idx) {
-        selectedPackage = packages[idx];
-        const priceCard = document.querySelectorAll('.price-card')[idx];
-        let finalPrice = parseInt(priceCard?.getAttribute('data-final-price') || selectedPackage.price);
-    
-        document.querySelectorAll('.price-card').forEach(c => c.classList.remove('selected'));
-        if (event?.currentTarget) event.currentTarget.classList.add('selected');
-    
-        document.getElementById('summaryPackageName').textContent = selectedPackage.label;
-        document.getElementById('summaryPrice').textContent = 'Rp ' + formatRupiah(finalPrice);
-        document.getElementById('summaryTotal').textContent = 'Rp ' + formatRupiah(finalPrice);
-    
-        selectedPackage.finalPrice = finalPrice;
     }
 
     // ==================== REALTIME LISTENERS ====================
