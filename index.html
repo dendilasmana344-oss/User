@@ -1338,6 +1338,299 @@
             }
         }
         
+        /* ============================================================
+           TOMBOL MATA (EYE ICON) & POP UP DETAIL PACKAGE
+           ============================================================ */
+        
+        /* --- TOMBOL MATA --- */
+        .eye-icon {
+            position: absolute;
+            bottom: 10px;
+            right: 12px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid var(--neon-cyan);
+            color: var(--neon-cyan);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            z-index: 5;
+            animation: eyeGlow 2s infinite;
+        }
+        
+        .eye-icon:hover {
+            transform: scale(1.15);
+            background: var(--neon-cyan);
+            color: #000;
+            box-shadow: 0 0 25px var(--neon-cyan);
+        }
+        
+        @keyframes eyeGlow {
+            0%, 100% { box-shadow: 0 0 5px var(--neon-cyan); }
+            50% { box-shadow: 0 0 20px var(--neon-cyan), 0 0 40px rgba(0, 255, 255, 0.3); }
+        }
+        
+        /* --- POP UP DETAIL PACKAGE --- */
+        .package-detail-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.98);
+            backdrop-filter: blur(30px);
+            z-index: 999999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+        }
+        
+        .package-detail-popup.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .package-detail-popup .popup-box {
+            max-width: 520px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            background: linear-gradient(145deg, #0a0a0a, #0f0f0f);
+            border: 2px solid var(--neon-cyan);
+            border-radius: 40px;
+            padding: 35px 30px;
+            box-shadow: 0 0 80px rgba(0, 255, 255, 0.3), inset 0 0 40px rgba(0, 255, 255, 0.05);
+            animation: fadeIn 0.4s ease;
+            position: relative;
+        }
+        
+        .package-detail-popup .popup-box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 255, 255, 0.06) 0%, transparent 70%);
+            animation: spin 25s linear infinite;
+            z-index: -1;
+        }
+        
+        .package-detail-popup .popup-box::-webkit-scrollbar {
+            width: 4px;
+        }
+        
+        .package-detail-popup .popup-box::-webkit-scrollbar-track {
+            background: rgba(0, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+        
+        .package-detail-popup .popup-box::-webkit-scrollbar-thumb {
+            background: var(--neon-cyan);
+            border-radius: 10px;
+        }
+        
+        /* --- CLOSE BUTTON --- */
+        .package-detail-popup .popup-close {
+            position: sticky;
+            top: 0;
+            float: right;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 68, 68, 0.15);
+            border: 2px solid #ff4444;
+            color: #ff4444;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            margin-bottom: 10px;
+        }
+        
+        .package-detail-popup .popup-close:hover {
+            background: #ff4444;
+            color: #000;
+            transform: rotate(90deg) scale(1.1);
+            box-shadow: 0 0 30px rgba(255, 68, 68, 0.5);
+        }
+        
+        /* --- POP UP CONTENT --- */
+        .package-detail-popup .popup-package-name {
+            font-family: 'Orbitron', monospace;
+            font-size: 28px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #00ffff, #bf00ff, #00ffff);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientShift 3s ease infinite;
+            text-align: center;
+            margin-bottom: 5px;
+        }
+        
+        .package-detail-popup .popup-package-price {
+            text-align: center;
+            font-size: 36px;
+            font-weight: bold;
+            color: #00ff88;
+            font-family: 'Orbitron', monospace;
+            margin: 10px 0 20px 0;
+            text-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+        }
+        
+        .package-detail-popup .popup-divider {
+            border: none;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
+            margin: 15px 0;
+        }
+        
+        .package-detail-popup .popup-section-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 14px;
+            color: var(--neon-cyan);
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+        
+        .package-detail-popup .popup-desc {
+            color: #ccc;
+            font-size: 14px;
+            line-height: 1.8;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 15px;
+            border-left: 3px solid var(--neon-cyan);
+            margin-bottom: 15px;
+        }
+        
+        .package-detail-popup .popup-features {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin: 10px 0;
+        }
+        
+        .package-detail-popup .popup-features .feature-item {
+            background: rgba(0, 255, 255, 0.05);
+            border: 1px solid rgba(0, 255, 255, 0.15);
+            border-radius: 10px;
+            padding: 8px 12px;
+            font-size: 12px;
+            color: #ccc;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+        
+        .package-detail-popup .popup-features .feature-item:hover {
+            background: rgba(0, 255, 255, 0.1);
+            border-color: var(--neon-cyan);
+        }
+        
+        .package-detail-popup .popup-features .feature-item i {
+            color: var(--neon-cyan);
+            font-size: 14px;
+        }
+        
+        .package-detail-popup .popup-info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 15px 0;
+        }
+        
+        .package-detail-popup .popup-info-item {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+            border: 1px solid rgba(0, 255, 255, 0.1);
+        }
+        
+        .package-detail-popup .popup-info-item .label {
+            font-size: 10px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .package-detail-popup .popup-info-item .value {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--neon-cyan);
+            font-family: 'Orbitron', monospace;
+            margin-top: 5px;
+        }
+        
+        .package-detail-popup .popup-buy-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--neon-cyan), #0088ff);
+            border: none;
+            border-radius: 30px;
+            color: #000;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Orbitron', monospace;
+            margin-top: 20px;
+        }
+        
+        .package-detail-popup .popup-buy-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.4);
+        }
+        
+        /* --- RESPONSIVE --- */
+        @media (max-width: 500px) {
+            .package-detail-popup .popup-box {
+                padding: 25px 20px;
+                border-radius: 30px;
+            }
+            
+            .package-detail-popup .popup-package-name {
+                font-size: 22px;
+            }
+            
+            .package-detail-popup .popup-package-price {
+                font-size: 28px;
+            }
+            
+            .package-detail-popup .popup-features {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .package-detail-popup .popup-info-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        @media (max-width: 400px) {
+            .package-detail-popup .popup-features {
+                grid-template-columns: 1fr;
+            }
+            
+            .package-detail-popup .popup-info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
         /* ===== RESPONSIVE NOTIFICATION ===== */
         @media (max-width: 500px) {
             .notification-container {
@@ -4059,6 +4352,65 @@
     </div>
 </div>
 
+<!-- ===== POP UP DETAIL PACKAGE ===== -->
+<div class="package-detail-popup" id="packageDetailPopup">
+    <div class="popup-box">
+        <button class="popup-close" onclick="closePackageDetail()">
+            <i class="fas fa-times"></i>
+        </button>
+        
+        <div class="popup-package-name" id="popupPackageName">⚡ 6X UPDATE</div>
+        <div class="popup-package-price" id="popupPackagePrice">Rp 50.000</div>
+        
+        <hr class="popup-divider">
+        
+        <div class="popup-section-title"><i class="fas fa-info-circle"></i> DESKRIPSI</div>
+        <div class="popup-desc" id="popupPackageDesc">
+            Deskripsi package akan muncul di sini.
+        </div>
+        
+        <hr class="popup-divider">
+        
+        <div class="popup-section-title"><i class="fas fa-star"></i> FITUR PREMIUM</div>
+        <div class="popup-features" id="popupPackageFeatures">
+            <div class="feature-item"><i class="fas fa-crosshairs"></i> AimAssist</div>
+            <div class="feature-item"><i class="fas fa-lock"></i> AimLock</div>
+            <div class="feature-item"><i class="fas fa-bullseye"></i> AimHead</div>
+            <div class="feature-item"><i class="fas fa-crosshairs"></i> BulletTracking</div>
+            <div class="feature-item"><i class="fas fa-sliders-h"></i> RecoilReduction</div>
+            <div class="feature-item"><i class="fas fa-tachometer-alt"></i> FpsOptimizer</div>
+            <div class="feature-item"><i class="fas fa-crosshairs"></i> SnipersAutoLock</div>
+            <div class="feature-item"><i class="fas fa-shield-alt"></i> AntiBan</div>
+        </div>
+        
+        <hr class="popup-divider">
+        
+        <div class="popup-section-title"><i class="fas fa-info"></i> DETAIL PAKET</div>
+        <div class="popup-info-grid" id="popupPackageInfo">
+            <div class="popup-info-item">
+                <div class="label">Tipe</div>
+                <div class="value" id="popupType">Quota</div>
+            </div>
+            <div class="popup-info-item">
+                <div class="label">Jumlah Update</div>
+                <div class="value" id="popupQuota">6x</div>
+            </div>
+            <div class="popup-info-item">
+                <div class="label">Durasi</div>
+                <div class="value" id="popupDuration">-</div>
+            </div>
+            <div class="popup-info-item">
+                <div class="label">Status</div>
+                <div class="value" id="popupStatus" style="color:#00ff88;">Tersedia</div>
+            </div>
+        </div>
+        
+        <button class="popup-buy-btn" onclick="buyFromPopup()">
+            <i class="fas fa-shopping-cart"></i> BELI SEKARANG
+        </button>
+    </div>
+</div>
+
 <!-- ===== POP UP WARNING DUPLIKAT AKUN ===== -->
 <div class="duplicate-account-popup" id="duplicateAccountPopup">
     <div class="popup-content">
@@ -5832,7 +6184,6 @@
             let discountText = '';
             let badgeHtml = '';
     
-            // Diskon
             if (globalDiscount.active && (globalDiscount.minPurchase === 0 || originalPrice >= globalDiscount.minPurchase)) {
                 finalPrice = originalPrice - (originalPrice * globalDiscount.percentage / 100);
                 discountText = `<div style="font-size: 11px; color: #00ff88; margin-top: 6px;">
@@ -5841,7 +6192,6 @@
                 </div>`;
             }
     
-            // Badge
             if (pkg.type === 'lifetime') {
                 badgeHtml = `<span class="price-badge lifetime">👑 LIFETIME</span>`;
             } else if (pkg.type === 'quota' && pkg.quota >= 10) {
@@ -5854,7 +6204,6 @@
                 badgeHtml = `<span class="price-badge popular">🔥 POPULAR</span>`;
             }
     
-            // Deskripsi
             let descText = pkg.description || '';
             if (pkg.type === 'quota' && pkg.quota) {
                 descText = `${pkg.quota}x Update VIP`;
@@ -5865,12 +6214,17 @@
             }
     
             html += `
-                <div class="price-card" onclick="selectPackage(${idx})" data-original-price="${originalPrice}" data-final-price="${finalPrice}">
+                <div class="price-card" onclick="selectPackage(${idx})" data-original-price="${originalPrice}" data-final-price="${finalPrice}" style="position: relative;">
                     <div class="price-amount">Rp ${formatRupiah(finalPrice)}</div>
                     <div class="price-type">${escapeHtml(pkg.label)}</div>
                     <div class="price-desc">${escapeHtml(descText)}</div>
                     ${discountText}
                     ${badgeHtml}
+                    
+                    <!-- 👁️ TOMBOL MATA - INSPECT -->
+                    <div class="eye-icon" onclick="event.stopPropagation(); openPackageDetail(${idx});" title="Lihat detail package">
+                        <i class="fas fa-eye"></i>
+                    </div>
                 </div>
             `;
         });
@@ -5891,6 +6245,115 @@
     
         selectedPackage.finalPrice = finalPrice;
     }
+        
+        // ============================================================
+    // POP UP DETAIL PACKAGE - EYE ICON
+    // ============================================================
+    
+    function openPackageDetail(index) {
+        const pkg = packages[index];
+        if (!pkg) return;
+        
+        popupSelectedPackage = pkg;
+        
+        // Hitung harga final dengan diskon
+        let originalPrice = pkg.price;
+        let finalPrice = originalPrice;
+        let discountText = '';
+        
+        if (globalDiscount.active && (globalDiscount.minPurchase === 0 || originalPrice >= globalDiscount.minPurchase)) {
+            finalPrice = originalPrice - (originalPrice * globalDiscount.percentage / 100);
+            discountText = `<span style="color:#ffaa00; font-size:14px;">(${globalDiscount.percentage}% OFF)</span>`;
+        }
+        
+        // Set data ke popup
+        document.getElementById('popupPackageName').textContent = pkg.label || 'Package';
+        document.getElementById('popupPackagePrice').innerHTML = `Rp ${formatRupiah(finalPrice)} ${discountText}`;
+        document.getElementById('popupPackageDesc').textContent = pkg.description || 'Tidak ada deskripsi';
+        
+        // Set type
+        let typeText = 'Quota';
+        let quotaText = '-';
+        let durationText = '-';
+        
+        if (pkg.type === 'quota') {
+            typeText = '📦 Quota (Limited)';
+            quotaText = `${pkg.quota || 0}x Update`;
+            durationText = 'Hingga quota habis';
+        } else if (pkg.type === 'unlimited') {
+            typeText = '♾️ Unlimited (Time-based)';
+            quotaText = '∞ Unlimited';
+            durationText = `${pkg.durationMonths || 0} Bulan`;
+        } else if (pkg.type === 'lifetime') {
+            typeText = '👑 Lifetime';
+            quotaText = '∞ Unlimited';
+            durationText = 'Seumur Hidup!';
+        }
+        
+        document.getElementById('popupType').textContent = typeText;
+        document.getElementById('popupQuota').textContent = quotaText;
+        document.getElementById('popupDuration').textContent = durationText;
+        document.getElementById('popupStatus').textContent = '✅ Tersedia';
+        document.getElementById('popupStatus').style.color = '#00ff88';
+        
+        // Fitur premium
+        const features = [
+            { icon: 'fa-crosshairs', name: 'AimAssist - Bantuan bidikan otomatis' },
+            { icon: 'fa-lock', name: 'AimLock - Kunci target otomatis' },
+            { icon: 'fa-bullseye', name: 'AimHead - Bidikan otomatis ke kepala' },
+            { icon: 'fa-crosshairs', name: 'BulletTracking - Lacak peluru' },
+            { icon: 'fa-sliders-h', name: 'RecoilReduction - Kurangi recoil' },
+            { icon: 'fa-tachometer-alt', name: 'FpsOptimizer - Optimasi FPS' },
+            { icon: 'fa-crosshairs', name: 'SnipersAutoLock - Auto lock sniper' },
+            { icon: 'fa-shield-alt', name: 'AntiBan - Perlindungan deteksi' }
+        ];
+        
+        let featuresHtml = '';
+        features.forEach(f => {
+            featuresHtml += `
+                <div class="feature-item">
+                    <i class="fas ${f.icon}"></i> ${f.name}
+                </div>
+            `;
+        });
+        document.getElementById('popupPackageFeatures').innerHTML = featuresHtml;
+        
+        // Tampilkan popup
+        document.getElementById('packageDetailPopup').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+    
+    function closePackageDetail() {
+        document.getElementById('packageDetailPopup').classList.remove('active');
+        document.body.style.overflow = '';
+    }
+    
+    function buyFromPopup() {
+        if (popupSelectedPackage) {
+            closePackageDetail();
+            // Cari index package dan pilih
+            const index = packages.indexOf(popupSelectedPackage);
+            if (index !== -1) {
+                selectPackage(index);
+                // Scroll ke packages
+                document.getElementById('premiumPackagesCard').scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    }
+    
+    // Tutup popup dengan ESC
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closePackageDetail();
+        }
+    });
+    
+    // Tutup popup dengan klik di luar box
+    document.getElementById('packageDetailPopup').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closePackageDetail();
+    }
+});
 
     // ==================== REALTIME LISTENERS ====================
     function setupRealtimeListeners() {
