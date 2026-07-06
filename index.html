@@ -3679,6 +3679,47 @@
             padding: 35px;
         }
         
+        /* ===== ANNOUNCEMENT POPUP ===== */
+        .announcement-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            z-index: 999998;
+            display: none;
+        }
+        .announcement-overlay.active { display: block; }
+
+        .announcement-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 500px;
+            width: 92%;
+            background: linear-gradient(145deg, #0a0a0a, #1a0a0a);
+            border: 3px solid var(--neon-cyan);
+            border-radius: 40px;
+            padding: 35px 30px;
+            box-shadow: 0 0 80px rgba(0, 255, 255, 0.5), inset 0 0 40px rgba(0, 255, 255, 0.05);
+            z-index: 999999;
+            animation: fadeIn 0.5s ease;
+            display: none;
+        }
+        .announcement-popup.active { display: block; }
+
+        .announcement-popup .announcement-icon { font-size: 50px; color: var(--neon-cyan); margin-bottom: 15px; text-align: center; animation: neonPulse 2s infinite; }
+        .announcement-popup .announcement-title { font-family: 'Orbitron', monospace; font-size: 24px; font-weight: 900; color: var(--neon-cyan); text-align: center; margin-bottom: 15px; text-shadow: 0 0 20px rgba(0, 255, 255, 0.4); letter-spacing: 2px; }
+        .announcement-popup .announcement-message { color: #ddd; font-size: 15px; line-height: 1.8; text-align: center; padding: 15px 10px; background: rgba(0, 0, 0, 0.4); border-radius: 15px; border-left: 3px solid var(--neon-cyan); margin-bottom: 20px; }
+        .announcement-popup .announcement-badge { display: inline-block; padding: 6px 20px; border-radius: 25px; font-size: 12px; font-weight: bold; font-family: 'Orbitron', monospace; background: linear-gradient(135deg, var(--neon-cyan), #0088ff); color: #000; margin: 0 auto 15px; text-align: center; display: table; letter-spacing: 1px; }
+        .announcement-popup .announcement-type { font-size: 13px; color: #888; text-align: center; margin-bottom: 15px; }
+        .announcement-popup .announcement-close-btn { width: 100%; padding: 14px; background: linear-gradient(135deg, var(--neon-cyan), #0088ff); border: none; border-radius: 30px; color: #000; font-weight: bold; font-size: 16px; cursor: pointer; transition: all 0.3s; font-family: 'Orbitron', monospace; }
+        .announcement-popup .announcement-close-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0, 255, 255, 0.4); }
+        .announcement-popup .announcement-time { font-size: 10px; color: #666; text-align: right; margin-top: 12px; }
+        
         /* ===== NOTIFICATION CONTAINER ===== */
         .notification-container {
             position: fixed;
@@ -4661,6 +4702,18 @@
 
 <div class="neon-bg"></div>
 
+<!-- ===== ANNOUNCEMENT POPUP ===== -->
+<div class="announcement-overlay" id="announcementOverlay"></div>
+<div class="announcement-popup" id="announcementPopup">
+    <div class="announcement-icon"><i class="fas fa-bullhorn"></i></div>
+    <div class="announcement-badge" id="announcementBadge">📢 PENGUMUMAN</div>
+    <div class="announcement-title" id="announcementTitle">Judul Pengumuman</div>
+    <div class="announcement-type" id="announcementType">ℹ️ Info</div>
+    <div class="announcement-message" id="announcementMessage">Isi pengumuman akan muncul di sini.</div>
+    <button class="announcement-close-btn" onclick="closeAnnouncementPopup()">OK, Saya Mengerti</button>
+    <div class="announcement-time" id="announcementTime">-</div>
+</div>
+
 <!-- NOTIFICATION CONTAINER - Letakkan setelah <div class="neon-bg"></div> -->
 <div class="notification-container" id="notificationContainer"></div>
 
@@ -5350,6 +5403,7 @@
     let isMaintenanceOverridden = false;
     let maintenanceKeyLoaded = false;
     let supportIsLoggedIn = false;
+    let maintenanceOverrideActive = false;
     let selectedDepositAmount = 0;
     let pendingSecurityCallback = null;
     let globalDiscount = { active: false, percentage: 0, minPurchase: 0 };
@@ -7044,25 +7098,20 @@
         });
     }
     
-    // ==================== LISTENER PENGUMUMAN USER ====================
+    // ==================== ANNOUNCEMENT POPUP ====================
 
     function setupAnnouncementListener() {
         if (!currentUID && !deviceFingerprint) return;
         const uid = currentUID || deviceFingerprint;
-    
+
         database.ref('user_notifications/' + uid).on('child_added', (snap) => {
             const notif = snap.val();
             if (!notif) return;
         
             console.log('📢 PENGUMUMAN DITERIMA:', notif);
         
-            // ✅ TAMPILKAN POP UP
-            showNotificationToast(
-                notif.title || '📢 Pengumuman',
-                notif.message || '',
-                notif.type || 'info',
-                (notif.duration || 5) * 1000
-            );
+            // TAMPILKAN POP UP
+            showAnnouncementPopup(notif);
         
             // Browser notification
             if (notificationPermissionGranted) {
@@ -7075,8 +7124,65 @@
                 } catch(e) {}
             }
         
+            // Tandai sudah dibaca
             database.ref('user_notifications/' + uid + '/' + snap.key + '/read').set(true);
         });
+    }
+
+    function showAnnouncementPopup(notif) {
+        const popup = document.getElementById('announcementPopup');
+        const overlay = document.getElementById('announcementOverlay');
+    
+        if (!popup) {
+            console.log('❌ Popup element tidak ditemukan!');
+            return;
+        }
+    
+        // Set konten
+        document.getElementById('announcementTitle').textContent = notif.title || '📢 Pengumuman';
+        document.getElementById('announcementMessage').textContent = notif.message || '';
+    
+        // Set badge berdasarkan type
+        const badgeEl = document.getElementById('announcementBadge');
+        const typeEl = document.getElementById('announcementType');
+        const iconEl = popup.querySelector('.announcement-icon i');
+    
+        const typeMap = {
+            info: { badge: 'ℹ️ INFO', text: 'Info', icon: 'fa-info-circle', color: 'var(--neon-cyan)' },
+            success: { badge: '✅ SUCCESS', text: 'Sukses', icon: 'fa-check-circle', color: '#00ff88' },
+            warning: { badge: '⚠️ WARNING', text: 'Peringatan', icon: 'fa-exclamation-triangle', color: '#ffaa00' },
+            error: { badge: '❌ ERROR', text: 'Error', icon: 'fa-times-circle', color: '#ff4444' }
+        };
+    
+        const type = notif.type || 'info';
+        const info = typeMap[type] || typeMap.info;
+    
+        badgeEl.textContent = info.badge;
+        badgeEl.style.background = `linear-gradient(135deg, ${info.color}, ${info.color}dd)`;
+        typeEl.textContent = `📌 ${info.text}`;
+        iconEl.className = `fas ${info.icon}`;
+        iconEl.style.color = info.color;
+    
+        // Set waktu
+        document.getElementById('announcementTime').textContent = notif.sentAt ? 
+            new Date(notif.sentAt).toLocaleString('id-ID') : new Date().toLocaleString('id-ID');
+    
+        // Tampilkan popup
+        popup.classList.add('active');
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    
+        // Auto close setelah durasi
+        const duration = (notif.duration || 5) * 1000;
+        setTimeout(() => {
+            closeAnnouncementPopup();
+        }, duration);
+    }
+
+    function closeAnnouncementPopup() {
+        document.getElementById('announcementPopup').classList.remove('active');
+        document.getElementById('announcementOverlay').classList.remove('active');
+        document.body.style.overflow = '';
     }
 
     // ==================== CHANGE PROFILE IMAGE ====================
@@ -7112,6 +7218,9 @@
                 database.ref('users/' + currentUID + '/status').set('offline');
                 database.ref('sessions/' + currentUID).remove();
             }
+            
+            resetMaintenanceOverride();
+            
             localStorage.removeItem('vip_files_uid');
             localStorage.removeItem('vip_uid');
             currentUID = '';
@@ -7571,11 +7680,8 @@
         }
     }
         
-        // ============================================================
-    // MAINTENANCE OVERRIDE - KUNCI AKSES (USER)
-    // ============================================================
-    
-    // Ambil kunci dari Admin Panel (disimpan di Firebase)
+    // ==================== MAINTENANCE OVERRIDE - KUNCI AKSES (USER) ====================
+
     async function loadMaintenanceKey() {
         try {
             const snap = await database.ref('admin_config/maintenance_key').once('value');
@@ -7583,7 +7689,6 @@
                 maintenanceKey = snap.val();
                 console.log('🔑 Maintenance key loaded:', maintenanceKey);
             } else {
-                // Default key jika belum di-set admin
                 maintenanceKey = 'PhantomStore2026';
                 await database.ref('admin_config/maintenance_key').set(maintenanceKey);
                 console.log('🔑 Default maintenance key set:', maintenanceKey);
@@ -7592,104 +7697,113 @@
             return maintenanceKey;
         } catch (error) {
             console.error('Error loading maintenance key:', error);
-            maintenanceKey = 'PhantomStore2026'; // Fallback
+            maintenanceKey = 'PhantomStore2026';
             maintenanceKeyLoaded = true;
             return maintenanceKey;
         }
     }
-    
+
     function openKeyPopup() {
+        // CEK APAKAH SUDAH OVERRIDE
+        const overrideKey = localStorage.getItem('maintenance_override_key');
+        const overrideStatus = localStorage.getItem('maintenance_override_' + currentUID);
+        const isOverridden = overrideKey === maintenanceKey && overrideStatus === 'true';
+
+        if (isOverridden) {
+            showNeonToast('✅ Anda sudah memiliki akses maintenance!');
+            return;
+        }
+
         document.getElementById('keyPopup').classList.add('active');
         document.getElementById('keyInput').value = '';
         document.getElementById('keyStatus').className = 'key-status';
         document.getElementById('keyStatus').textContent = '';
-        setTimeout(() => {
-            document.getElementById('keyInput').focus();
-        }, 300);
+        setTimeout(() => { document.getElementById('keyInput').focus(); }, 300);
         document.body.style.overflow = 'hidden';
     }
-    
+
     function closeKeyPopup() {
         document.getElementById('keyPopup').classList.remove('active');
         document.body.style.overflow = '';
     }
-    
+
     function submitKey() {
         const input = document.getElementById('keyInput').value.trim();
         const status = document.getElementById('keyStatus');
-        
+
         if (!input) {
             status.className = 'key-status error';
             status.textContent = '❌ Masukkan kunci terlebih dahulu!';
             return;
         }
-        
-        console.log('🔑 Input key:', input);
-        console.log('🔑 Stored key:', maintenanceKey);
-        
+
         if (input === maintenanceKey) {
             status.className = 'key-status success';
             status.textContent = '✅ Kunci benar! Maintenance dinonaktifkan untuk Anda.';
-            
-            // Simpan status override
+        
+            // SIMPAN STATUS OVERRIDE (PERMANEN)
             isMaintenanceOverridden = true;
+            maintenanceOverrideActive = true;
             localStorage.setItem('maintenance_override_' + currentUID, 'true');
             localStorage.setItem('maintenance_override_key', input);
-            
-            // Sembunyikan maintenance page
+            localStorage.setItem('maintenance_override_date', new Date().toISOString());
+        
+            // HENTIKAN INTERVAL MAINTENANCE SEMENTARA
+            if (maintenanceInterval) {
+                clearInterval(maintenanceInterval);
+                maintenanceInterval = null;
+            }
+        
+            // SEMBUNYIKAN MAINTENANCE PAGE
             document.getElementById('maintenancePage').classList.remove('active');
             document.getElementById('loginWrapper').style.display = 'flex';
             document.getElementById('mainLayout').style.display = 'block';
-            
-            setTimeout(() => {
-                closeKeyPopup();
-                showNeonToast('✅ Akses maintenance berhasil!');
-            }, 1500);
+        
+            showNeonToast('✅ Akses maintenance berhasil!');
+        
+            setTimeout(() => { closeKeyPopup(); }, 1500);
+        
+            // RESET INTERVAL MAINTENANCE DENGAN PENGECEKAN OVERRIDE
+            if (window.maintenanceIntervalId) {
+                clearInterval(window.maintenanceIntervalId);
+            }
+            window.maintenanceIntervalId = setInterval(() => { checkMaintenance(); }, 30000);
+        
         } else {
             status.className = 'key-status error';
             status.textContent = '❌ Kunci salah! Coba lagi.';
             document.getElementById('keyInput').value = '';
-            setTimeout(() => {
-                document.getElementById('keyInput').focus();
-            }, 300);
+            setTimeout(() => { document.getElementById('keyInput').focus(); }, 300);
         }
     }
-    
-    // Enter key untuk submit
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter' && document.getElementById('keyPopup').classList.contains('active')) {
-            submitKey();
-        }
-    });
-    
-    // ============================================================
+
     // UPDATE FUNGSI CHECKMAINTENANCE()
-    // ============================================================
-    
     async function checkMaintenance() {
         try {
-            // PASTIKAN kunci sudah dimuat
             if (!maintenanceKeyLoaded) {
                 await loadMaintenanceKey();
             }
-            
+        
             const snap = await database.ref('maintenance').once('value');
             const m = snap.val();
-            
-            // CEK APAKAH USER SUDAH OVERRIDE
+        
+            // CEK APAKAH USER SUDAH OVERRIDE (PERMANEN)
             const overrideKey = localStorage.getItem('maintenance_override_key');
-            const isOverridden = overrideKey === maintenanceKey && 
-                                localStorage.getItem('maintenance_override_' + currentUID) === 'true';
-            
+            const overrideStatus = localStorage.getItem('maintenance_override_' + currentUID);
+            const isOverridden = overrideKey === maintenanceKey && overrideStatus === 'true';
+        
+            // JIKA OVERRIDE AKTIF, SELALU ABAIKAN MAINTENANCE
             if (isOverridden) {
-                // User dengan kunci benar, abaikan maintenance
+                maintenanceOverrideActive = true;
                 document.getElementById('maintenancePage').classList.remove('active');
                 document.getElementById('loginWrapper').style.display = 'flex';
                 document.getElementById('mainLayout').style.display = 'block';
                 return;
             }
-            
+        
+            // JIKA TIDAK OVERRIDE, CEK STATUS MAINTENANCE
             if (m && m.status === 'active') {
+                maintenanceOverrideActive = false;
                 document.getElementById('maintenancePage').classList.add('active');
                 document.getElementById('loginWrapper').style.display = 'none';
                 document.getElementById('mainLayout').style.display = 'none';
@@ -7877,26 +7991,16 @@
 
     function playUserNotificationSound() {
         try {
-            // Coba gunakan file MP3
             if (!userNotificationAudio) {
                 userNotificationAudio = new Audio('nada.mp3');
                 userNotificationAudio.preload = 'auto';
             }
-        
-            // Reset audio ke awal
             userNotificationAudio.currentTime = 0;
-        
-            // Play
             const playPromise = userNotificationAudio.play();
-        
             if (playPromise !== undefined) {
-                playPromise.catch(() => {
-                    // Jika file MP3 gagal, gunakan fallback (Web Audio)
-                    playUserFallbackSound();
-                });
+                playPromise.catch(() => playUserFallbackSound());
             }
         } catch(e) {
-            // Fallback jika MP3 tidak bisa dimuat
             playUserFallbackSound();
         }
     }
@@ -7906,19 +8010,20 @@
             const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             const oscillator = audioCtx.createOscillator();
             const gainNode = audioCtx.createGain();
-        
             oscillator.connect(gainNode);
             gainNode.connect(audioCtx.destination);
-        
             oscillator.frequency.value = 880;
             gainNode.gain.value = 0.15;
-        
             oscillator.start();
             gainNode.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.3);
             oscillator.stop(audioCtx.currentTime + 0.3);
         } catch(e) {
             console.log('Sound error:', e);
         }
+    }
+
+    function playNotificationSound() {
+        playUserNotificationSound();
     }
     
     // ==================== CHAT FILE UPLOAD ====================
@@ -8270,7 +8375,7 @@
     features.forEach(f => { fHtml += `<div class="feature-item"><div class="feature-icon"><i class="fas fa-crosshairs"></i></div><div class="feature-name">${f}</div></div>`; });
     document.getElementById('featuresGrid').innerHTML = fHtml;
 
-    // ==================== INIT ====================
+    // UPDATE FUNGSI INIT
     async function init() {
         loadAdminConfig();
         loadBackgroundVideo();
@@ -8279,11 +8384,27 @@
         setupUserChatFileUpload();
         await loadGlobalDiscount();
         monitorAdminStatus();
+        setupAnnouncementListener();
         setInterval(checkMaintenance, 30000);
+    
+        // CEK OVERRIDE SAAT INIT
+        const overrideKey = localStorage.getItem('maintenance_override_key');
+        const overrideStatus = localStorage.getItem('maintenance_override_' + currentUID);
+        if (overrideKey === maintenanceKey && overrideStatus === 'true') {
+            maintenanceOverrideActive = true;
+            isMaintenanceOverridden = true;
+            console.log('🔑 Maintenance override aktif dari localStorage');
+        }
+    
+        // SET INTERVAL DENGAN PENGECEKAN OVERRIDE
+        if (window.maintenanceIntervalId) {
+            clearInterval(window.maintenanceIntervalId);
+        }
+        window.maintenanceIntervalId = setInterval(() => { checkMaintenance(); }, 30000);
+    
         const savedUID = localStorage.getItem('vip_uid');
         if(savedUID) document.getElementById('loginUID').value = savedUID;
         initChatSupport();
-        // AUTO LOGIN
         checkAutoLogin();
         console.log('💬 Chat Support aktif dengan Device ID:', supportDeviceId);
         console.log('🔐 Device Fingerprint aktif:', deviceFingerprint);
