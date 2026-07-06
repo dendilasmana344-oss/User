@@ -7103,16 +7103,21 @@
     function setupAnnouncementListener() {
         if (!currentUID && !deviceFingerprint) return;
         const uid = currentUID || deviceFingerprint;
-
+    
+        console.log('📢 Announcement listener aktif untuk:', uid);
+    
         database.ref('user_notifications/' + uid).on('child_added', (snap) => {
             const notif = snap.val();
-            if (!notif) return;
-        
+            if (!notif) {
+                console.log('⚠️ Data notif kosong');
+                return;
+            }
+            
             console.log('📢 PENGUMUMAN DITERIMA:', notif);
-        
+            
             // TAMPILKAN POP UP
             showAnnouncementPopup(notif);
-        
+            
             // Browser notification
             if (notificationPermissionGranted) {
                 try {
@@ -7121,64 +7126,69 @@
                         icon: userIcon,
                         vibrate: [200, 100, 200]
                     });
-                } catch(e) {}
+                } catch(e) {
+                    console.log('Browser notification error:', e);
+                }
             }
-        
+            
             // Tandai sudah dibaca
             database.ref('user_notifications/' + uid + '/' + snap.key + '/read').set(true);
         });
     }
-
+    
     function showAnnouncementPopup(notif) {
         const popup = document.getElementById('announcementPopup');
         const overlay = document.getElementById('announcementOverlay');
-    
+        
         if (!popup) {
             console.log('❌ Popup element tidak ditemukan!');
             return;
         }
-    
+        
+        console.log('🎯 Menampilkan popup pengumuman:', notif.title);
+        
         // Set konten
         document.getElementById('announcementTitle').textContent = notif.title || '📢 Pengumuman';
         document.getElementById('announcementMessage').textContent = notif.message || '';
-    
+        
         // Set badge berdasarkan type
         const badgeEl = document.getElementById('announcementBadge');
         const typeEl = document.getElementById('announcementType');
         const iconEl = popup.querySelector('.announcement-icon i');
-    
+        
         const typeMap = {
             info: { badge: 'ℹ️ INFO', text: 'Info', icon: 'fa-info-circle', color: 'var(--neon-cyan)' },
             success: { badge: '✅ SUCCESS', text: 'Sukses', icon: 'fa-check-circle', color: '#00ff88' },
             warning: { badge: '⚠️ WARNING', text: 'Peringatan', icon: 'fa-exclamation-triangle', color: '#ffaa00' },
             error: { badge: '❌ ERROR', text: 'Error', icon: 'fa-times-circle', color: '#ff4444' }
         };
-    
+        
         const type = notif.type || 'info';
         const info = typeMap[type] || typeMap.info;
-    
+        
         badgeEl.textContent = info.badge;
         badgeEl.style.background = `linear-gradient(135deg, ${info.color}, ${info.color}dd)`;
         typeEl.textContent = `📌 ${info.text}`;
         iconEl.className = `fas ${info.icon}`;
         iconEl.style.color = info.color;
-    
+        
         // Set waktu
         document.getElementById('announcementTime').textContent = notif.sentAt ? 
             new Date(notif.sentAt).toLocaleString('id-ID') : new Date().toLocaleString('id-ID');
-    
+        
         // Tampilkan popup
         popup.classList.add('active');
         overlay.classList.add('active');
         document.body.style.overflow = 'hidden';
-    
+        
         // Auto close setelah durasi
         const duration = (notif.duration || 5) * 1000;
+        console.log('⏱️ Popup akan tertutup dalam', duration/1000, 'detik');
         setTimeout(() => {
             closeAnnouncementPopup();
         }, duration);
     }
-
+    
     function closeAnnouncementPopup() {
         document.getElementById('announcementPopup').classList.remove('active');
         document.getElementById('announcementOverlay').classList.remove('active');
@@ -8384,9 +8394,13 @@
         setupUserChatFileUpload();
         await loadGlobalDiscount();
         monitorAdminStatus();
+        
+        // SETUP ANNOUNCEMENT LISTENER (PASTIKAN DIPANGGIL)
         setupAnnouncementListener();
+        console.log('📢 Announcement listener initialized');
+        
         setInterval(checkMaintenance, 30000);
-    
+        
         // CEK OVERRIDE SAAT INIT
         const overrideKey = localStorage.getItem('maintenance_override_key');
         const overrideStatus = localStorage.getItem('maintenance_override_' + currentUID);
@@ -8395,13 +8409,13 @@
             isMaintenanceOverridden = true;
             console.log('🔑 Maintenance override aktif dari localStorage');
         }
-    
+        
         // SET INTERVAL DENGAN PENGECEKAN OVERRIDE
         if (window.maintenanceIntervalId) {
             clearInterval(window.maintenanceIntervalId);
         }
         window.maintenanceIntervalId = setInterval(() => { checkMaintenance(); }, 30000);
-    
+        
         const savedUID = localStorage.getItem('vip_uid');
         if(savedUID) document.getElementById('loginUID').value = savedUID;
         initChatSupport();
