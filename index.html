@@ -533,6 +533,228 @@
             border-color: #ffd700;
             color: #ffd700;
         }
+        
+        /* ============================================================
+           POPUP PENGUMUMAN - ADMIN (NON-BLOCKING)
+           ============================================================ */
+        
+        .popup-container {
+            background: rgba(255, 0, 0, 0.08);
+            border: 2px dashed #ff4444;
+            border-radius: 20px;
+            padding: 20px;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+        
+        .popup-container .empty-state {
+            color: #ff4444;
+            font-size: 13px;
+            opacity: 0.6;
+            text-align: center;
+        }
+        
+        .popup-container .empty-state i {
+            font-size: 28px;
+            display: block;
+            margin-bottom: 8px;
+        }
+        
+        /* NOTIFICATION POPUP */
+        .notification-popup {
+            width: 100%;
+            border-radius: 20px;
+            padding: 18px 22px;
+            animation: slideDown 0.5s ease forwards;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .notification-popup.hide {
+            animation: slideUp 0.4s ease forwards;
+        }
+        
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-20px); }
+        }
+        
+        @keyframes glowPulse {
+            0%, 100% { box-shadow: 0 0 10px rgba(255, 68, 68, 0.3); }
+            50% { box-shadow: 0 0 30px rgba(255, 68, 68, 0.6); }
+        }
+        
+        .notification-popup.type-info {
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(0, 136, 255, 0.15));
+            border: 2px solid var(--neon-cyan);
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+        }
+        
+        .notification-popup.type-success {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 204, 102, 0.15));
+            border: 2px solid #00ff88;
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.3);
+        }
+        
+        .notification-popup.type-warning {
+            background: linear-gradient(135deg, rgba(255, 170, 0, 0.2), rgba(255, 136, 0, 0.15));
+            border: 2px solid #ffaa00;
+            box-shadow: 0 0 30px rgba(255, 170, 0, 0.3);
+        }
+        
+        .notification-popup.type-error {
+            background: linear-gradient(135deg, rgba(255, 68, 68, 0.25), rgba(204, 0, 0, 0.2));
+            border: 2px solid #ff4444;
+            box-shadow: 0 0 40px rgba(255, 68, 68, 0.4);
+            animation: glowPulse 1.5s infinite;
+        }
+        
+        .notification-popup .notif-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .notification-popup .notif-icon {
+            font-size: 28px;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .type-info .notif-icon { background: rgba(0, 255, 255, 0.2); color: var(--neon-cyan); }
+        .type-success .notif-icon { background: rgba(0, 255, 136, 0.2); color: #00ff88; }
+        .type-warning .notif-icon { background: rgba(255, 170, 0, 0.2); color: #ffaa00; }
+        .type-error .notif-icon { background: rgba(255, 68, 68, 0.25); color: #ff4444; animation: glowPulse 1s infinite; }
+        
+        .notification-popup .notif-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 16px;
+            font-weight: 700;
+            flex: 1;
+        }
+        
+        .type-info .notif-title { color: var(--neon-cyan); }
+        .type-success .notif-title { color: #00ff88; }
+        .type-warning .notif-title { color: #ffaa00; }
+        .type-error .notif-title { color: #ff4444; }
+        
+        .notification-popup .notif-badge {
+            display: inline-block;
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 700;
+            font-family: 'Orbitron', monospace;
+        }
+        
+        .type-info .notif-badge { background: rgba(0, 255, 255, 0.2); color: var(--neon-cyan); border: 1px solid var(--neon-cyan); }
+        .type-success .notif-badge { background: rgba(0, 255, 136, 0.2); color: #00ff88; border: 1px solid #00ff88; }
+        .type-warning .notif-badge { background: rgba(255, 170, 0, 0.2); color: #ffaa00; border: 1px solid #ffaa00; }
+        .type-error .notif-badge { background: rgba(255, 68, 68, 0.25); color: #ff4444; border: 1px solid #ff4444; animation: glowPulse 1s infinite; }
+        
+        .notification-popup .notif-message {
+            color: #ddd;
+            font-size: 13px;
+            line-height: 1.7;
+            padding: 10px 14px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            margin: 8px 0 12px 0;
+            white-space: pre-line;
+        }
+        
+        .notification-popup .notif-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .notification-popup .notif-time {
+            font-size: 10px;
+            color: #888;
+        }
+        
+        .notification-popup .notif-countdown {
+            font-family: 'Orbitron', monospace;
+            font-size: 18px;
+            font-weight: 700;
+            min-width: 35px;
+            text-align: center;
+        }
+        
+        .type-info .notif-countdown { color: var(--neon-cyan); }
+        .type-success .notif-countdown { color: #00ff88; }
+        .type-warning .notif-countdown { color: #ffaa00; }
+        .type-error .notif-countdown { color: #ff4444; }
+        
+        .notification-popup .notif-progress {
+            width: 100%;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+        
+        .notification-popup .notif-progress-fill {
+            height: 100%;
+            width: 100%;
+            border-radius: 2px;
+            transition: width 0.1s linear;
+        }
+        
+        .type-info .notif-progress-fill { background: linear-gradient(90deg, var(--neon-cyan), #0088ff); }
+        .type-success .notif-progress-fill { background: linear-gradient(90deg, #00ff88, #00cc66); }
+        .type-warning .notif-progress-fill { background: linear-gradient(90deg, #ffaa00, #ff8800); }
+        .type-error .notif-progress-fill { background: linear-gradient(90deg, #ff4444, #cc0000); }
+        
+        .btn-close-popup {
+            padding: 6px 18px;
+            border: none;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Orbitron', monospace;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .btn-close-popup:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+        
+        .type-error .btn-close-popup {
+            background: rgba(255, 68, 68, 0.2);
+            border-color: #ff4444;
+            color: #ff4444;
+        }
+        
+        .type-error .btn-close-popup:hover {
+            background: #ff4444;
+            color: #000;
+        }
 
         /* MAINTENANCE PAGE */
         .maintenance-page {
@@ -5250,6 +5472,19 @@
     </div>
 </div>
 
+<!-- CARD PENGUMUMAN - POPUP AKAN MUNCUL DI SINI -->
+<div class="card" id="announcementCard" style="border-color: #ff4444; border-style: dashed;">
+    <div class="card-title" style="color: #ff4444;">
+        <i class="fas fa-bell"></i> PENGUMUMAN
+    </div>
+    <div class="popup-container" id="popupContainer">
+        <div class="empty-state" id="emptyState">
+            <i class="fas fa-bell"></i>
+            Belum ada pengumuman
+        </div>
+    </div>
+</div>
+
 <!-- MAIN LAYOUT -->
 <div class="main-layout" id="mainLayout" style="display: none;">
     <div class="content-row">
@@ -5961,7 +6196,6 @@
             await loadMaintenanceKey();
             await loadUserData();
             
-            setupAnnouncementListener();
             setupChatNotifUser();
             setupPublicNotifUser();
             setupSupportChatNotif();
@@ -6052,6 +6286,494 @@
             
         } catch(error) { console.error(error); hideLoading(); showMessage('loginMessage', 'Error: ' + error.message, true); }
     }
+    
+    // ============================================================
+    // FITUR PENGUMUMAN - USER (VERSI REVISI)
+    // Popup muncul di kotak, tidak mengganggu aktivitas
+    // ============================================================
+    
+    // SETUP ANNOUNCEMENT LISTENER
+    function setupAnnouncementListener() {
+        // Gunakan UID atau Device ID
+        const uid = currentUID || deviceFingerprint || localStorage.getItem('vip_uid');
+        
+        if (!uid) {
+            console.log('❌ No UID/Device ID for announcement');
+            return;
+        }
+        
+        console.log('📢 Announcement listener aktif untuk:', uid);
+        
+        // Hapus listener lama jika ada
+        if (window.announcementListenerRef) {
+            db.ref('user_notifications/' + uid).off('child_added', window.announcementListenerRef);
+        }
+        
+        // Buat listener baru untuk user_notifications
+        window.announcementListenerRef = db.ref('user_notifications/' + uid)
+            .orderByChild('sentAt')
+            .limitToLast(10)
+            .on('child_added', function(snap) {
+                const notif = snap.val();
+                if (!notif) return;
+                
+                console.log('📢 PENGUMUMAN DITERIMA:', notif);
+                
+                // TAMPILKAN POPUP (NON-BLOCKING)
+                tampilkanPopupUser(notif);
+                
+                // Browser notification
+                if (notificationPermissionGranted) {
+                    try {
+                        new Notification(notif.title || '📢 Pengumuman', {
+                            body: notif.message || '',
+                            icon: userIcon || 'https://i.ibb.co.com/4wHZpnFB/IMG-20260610-WA0000.jpg',
+                            vibrate: [200, 100, 200]
+                        });
+                    } catch(e) {
+                        console.log('Browser notification error:', e);
+                    }
+                }
+                
+                // Tandai sudah dibaca
+                db.ref('user_notifications/' + uid + '/' + snap.key + '/read').set(true);
+            });
+    }
+    
+    // SETUP GUEST ANNOUNCEMENT LISTENER (untuk yang belum login)
+    function setupGuestAnnouncementListener() {
+        if (!deviceFingerprint) return;
+        
+        if (window.guestListenerRef) {
+            db.ref('guest_notifications/' + deviceFingerprint).off('child_added', window.guestListenerRef);
+        }
+        
+        window.guestListenerRef = db.ref('guest_notifications/' + deviceFingerprint)
+            .on('child_added', function(snap) {
+                const notif = snap.val();
+                if (!notif) return;
+                
+                console.log('📢 GUEST PENGUMUMAN DITERIMA:', notif);
+                tampilkanPopupUser(notif);
+                
+                db.ref('guest_notifications/' + deviceFingerprint + '/' + snap.key + '/read').set(true);
+            });
+    }
+    
+    // TAMPILKAN POPUP USER (NON-BLOCKING)
+    function tampilkanPopupUser(data) {
+        // Cari container popup
+        let container = document.getElementById('popupContainer');
+        
+        // Jika container belum ada, buat di dalam card
+        if (!container) {
+            // Cari card yang cocok atau buat baru
+            const mainLayout = document.getElementById('mainLayout');
+            if (!mainLayout) return;
+            
+            // Buat card baru untuk popup
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.style.borderColor = '#ff4444';
+            card.style.borderStyle = 'dashed';
+            card.innerHTML = `
+                <div class="card-title" style="color: #ff4444;">
+                    <i class="fas fa-bell"></i> PENGUMUMAN
+                </div>
+                <div class="popup-container" id="popupContainer">
+                    <div class="empty-state" id="emptyState">
+                        <i class="fas fa-bell"></i>
+                        Belum ada pengumuman
+                    </div>
+                </div>
+            `;
+            
+            // Masukkan ke bagian atas right-column
+            const rightColumn = document.querySelector('.right-column');
+            if (rightColumn) {
+                rightColumn.prepend(card);
+            } else {
+                mainLayout.prepend(card);
+            }
+            
+            container = document.getElementById('popupContainer');
+        }
+        
+        if (!container) return;
+        
+        const emptyState = document.getElementById('emptyState');
+        if (emptyState) emptyState.style.display = 'none';
+        
+        // Hapus popup lama
+        const oldPopup = container.querySelector('.notification-popup');
+        if (oldPopup) {
+            oldPopup.remove();
+        }
+        
+        // Hapus timer lama
+        clearUserTimers();
+        
+        // Buat popup baru
+        const popup = document.createElement('div');
+        popup.className = `notification-popup type-${data.type}`;
+        popup.id = 'activeNotificationUser';
+        
+        const typeMap = {
+            info: { icon: 'fa-info-circle', label: 'ℹ️ INFO' },
+            success: { icon: 'fa-check-circle', label: '✅ SUCCESS' },
+            warning: { icon: 'fa-exclamation-triangle', label: '⚠️ WARNING' },
+            error: { icon: 'fa-times-circle', label: '❌ ERROR' }
+        };
+        
+        const info = typeMap[data.type] || typeMap.info;
+        const duration = data.duration || 5;
+        
+        popup.innerHTML = `
+            <div class="notif-header">
+                <div class="notif-icon"><i class="fas ${info.icon}"></i></div>
+                <div class="notif-title">${escapeHtml(data.title)}</div>
+                <span class="notif-badge">${info.label}</span>
+            </div>
+            <div class="notif-message">${escapeHtml(data.message)}</div>
+            <div class="notif-footer">
+                <span class="notif-time">${data.sentAt ? new Date(data.sentAt).toLocaleString('id-ID') : new Date().toLocaleString('id-ID')}</span>
+                <div style="display:flex; align-items:center; gap:12px;">
+                    <span class="notif-countdown" id="countdownUserDisplay">${duration}s</span>
+                    <button class="btn-close-popup" onclick="tutupPopupUserManual()">
+                        <i class="fas fa-times"></i> Tutup
+                    </button>
+                </div>
+            </div>
+            <div class="notif-progress">
+                <div class="notif-progress-fill" id="progressUserFill" style="width:100%;"></div>
+            </div>
+        `;
+        
+        container.appendChild(popup);
+        
+        // Mainkan suara
+        playUserSound();
+        
+        // Mulai timer
+        startUserCountdown(duration);
+        
+        // Auto close
+        window.userPopupTimer = setTimeout(() => {
+            tutupPopupUserOtomatis();
+        }, duration * 1000);
+    }
+    
+    // COUNTDOWN & PROGRESS USER
+    function startUserCountdown(totalSeconds) {
+        let remaining = totalSeconds;
+        
+        window.userCountdownTimer = setInterval(() => {
+            remaining--;
+            const display = document.getElementById('countdownUserDisplay');
+            if (display) {
+                display.textContent = remaining + 's';
+                if (remaining <= 5) {
+                    display.style.color = '#ff4444';
+                    display.style.animation = 'neonPulse 0.5s infinite';
+                }
+            }
+        }, 1000);
+        
+        let progress = 100;
+        const step = 100 / totalSeconds;
+        
+        window.userProgressTimer = setInterval(() => {
+            progress -= step;
+            const fill = document.getElementById('progressUserFill');
+            if (fill) {
+                fill.style.width = Math.max(0, progress) + '%';
+            }
+        }, 1000);
+    }
+    
+    function clearUserTimers() {
+        if (window.userPopupTimer) { clearTimeout(window.userPopupTimer); window.userPopupTimer = null; }
+        if (window.userProgressTimer) { clearInterval(window.userProgressTimer); window.userProgressTimer = null; }
+        if (window.userCountdownTimer) { clearInterval(window.userCountdownTimer); window.userCountdownTimer = null; }
+    }
+    
+    function tutupPopupUserOtomatis() {
+        const popup = document.getElementById('activeNotificationUser');
+        if (popup) {
+            popup.classList.add('hide');
+            setTimeout(() => {
+                popup.remove();
+                const emptyState = document.getElementById('emptyState');
+                if (emptyState) emptyState.style.display = 'block';
+                clearUserTimers();
+            }, 400);
+        }
+        clearUserTimers();
+    }
+    
+    function tutupPopupUserManual() {
+        const popup = document.getElementById('activeNotificationUser');
+        if (popup) {
+            popup.classList.add('hide');
+            setTimeout(() => {
+                popup.remove();
+                const emptyState = document.getElementById('emptyState');
+                if (emptyState) emptyState.style.display = 'block';
+                clearUserTimers();
+            }, 300);
+        }
+        clearUserTimers();
+    }
+    
+    // SUARA USER
+    function playUserSound() {
+        try {
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            oscillator.frequency.value = 880;
+            gainNode.gain.value = 0.15;
+            
+            oscillator.start();
+            gainNode.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.3);
+            oscillator.stop(audioCtx.currentTime + 0.3);
+        } catch(e) {
+            console.log('Sound error:', e);
+        }
+    }
+    
+    // TAMBAHKAN CSS UNTUK POPUP USER
+    function tambahCSSUser() {
+        const style = document.createElement('style');
+        style.textContent = `
+            /* POPUP CONTAINER */
+            .popup-container {
+                background: rgba(255, 0, 0, 0.08);
+                border: 2px dashed #ff4444;
+                border-radius: 20px;
+                padding: 20px;
+                min-height: 80px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.3s;
+                margin-top: 10px;
+            }
+            
+            .popup-container .empty-state {
+                color: #ff4444;
+                font-size: 13px;
+                opacity: 0.6;
+                text-align: center;
+            }
+            
+            .popup-container .empty-state i {
+                font-size: 28px;
+                display: block;
+                margin-bottom: 8px;
+            }
+            
+            /* NOTIFICATION POPUP */
+            .notification-popup {
+                width: 100%;
+                border-radius: 20px;
+                padding: 18px 22px;
+                animation: slideDown 0.5s ease forwards;
+                position: relative;
+                overflow: hidden;
+            }
+            
+            .notification-popup.hide {
+                animation: slideUp 0.4s ease forwards;
+            }
+            
+            @keyframes slideDown {
+                from { opacity: 0; transform: translateY(-20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            
+            @keyframes slideUp {
+                from { opacity: 1; transform: translateY(0); }
+                to { opacity: 0; transform: translateY(-20px); }
+            }
+            
+            @keyframes glowPulse {
+                0%, 100% { box-shadow: 0 0 10px rgba(255, 68, 68, 0.3); }
+                50% { box-shadow: 0 0 30px rgba(255, 68, 68, 0.6); }
+            }
+            
+            .notification-popup.type-info {
+                background: linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(0, 136, 255, 0.15));
+                border: 2px solid var(--neon-cyan);
+                box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+            }
+            
+            .notification-popup.type-success {
+                background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 204, 102, 0.15));
+                border: 2px solid #00ff88;
+                box-shadow: 0 0 30px rgba(0, 255, 136, 0.3);
+            }
+            
+            .notification-popup.type-warning {
+                background: linear-gradient(135deg, rgba(255, 170, 0, 0.2), rgba(255, 136, 0, 0.15));
+                border: 2px solid #ffaa00;
+                box-shadow: 0 0 30px rgba(255, 170, 0, 0.3);
+            }
+            
+            .notification-popup.type-error {
+                background: linear-gradient(135deg, rgba(255, 68, 68, 0.25), rgba(204, 0, 0, 0.2));
+                border: 2px solid #ff4444;
+                box-shadow: 0 0 40px rgba(255, 68, 68, 0.4);
+                animation: glowPulse 1.5s infinite;
+            }
+            
+            .notification-popup .notif-header {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                margin-bottom: 10px;
+                flex-wrap: wrap;
+            }
+            
+            .notification-popup .notif-icon {
+                font-size: 28px;
+                width: 45px;
+                height: 45px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+            }
+            
+            .type-info .notif-icon { background: rgba(0, 255, 255, 0.2); color: var(--neon-cyan); }
+            .type-success .notif-icon { background: rgba(0, 255, 136, 0.2); color: #00ff88; }
+            .type-warning .notif-icon { background: rgba(255, 170, 0, 0.2); color: #ffaa00; }
+            .type-error .notif-icon { background: rgba(255, 68, 68, 0.25); color: #ff4444; animation: glowPulse 1s infinite; }
+            
+            .notification-popup .notif-title {
+                font-family: 'Orbitron', monospace;
+                font-size: 16px;
+                font-weight: 700;
+                flex: 1;
+            }
+            
+            .type-info .notif-title { color: var(--neon-cyan); }
+            .type-success .notif-title { color: #00ff88; }
+            .type-warning .notif-title { color: #ffaa00; }
+            .type-error .notif-title { color: #ff4444; }
+            
+            .notification-popup .notif-badge {
+                display: inline-block;
+                padding: 2px 12px;
+                border-radius: 20px;
+                font-size: 10px;
+                font-weight: 700;
+                font-family: 'Orbitron', monospace;
+            }
+            
+            .type-info .notif-badge { background: rgba(0, 255, 255, 0.2); color: var(--neon-cyan); border: 1px solid var(--neon-cyan); }
+            .type-success .notif-badge { background: rgba(0, 255, 136, 0.2); color: #00ff88; border: 1px solid #00ff88; }
+            .type-warning .notif-badge { background: rgba(255, 170, 0, 0.2); color: #ffaa00; border: 1px solid #ffaa00; }
+            .type-error .notif-badge { background: rgba(255, 68, 68, 0.25); color: #ff4444; border: 1px solid #ff4444; animation: glowPulse 1s infinite; }
+            
+            .notification-popup .notif-message {
+                color: #ddd;
+                font-size: 13px;
+                line-height: 1.7;
+                padding: 10px 14px;
+                background: rgba(0, 0, 0, 0.3);
+                border-radius: 12px;
+                margin: 8px 0 12px 0;
+                white-space: pre-line;
+            }
+            
+            .notification-popup .notif-footer {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            
+            .notification-popup .notif-time {
+                font-size: 10px;
+                color: #888;
+            }
+            
+            .notification-popup .notif-countdown {
+                font-family: 'Orbitron', monospace;
+                font-size: 18px;
+                font-weight: 700;
+                min-width: 35px;
+                text-align: center;
+            }
+            
+            .type-info .notif-countdown { color: var(--neon-cyan); }
+            .type-success .notif-countdown { color: #00ff88; }
+            .type-warning .notif-countdown { color: #ffaa00; }
+            .type-error .notif-countdown { color: #ff4444; }
+            
+            .notification-popup .notif-progress {
+                width: 100%;
+                height: 3px;
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 2px;
+                margin-top: 10px;
+                overflow: hidden;
+            }
+            
+            .notification-popup .notif-progress-fill {
+                height: 100%;
+                width: 100%;
+                border-radius: 2px;
+                transition: width 0.1s linear;
+            }
+            
+            .type-info .notif-progress-fill { background: linear-gradient(90deg, var(--neon-cyan), #0088ff); }
+            .type-success .notif-progress-fill { background: linear-gradient(90deg, #00ff88, #00cc66); }
+            .type-warning .notif-progress-fill { background: linear-gradient(90deg, #ffaa00, #ff8800); }
+            .type-error .notif-progress-fill { background: linear-gradient(90deg, #ff4444, #cc0000); }
+            
+            .btn-close-popup {
+                padding: 6px 18px;
+                border: none;
+                border-radius: 20px;
+                font-weight: 700;
+                font-size: 12px;
+                cursor: pointer;
+                transition: all 0.3s;
+                font-family: 'Orbitron', monospace;
+                background: rgba(255, 255, 255, 0.1);
+                color: #fff;
+                border: 1px solid rgba(255, 255, 255, 0.2);
+            }
+            
+            .btn-close-popup:hover {
+                background: rgba(255, 255, 255, 0.2);
+                transform: scale(1.05);
+            }
+            
+            .type-error .btn-close-popup {
+                background: rgba(255, 68, 68, 0.2);
+                border-color: #ff4444;
+                color: #ff4444;
+            }
+            
+            .type-error .btn-close-popup:hover {
+                background: #ff4444;
+                color: #000;
+            }
+        `;
+        document.head.appendChild(style);
+    }
+    
+    // PANGGIL TAMBAHAN CSS
+    tambahCSSUser();
     
     // ============================================================
     // POP UP SELAMAT DATANG - SOCIAL MEDIA
@@ -7064,175 +7786,75 @@ function updateChatBadge(uid) {
     });
 
     // ==================== REALTIME LISTENERS ====================
-    function setupRealtimeListeners() {
-        if(!currentUID) return;
+function setupRealtimeListeners() {
+    if(!currentUID) return;
     
-        database.ref('saldo/' + currentUID).on('value', s => { 
-            if(s.exists()) { 
-                currentSaldo = s.val().amount || 0; 
-                updateSaldoDisplay(); 
-            } 
-        });
+    database.ref('saldo/' + currentUID).on('value', s => { 
+        if(s.exists()) { 
+            currentSaldo = s.val().amount || 0; 
+            updateSaldoDisplay(); 
+        } 
+    });
     
-        database.ref('vip_members/' + currentUID).on('value', () => { 
-            loadVIPStatus(); 
-        });
+    database.ref('vip_members/' + currentUID).on('value', () => { 
+        loadVIPStatus(); 
+    });
     
-        database.ref('deposits/' + currentUID).on('child_added', () => { 
-            loadTransactionHistory(); 
-        });
+    database.ref('deposits/' + currentUID).on('child_added', () => { 
+        loadTransactionHistory(); 
+    });
     
-        database.ref('purchases/' + currentUID).on('child_added', () => { 
-            loadPurchaseHistory(); 
-        });
+    database.ref('purchases/' + currentUID).on('child_added', () => { 
+        loadPurchaseHistory(); 
+    });
     
-        database.ref('sessions/' + currentUID).on('value', (snap) => {
-            const session = snap.val();
-            if (isManualLogout) return;
-            if (!session && currentUID) {
-                forceLogoutCount++;
-                if (forceLogoutCount <= 3) {
-                    showForceLogoutModal('⚠️ AKUN ANDA SEMENTARA KAMI TANGGUHKAN ⚠️\n\nAkun Anda sementara kami tangguhkan karena ada aktivitas mencurigakan.\nHarap bersabar dan hubungi admin untuk informasi lebih lanjut.\n\nAnda akan diarahkan ke halaman login.', 5);
-                } else {
-                    showForceLogoutModal('⚠️ AKUN ANDA DIBLOKIR SEMENTARA ⚠️\n\nTerjadi aktivitas mencurigakan berulang kali.\nAkun Anda akan diblokir sementara.\nHubungi admin untuk informasi lebih lanjut.', 5);
-                }
+    database.ref('sessions/' + currentUID).on('value', (snap) => {
+        const session = snap.val();
+        if (isManualLogout) return;
+        if (!session && currentUID) {
+            forceLogoutCount++;
+            if (forceLogoutCount <= 3) {
+                showForceLogoutModal('⚠️ AKUN ANDA SEMENTARA KAMI TANGGUHKAN ⚠️\n\nAkun Anda sementara kami tangguhkan karena ada aktivitas mencurigakan.\nHarap bersabar dan hubungi admin untuk informasi lebih lanjut.\n\nAnda akan diarahkan ke halaman login.', 5);
+            } else {
+                showForceLogoutModal('⚠️ AKUN ANDA DIBLOKIR SEMENTARA ⚠️\n\nTerjadi aktivitas mencurigakan berulang kali.\nAkun Anda akan diblokir sementara.\nHubungi admin untuk informasi lebih lanjut.', 5);
             }
-        });
-    
-        database.ref('banned_users/' + currentUID).on('value', (snap) => {
-            if (snap.exists() && snap.val().status === 'banned' && currentUID) {
-                    forceLogoutCount = 0;
-                    showForceLogoutModal('⚠️ AKUN ANDA DIBLOKIR ⚠️\n\nAkun Anda telah diblokir oleh admin karena melanggar aturan.\nHubungi admin untuk informasi lebih lanjut.\n\nAnda akan diarahkan ke halaman login.', 5);
-                }
-            });
-        
-            database.ref('vip_members/' + currentUID).on('value', (snap) => {
-                const vip = snap.val();
-                if (vip && vip.status === 'active' && vip.updateType === 'quota') {
-                    const used = vip.updatesUsed || 0;
-                    const total = vip.updateQuota || 0;
-                    const percent = total > 0 ? (used / total) * 100 : 0;
-                
-                    const progressFill = document.querySelector('#vipCounterCard .progress-bar-fill.quota');
-                    const percentText = document.querySelector('#vipCounterCard .progress-label span:last-child');
-                
-                    if (progressFill) {
-                        progressFill.style.width = percent + '%';
-                    }
-                    if (percentText) {
-                        percentText.innerHTML = `${used}/${total} (${percent.toFixed(1)}%)`;
-                    }
-                
-                    const usedEl = document.querySelector('#vipCounterCard .vip-stat-item:first-child .vip-stat-value');
-                    const totalEl = document.querySelector('#vipCounterCard .vip-stat-item:nth-child(2) .vip-stat-value');
-                    const remainingEl = document.querySelector('#vipCounterCard .vip-stat-item:last-child .vip-stat-value');
-                
-                    if (usedEl) usedEl.innerHTML = used;
-                    if (totalEl) totalEl.innerHTML = total;
-                    if (remainingEl) remainingEl.innerHTML = total - used;
-                }
-            });
         }
+    });
+    
+    database.ref('banned_users/' + currentUID).on('value', (snap) => {
+        if (snap.exists() && snap.val().status === 'banned' && currentUID) {
+                forceLogoutCount = 0;
+                showForceLogoutModal('⚠️ AKUN ANDA DIBLOKIR ⚠️\n\nAkun Anda telah diblokir oleh admin karena melanggar aturan.\nHubungi admin untuk informasi lebih lanjut.\n\nAnda akan diarahkan ke halaman login.', 5);
+            }
+        });
         
-        // ==================== ANNOUNCEMENT POPUP ====================
-    
-        function setupAnnouncementListener() {
-        if (!currentUID && !deviceFingerprint) return;
-        const uid = currentUID || deviceFingerprint;
-    
-        console.log('📢 Announcement listener aktif untuk:', uid);
-    
-        database.ref('user_notifications/' + uid).on('child_added', (snap) => {
-            const notif = snap.val();
-            if (!notif) {
-                console.log('⚠️ Data notif kosong');
-                return;
-            }
-            
-            console.log('📢 PENGUMUMAN DITERIMA:', notif);
-            
-            // TAMPILKAN POP UP
-            showAnnouncementPopup(notif);
-            
-            // Browser notification
-            if (notificationPermissionGranted) {
-                try {
-                    new Notification(notif.title || '📢 Pengumuman', {
-                        body: notif.message || '',
-                        icon: userIcon,
-                        vibrate: [200, 100, 200]
-                    });
-                } catch(e) {
-                    console.log('Browser notification error:', e);
+        database.ref('vip_members/' + currentUID).on('value', (snap) => {
+            const vip = snap.val();
+            if (vip && vip.status === 'active' && vip.updateType === 'quota') {
+                const used = vip.updatesUsed || 0;
+                const total = vip.updateQuota || 0;
+                const percent = total > 0 ? (used / total) * 100 : 0;
+                
+                const progressFill = document.querySelector('#vipCounterCard .progress-bar-fill.quota');
+                const percentText = document.querySelector('#vipCounterCard .progress-label span:last-child');
+                
+                if (progressFill) {
+                     progressFill.style.width = percent + '%';
                 }
+                if (percentText) {
+                    percentText.innerHTML = `${used}/${total} (${percent.toFixed(1)}%)`;
+                }
+                
+                const usedEl = document.querySelector('#vipCounterCard .vip-stat-item:first-child .vip-stat-value');
+                const totalEl = document.querySelector('#vipCounterCard .vip-stat-item:nth-child(2) .vip-stat-value');
+                const remainingEl = document.querySelector('#vipCounterCard .vip-stat-item:last-child .vip-stat-value');
+                
+                if (usedEl) usedEl.innerHTML = used;
+                if (totalEl) totalEl.innerHTML = total;
+                if (remainingEl) remainingEl.innerHTML = total - used;
             }
-            
-            // Tandai sudah dibaca
-            database.ref('user_notifications/' + uid + '/' + snap.key + '/read').set(true);
         });
     }
-    
-    function showAnnouncementPopup(notif) {
-        const popup = document.getElementById('announcementPopup');
-        const overlay = document.getElementById('announcementOverlay');
-        
-        if (!popup) {
-            console.log('❌ Popup element tidak ditemukan!');
-            return;
-        }
-        
-        console.log('🎯 Menampilkan popup pengumuman:', notif.title);
-        
-        // Set konten
-        document.getElementById('announcementTitle').textContent = notif.title || '📢 Pengumuman';
-        document.getElementById('announcementMessage').textContent = notif.message || '';
-        
-        // Set badge berdasarkan type
-        const badgeEl = document.getElementById('announcementBadge');
-        const typeEl = document.getElementById('announcementType');
-        const iconEl = popup.querySelector('.announcement-icon i');
-        
-        const typeMap = {
-            info: { badge: 'ℹ️ INFO', text: 'Info', icon: 'fa-info-circle', color: 'var(--neon-cyan)' },
-            success: { badge: '✅ SUCCESS', text: 'Sukses', icon: 'fa-check-circle', color: '#00ff88' },
-            warning: { badge: '⚠️ WARNING', text: 'Peringatan', icon: 'fa-exclamation-triangle', color: '#ffaa00' },
-            error: { badge: '❌ ERROR', text: 'Error', icon: 'fa-times-circle', color: '#ff4444' }
-    };
-    
-    const type = notif.type || 'info';
-    const info = typeMap[type] || typeMap.info;
-    
-    badgeEl.textContent = info.badge;
-    badgeEl.style.background = 'linear-gradient(135deg, ' + info.color + ', ' + info.color + 'dd)';
-    typeEl.textContent = '📌 ' + info.text;
-    iconEl.className = 'fas ' + info.icon;
-    iconEl.style.color = info.color;
-    
-    // Set waktu
-    document.getElementById('announcementTime').textContent = notif.sentAt ? 
-        new Date(notif.sentAt).toLocaleString('id-ID') : new Date().toLocaleString('id-ID');
-    
-    // Tampilkan popup
-    popup.classList.add('active');
-    overlay.classList.add('active');
-    document.body.style.overflow = 'hidden';
-    
-    // Mainkan suara notifikasi
-    playUserNotificationSound();
-    
-    // Auto close setelah durasi
-    const duration = (notif.duration || 5) * 1000;
-    console.log('⏱️ Popup akan tertutup dalam', duration/1000, 'detik');
-    setTimeout(() => {
-        closeAnnouncementPopup();
-    }, duration);
-}
-
-function closeAnnouncementPopup() {
-    document.getElementById('announcementPopup').classList.remove('active');
-    document.getElementById('announcementOverlay').classList.remove('active');
-    document.body.style.overflow = '';
-}
 
     // ==================== CHANGE PROFILE IMAGE ====================
     function changeProfileImage() {
@@ -8434,9 +9056,11 @@ function closeAnnouncementPopup() {
         setupUserChatFileUpload();
         await loadGlobalDiscount();
         monitorAdminStatus();
+        // Di dalam fungsi init() user
+        setupAnnouncementListener();
+        setupGuestAnnouncementListener();
         
         // SETUP ANNOUNCEMENT LISTENER (PASTIKAN DIPANGGIL)
-        setupAnnouncementListener();
         console.log('📢 Announcement listener initialized');
         
         setInterval(checkMaintenance, 30000);
