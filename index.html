@@ -1709,6 +1709,24 @@
                 font-size: 12px;
             }
         }
+        
+        /* ===== NAV BADGE ===== */
+        .nav-badge {
+            display: none;
+            background: #ff4444;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 7px;
+            font-size: 10px;
+            font-weight: bold;
+            margin-left: 5px;
+            animation: pulse 1s infinite;
+            min-width: 20px;
+            text-align: center;
+        }
+        .nav-badge.show {
+            display: inline-block;
+        }
 
         /* NEON PROMPT MODAL */
         .neon-prompt-modal {
@@ -5351,9 +5369,9 @@
     </div>
 
     <div class="bottom-nav">
-        <div class="nav-item active" onclick="navigateWithLoading('dashboard')"><i class="fas fa-home"></i><span>Home</span></div>
+        <div class="nav-item active" onclick="navigateWithLoading('dashboard')"> <i class="fas fa-home"></i> <span>Home</span></div>
         <div class="nav-item" onclick="navigateWithLoading('account')"><i class="fas fa-user"></i><span>Akun</span></div>
-        <div class="nav-item" onclick="navigateWithLoading('chat')"><i class="fas fa-comments"></i><span>Chat</span></div>
+        <div class="nav-item" onclick="navigateWithLoading('chat')"><i class="fas fa-comments"></i><span>Chat</span><span class="nav-badge" id="chatNavBadge">0</span></div>
     </div>
 </div>
 
@@ -6689,24 +6707,24 @@
                 const isOpen = popup && popup.classList.contains('active');
                 const lastNotif = localStorage.getItem('last_support_notif_' + supportDeviceId);
                 
-                if (!isOpen || Date.now() - parseInt(lastNotif || 0) > 5000) {
-                    localStorage.setItem('last_support_notif_' + supportDeviceId, Date.now().toString());
-                    
-                    const text = msg.text ? msg.text.substring(0, 100) + (msg.text.length > 100 ? '...' : '') : 'Ada balasan dari admin';
-                    showNotificationToast('💬 Support Admin', text, 'success');
-                    
-                    const badge = document.getElementById('chatSupportBadge');
-                    if (badge) {
-                        const current = parseInt(badge.textContent) || 0;
-                        badge.textContent = current + 1;
-                        badge.classList.add('show');
+                    if (!isOpen || Date.now() - parseInt(lastNotif || 0) > 5000) {
+                        localStorage.setItem('last_support_notif_' + supportDeviceId, Date.now().toString());
+                        
+                        const text = msg.text ? msg.text.substring(0, 100) + (msg.text.length > 100 ? '...' : '') : 'Ada balasan dari admin';
+                        showNotificationToast('💬 Support Admin', text, 'success');
+                        
+                        const badge = document.getElementById('chatSupportBadge');
+                        if (badge) {
+                            const current = parseInt(badge.textContent) || 0;
+                            badge.textContent = current + 1;
+                            badge.classList.add('show');
+                        }
                     }
-                }
-            });
-    }
-    
-    // ==================== NOTIFICATION LISTENERS ====================
-    function setupChatNotifUser() {
+                });
+        }
+        
+        // ==================== NOTIFICATION LISTENERS ====================
+        function setupChatNotifUser() {
         if (!currentUID && !deviceFingerprint) return;
         const uid = currentUID || deviceFingerprint;
         
@@ -6721,10 +6739,28 @@
             if (!isOpen || Date.now() - parseInt(lastNotif || 0) > 5000) {
                 localStorage.setItem('last_admin_notif_' + uid, Date.now().toString());
                 const text = msg.text ? msg.text.substring(0, 100) + (msg.text.length > 100 ? '...' : '') : 'Ada pesan baru';
+                
+                // TAMPILKAN NOTIFIKASI POPUP
                 showNotificationToast('💬 Pesan dari Admin', text, 'info');
-            }
-        });
+                
+            // UPDATE BADGE
+            updateChatBadge(uid);
+            
+            // SUARA
+            playUserNotificationSound();
+        }
+    });
+}
+
+function updateChatBadge(uid) {
+    // Update badge di tab Chat
+    const badge = document.querySelector('.nav-item[onclick*="chat"] .nav-badge');
+    if (badge) {
+        const current = parseInt(badge.textContent) || 0;
+        badge.textContent = current + 1;
+        badge.style.display = 'inline-block';
     }
+}
     
     function setupPublicNotifUser() {
         database.ref('all_comments').orderByChild('timestamp').limitToLast(1).on('child_added', (snap) => {
@@ -7065,42 +7101,42 @@
     
         database.ref('banned_users/' + currentUID).on('value', (snap) => {
             if (snap.exists() && snap.val().status === 'banned' && currentUID) {
-                forceLogoutCount = 0;
-                showForceLogoutModal('⚠️ AKUN ANDA DIBLOKIR ⚠️\n\nAkun Anda telah diblokir oleh admin karena melanggar aturan.\nHubungi admin untuk informasi lebih lanjut.\n\nAnda akan diarahkan ke halaman login.', 5);
-            }
-        });
-    
-        database.ref('vip_members/' + currentUID).on('value', (snap) => {
-            const vip = snap.val();
-            if (vip && vip.status === 'active' && vip.updateType === 'quota') {
-                const used = vip.updatesUsed || 0;
-                const total = vip.updateQuota || 0;
-                const percent = total > 0 ? (used / total) * 100 : 0;
-            
-                const progressFill = document.querySelector('#vipCounterCard .progress-bar-fill.quota');
-                const percentText = document.querySelector('#vipCounterCard .progress-label span:last-child');
-            
-                if (progressFill) {
-                    progressFill.style.width = percent + '%';
+                    forceLogoutCount = 0;
+                    showForceLogoutModal('⚠️ AKUN ANDA DIBLOKIR ⚠️\n\nAkun Anda telah diblokir oleh admin karena melanggar aturan.\nHubungi admin untuk informasi lebih lanjut.\n\nAnda akan diarahkan ke halaman login.', 5);
                 }
-                if (percentText) {
-                    percentText.innerHTML = `${used}/${total} (${percent.toFixed(1)}%)`;
+            });
+        
+            database.ref('vip_members/' + currentUID).on('value', (snap) => {
+                const vip = snap.val();
+                if (vip && vip.status === 'active' && vip.updateType === 'quota') {
+                    const used = vip.updatesUsed || 0;
+                    const total = vip.updateQuota || 0;
+                    const percent = total > 0 ? (used / total) * 100 : 0;
+                
+                    const progressFill = document.querySelector('#vipCounterCard .progress-bar-fill.quota');
+                    const percentText = document.querySelector('#vipCounterCard .progress-label span:last-child');
+                
+                    if (progressFill) {
+                        progressFill.style.width = percent + '%';
+                    }
+                    if (percentText) {
+                        percentText.innerHTML = `${used}/${total} (${percent.toFixed(1)}%)`;
+                    }
+                
+                    const usedEl = document.querySelector('#vipCounterCard .vip-stat-item:first-child .vip-stat-value');
+                    const totalEl = document.querySelector('#vipCounterCard .vip-stat-item:nth-child(2) .vip-stat-value');
+                    const remainingEl = document.querySelector('#vipCounterCard .vip-stat-item:last-child .vip-stat-value');
+                
+                    if (usedEl) usedEl.innerHTML = used;
+                    if (totalEl) totalEl.innerHTML = total;
+                    if (remainingEl) remainingEl.innerHTML = total - used;
                 }
-            
-                const usedEl = document.querySelector('#vipCounterCard .vip-stat-item:first-child .vip-stat-value');
-                const totalEl = document.querySelector('#vipCounterCard .vip-stat-item:nth-child(2) .vip-stat-value');
-                const remainingEl = document.querySelector('#vipCounterCard .vip-stat-item:last-child .vip-stat-value');
-            
-                if (usedEl) usedEl.innerHTML = used;
-                if (totalEl) totalEl.innerHTML = total;
-                if (remainingEl) remainingEl.innerHTML = total - used;
-            }
-        });
-    }
+            });
+        }
+        
+        // ==================== ANNOUNCEMENT POPUP ====================
     
-    // ==================== ANNOUNCEMENT POPUP ====================
-
-    function setupAnnouncementListener() {
+        function setupAnnouncementListener() {
         if (!currentUID && !deviceFingerprint) return;
         const uid = currentUID || deviceFingerprint;
     
@@ -7161,39 +7197,42 @@
             success: { badge: '✅ SUCCESS', text: 'Sukses', icon: 'fa-check-circle', color: '#00ff88' },
             warning: { badge: '⚠️ WARNING', text: 'Peringatan', icon: 'fa-exclamation-triangle', color: '#ffaa00' },
             error: { badge: '❌ ERROR', text: 'Error', icon: 'fa-times-circle', color: '#ff4444' }
-        };
-        
-        const type = notif.type || 'info';
-        const info = typeMap[type] || typeMap.info;
-        
-        badgeEl.textContent = info.badge;
-        badgeEl.style.background = `linear-gradient(135deg, ${info.color}, ${info.color}dd)`;
-        typeEl.textContent = `📌 ${info.text}`;
-        iconEl.className = `fas ${info.icon}`;
-        iconEl.style.color = info.color;
-        
-        // Set waktu
-        document.getElementById('announcementTime').textContent = notif.sentAt ? 
-            new Date(notif.sentAt).toLocaleString('id-ID') : new Date().toLocaleString('id-ID');
-        
-        // Tampilkan popup
-        popup.classList.add('active');
-        overlay.classList.add('active');
-        document.body.style.overflow = 'hidden';
-        
-        // Auto close setelah durasi
-        const duration = (notif.duration || 5) * 1000;
-        console.log('⏱️ Popup akan tertutup dalam', duration/1000, 'detik');
-        setTimeout(() => {
-            closeAnnouncementPopup();
-        }, duration);
-    }
+    };
     
-    function closeAnnouncementPopup() {
-        document.getElementById('announcementPopup').classList.remove('active');
-        document.getElementById('announcementOverlay').classList.remove('active');
-        document.body.style.overflow = '';
-    }
+    const type = notif.type || 'info';
+    const info = typeMap[type] || typeMap.info;
+    
+    badgeEl.textContent = info.badge;
+    badgeEl.style.background = 'linear-gradient(135deg, ' + info.color + ', ' + info.color + 'dd)';
+    typeEl.textContent = '📌 ' + info.text;
+    iconEl.className = 'fas ' + info.icon;
+    iconEl.style.color = info.color;
+    
+    // Set waktu
+    document.getElementById('announcementTime').textContent = notif.sentAt ? 
+        new Date(notif.sentAt).toLocaleString('id-ID') : new Date().toLocaleString('id-ID');
+    
+    // Tampilkan popup
+    popup.classList.add('active');
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    
+    // Mainkan suara notifikasi
+    playUserNotificationSound();
+    
+    // Auto close setelah durasi
+    const duration = (notif.duration || 5) * 1000;
+    console.log('⏱️ Popup akan tertutup dalam', duration/1000, 'detik');
+    setTimeout(() => {
+        closeAnnouncementPopup();
+    }, duration);
+}
+
+function closeAnnouncementPopup() {
+    document.getElementById('announcementPopup').classList.remove('active');
+    document.getElementById('announcementOverlay').classList.remove('active');
+    document.body.style.overflow = '';
+}
 
     // ==================== CHANGE PROFILE IMAGE ====================
     function changeProfileImage() {
@@ -7699,86 +7738,86 @@
                 maintenanceKey = snap.val();
                 console.log('🔑 Maintenance key loaded:', maintenanceKey);
             } else {
+                    maintenanceKey = 'PhantomStore2026';
+                    await database.ref('admin_config/maintenance_key').set(maintenanceKey);
+                    console.log('🔑 Default maintenance key set:', maintenanceKey);
+                }
+                maintenanceKeyLoaded = true;
+                return maintenanceKey;
+            } catch (error) {
+                console.error('Error loading maintenance key:', error);
                 maintenanceKey = 'PhantomStore2026';
-                await database.ref('admin_config/maintenance_key').set(maintenanceKey);
-                console.log('🔑 Default maintenance key set:', maintenanceKey);
+                maintenanceKeyLoaded = true;
+                return maintenanceKey;
             }
-            maintenanceKeyLoaded = true;
-            return maintenanceKey;
-        } catch (error) {
-            console.error('Error loading maintenance key:', error);
-            maintenanceKey = 'PhantomStore2026';
-            maintenanceKeyLoaded = true;
-            return maintenanceKey;
         }
-    }
-
-    function openKeyPopup() {
-        // CEK APAKAH SUDAH OVERRIDE
-        const overrideKey = localStorage.getItem('maintenance_override_key');
-        const overrideStatus = localStorage.getItem('maintenance_override_' + currentUID);
-        const isOverridden = overrideKey === maintenanceKey && overrideStatus === 'true';
-
-        if (isOverridden) {
-            showNeonToast('✅ Anda sudah memiliki akses maintenance!');
-            return;
+    
+        function openKeyPopup() {
+            // CEK APAKAH SUDAH OVERRIDE
+            const overrideKey = localStorage.getItem('maintenance_override_key');
+            const overrideStatus = localStorage.getItem('maintenance_override_' + currentUID);
+            const isOverridden = overrideKey === maintenanceKey && overrideStatus === 'true';
+    
+            if (isOverridden) {
+                showNeonToast('✅ Anda sudah memiliki akses maintenance!');
+                return;
+            }
+    
+            document.getElementById('keyPopup').classList.add('active');
+            document.getElementById('keyInput').value = '';
+            document.getElementById('keyStatus').className = 'key-status';
+            document.getElementById('keyStatus').textContent = '';
+            setTimeout(() => { document.getElementById('keyInput').focus(); }, 300);
+            document.body.style.overflow = 'hidden';
         }
-
-        document.getElementById('keyPopup').classList.add('active');
-        document.getElementById('keyInput').value = '';
-        document.getElementById('keyStatus').className = 'key-status';
-        document.getElementById('keyStatus').textContent = '';
-        setTimeout(() => { document.getElementById('keyInput').focus(); }, 300);
-        document.body.style.overflow = 'hidden';
-    }
-
-    function closeKeyPopup() {
-        document.getElementById('keyPopup').classList.remove('active');
-        document.body.style.overflow = '';
-    }
-
-    function submitKey() {
+    
+        function closeKeyPopup() {
+            document.getElementById('keyPopup').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    
+        function submitKey() {
         const input = document.getElementById('keyInput').value.trim();
         const status = document.getElementById('keyStatus');
-
+    
         if (!input) {
             status.className = 'key-status error';
             status.textContent = '❌ Masukkan kunci terlebih dahulu!';
             return;
         }
-
+    
         if (input === maintenanceKey) {
             status.className = 'key-status success';
             status.textContent = '✅ Kunci benar! Maintenance dinonaktifkan untuk Anda.';
-        
+            
             // SIMPAN STATUS OVERRIDE (PERMANEN)
             isMaintenanceOverridden = true;
             maintenanceOverrideActive = true;
             localStorage.setItem('maintenance_override_' + currentUID, 'true');
             localStorage.setItem('maintenance_override_key', input);
             localStorage.setItem('maintenance_override_date', new Date().toISOString());
-        
+            
             // HENTIKAN INTERVAL MAINTENANCE SEMENTARA
             if (maintenanceInterval) {
                 clearInterval(maintenanceInterval);
                 maintenanceInterval = null;
             }
-        
+            
             // SEMBUNYIKAN MAINTENANCE PAGE
             document.getElementById('maintenancePage').classList.remove('active');
             document.getElementById('loginWrapper').style.display = 'flex';
             document.getElementById('mainLayout').style.display = 'block';
-        
+            
             showNeonToast('✅ Akses maintenance berhasil!');
-        
+            
             setTimeout(() => { closeKeyPopup(); }, 1500);
-        
+            
             // RESET INTERVAL MAINTENANCE DENGAN PENGECEKAN OVERRIDE
             if (window.maintenanceIntervalId) {
                 clearInterval(window.maintenanceIntervalId);
             }
             window.maintenanceIntervalId = setInterval(() => { checkMaintenance(); }, 30000);
-        
+            
         } else {
             status.className = 'key-status error';
             status.textContent = '❌ Kunci salah! Coba lagi.';
@@ -7786,53 +7825,54 @@
             setTimeout(() => { document.getElementById('keyInput').focus(); }, 300);
         }
     }
-
+    
     // UPDATE FUNGSI CHECKMAINTENANCE()
     async function checkMaintenance() {
         try {
             if (!maintenanceKeyLoaded) {
                 await loadMaintenanceKey();
             }
-        
+            
             const snap = await database.ref('maintenance').once('value');
-            const m = snap.val();
+        const m = snap.val();
         
-            // CEK APAKAH USER SUDAH OVERRIDE (PERMANEN)
-            const overrideKey = localStorage.getItem('maintenance_override_key');
-            const overrideStatus = localStorage.getItem('maintenance_override_' + currentUID);
-            const isOverridden = overrideKey === maintenanceKey && overrideStatus === 'true';
+        // CEK APAKAH USER SUDAH OVERRIDE (PERMANEN)
+        const overrideKey = localStorage.getItem('maintenance_override_key');
+        const overrideStatus = localStorage.getItem('maintenance_override_' + currentUID);
+        const isOverridden = overrideKey === maintenanceKey && overrideStatus === 'true';
         
-            // JIKA OVERRIDE AKTIF, SELALU ABAIKAN MAINTENANCE
-            if (isOverridden) {
-                maintenanceOverrideActive = true;
-                document.getElementById('maintenancePage').classList.remove('active');
-                document.getElementById('loginWrapper').style.display = 'flex';
-                document.getElementById('mainLayout').style.display = 'block';
-                return;
-            }
-        
-            // JIKA TIDAK OVERRIDE, CEK STATUS MAINTENANCE
-            if (m && m.status === 'active') {
-                maintenanceOverrideActive = false;
-                document.getElementById('maintenancePage').classList.add('active');
-                document.getElementById('loginWrapper').style.display = 'none';
-                document.getElementById('mainLayout').style.display = 'none';
-                document.getElementById('maintenanceTitle').innerHTML = m.title || 'MAINTENANCE MODE';
-                document.getElementById('maintenanceMessage').innerHTML = m.message || 'Sistem sedang dalam pemeliharaan.';
-                if (m.endTime) {
-                    maintenanceEndTime = new Date(m.endTime).getTime();
-                    updateMaintenanceTimer();
-                    if (maintenanceInterval) clearInterval(maintenanceInterval);
-                    maintenanceInterval = setInterval(updateMaintenanceTimer, 1000);
-                }
-            } else {
-                document.getElementById('maintenancePage').classList.remove('active');
-                if (maintenanceInterval) { clearInterval(maintenanceInterval); maintenanceInterval = null; }
-            }
-        } catch (error) { 
-            console.error('checkMaintenance error:', error); 
+        // JIKA OVERRIDE AKTIF, SELALU ABAIKAN MAINTENANCE
+        if (isOverridden) {
+            maintenanceOverrideActive = true;
+            // PASTIKAN MAINTENANCE PAGE TERSEMBUNYI
+            document.getElementById('maintenancePage').classList.remove('active');
+            document.getElementById('loginWrapper').style.display = 'flex';
+            document.getElementById('mainLayout').style.display = 'block';
+            return;
         }
+        
+        // JIKA TIDAK OVERRIDE, CEK STATUS MAINTENANCE
+        if (m && m.status === 'active') {
+            maintenanceOverrideActive = false;
+            document.getElementById('maintenancePage').classList.add('active');
+            document.getElementById('loginWrapper').style.display = 'none';
+            document.getElementById('mainLayout').style.display = 'none';
+            document.getElementById('maintenanceTitle').innerHTML = m.title || 'MAINTENANCE MODE';
+            document.getElementById('maintenanceMessage').innerHTML = m.message || 'Sistem sedang dalam pemeliharaan.';
+            if (m.endTime) {
+                maintenanceEndTime = new Date(m.endTime).getTime();
+                updateMaintenanceTimer();
+                if (maintenanceInterval) clearInterval(maintenanceInterval);
+                maintenanceInterval = setInterval(updateMaintenanceTimer, 1000);
+            }
+        } else {
+            document.getElementById('maintenancePage').classList.remove('active');
+            if (maintenanceInterval) { clearInterval(maintenanceInterval); maintenanceInterval = null; }
+        }
+    } catch (error) { 
+        console.error('checkMaintenance error:', error); 
     }
+}
 
     // ==================== CHAT ====================
     function loadAllComments() { database.ref('all_comments').limitToLast(50).on('child_added', s => displayAllComment(s.val())); }
@@ -7925,46 +7965,46 @@
             showNotificationToast('💬 Pesan dari Admin', m.text.substring(0, 100), 'info');
         }
     
-        content += `<div class="message-time">${m.timestamp ? new Date(m.timestamp).toLocaleString() : '-'}</div>`;
-        div.innerHTML = content;
-        box.appendChild(div);
-        box.scrollTop = box.scrollHeight;
-    }
-    function sendMessageFull() {
-        const txt = document.getElementById('chatInputFull').value.trim();
-        if (!txt) return;
-        database.ref('chats/' + currentUID).push({ sender: 'customer', text: txt, timestamp: Date.now() });
-        document.getElementById('chatInputFull').value = '';
-    }
-    function openChatAdmin() { navigateWithLoading('chat'); }
+            content += `<div class="message-time">${m.timestamp ? new Date(m.timestamp).toLocaleString() : '-'}</div>`;
+            div.innerHTML = content;
+            box.appendChild(div);
+            box.scrollTop = box.scrollHeight;
+        }
+        function sendMessageFull() {
+            const txt = document.getElementById('chatInputFull').value.trim();
+            if (!txt) return;
+            database.ref('chats/' + currentUID).push({ sender: 'customer', text: txt, timestamp: Date.now() });
+            document.getElementById('chatInputFull').value = '';
+        }
+        function openChatAdmin() { navigateWithLoading('chat'); }
+        
+        // ============================================================
+        // SHOW NOTIFICATION TOAST - USER (LENGKAP)
+        // ============================================================
     
-    // ============================================================
-    // SHOW NOTIFICATION TOAST - USER (LENGKAP)
-    // ============================================================
-
-    function showNotificationToast(title, message, type = 'info', duration = 5000) {
+        function showNotificationToast(title, message, type = 'info', duration = 5000) {
         const container = document.getElementById('notificationContainer');
         if (!container) {
             console.log('❌ Container notifikasi tidak ditemukan!');
             return;
         }
-
+    
         // Hapus notifikasi lama jika lebih dari 3
         const existing = container.querySelectorAll('.notification-toast');
         if (existing.length >= 3) {
             existing[0].classList.add('hide');
             setTimeout(() => existing[0].remove(), 400);
         }
-
+    
         const toast = document.createElement('div');
-        toast.className = `notification-toast ${type}`;
+        toast.className = 'notification-toast ' + type;
         const icons = {
             info: 'fa-info-circle',
             success: 'fa-check-circle',
             warning: 'fa-exclamation-triangle',
             error: 'fa-times-circle'
         };
-
+    
         toast.innerHTML = `
             <div class="notif-header">
                 <div class="notif-title">
@@ -7976,24 +8016,24 @@
                 </button>
             </div>
             <div class="notif-body">${message}</div>
-            <div class="notif-time">${new Date().toLocaleTimeString()}</div>
-        `;
+        <div class="notif-time">${new Date().toLocaleTimeString()}</div>
+    `;
 
-        container.appendChild(toast);
+    container.appendChild(toast);
 
-        // Auto hide
-        setTimeout(() => {
-            if (toast.parentElement) {
-                toast.classList.add('hide');
-                setTimeout(() => toast.remove(), 400);
-            }
-        }, duration);
+    // Auto hide
+    setTimeout(() => {
+        if (toast.parentElement) {
+            toast.classList.add('hide');
+            setTimeout(() => toast.remove(), 400);
+        }
+    }, duration);
 
-        // ✅ PLAY SUARA NOTIFIKASI
-        playUserNotificationSound();
+    // PLAY SUARA
+    playUserNotificationSound();
 
-        console.log('📢 Notifikasi ditampilkan:', title, message);
-    }
+    console.log('📢 Notifikasi ditampilkan:', title, message);
+}
     
     // ============================================================
     // NOTIFIKASI SUARA DENGAN FILE MP3 - USER
