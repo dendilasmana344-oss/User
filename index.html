@@ -1967,30 +1967,54 @@
         }
 
         .features-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
-            margin: 18px 0;
+            display: grid !important;
+            grid-template-columns: repeat(4, 1fr) !important;
+            gap: 10px !important;
+            margin: 15px 0 !important;
         }
 
-        .feature-item {
-            background: rgba(0, 255, 255, 0.08);
-            border: 1px solid var(--neon-cyan);
-            border-radius: 18px;
-            padding: 14px 5px;
-            text-align: center;
-            transition: all 0.3s;
+        .features-grid .feature-item {
+            padding: 12px 8px !important;
+            border-radius: 12px !important;
+            background: rgba(0, 255, 255, 0.05) !important;
+            border: 1px solid rgba(0, 255, 255, 0.15) !important;
+            text-align: center !important;
+            transition: all 0.3s !important;
         }
 
-        .feature-icon {
-            font-size: 22px;
-            color: var(--neon-cyan);
-            margin-bottom: 8px;
+        .features-grid .feature-item:hover {
+            background: rgba(0, 255, 255, 0.12) !important;
+            transform: translateY(-3px) !important;
+            border-color: var(--neon-cyan) !important;
+            box-shadow: 0 5px 15px rgba(0, 255, 255, 0.15) !important;
         }
 
-        .feature-name {
-            font-size: 11px;
-            font-weight: 600;
+        .features-grid .feature-item .feature-icon {
+            font-size: 20px !important;
+            color: var(--neon-cyan) !important;
+            margin-bottom: 5px !important;
+        }
+
+        .features-grid .feature-item .feature-name {
+            font-size: 10px !important;
+            font-weight: 600 !important;
+            color: #ccc !important;
+        }
+
+        @media (max-width: 480px) {
+            .features-grid {
+                grid-template-columns: repeat(4, 1fr) !important;
+                gap: 6px !important;
+            }
+            .features-grid .feature-item {
+                padding: 8px 4px !important;
+            }
+            .features-grid .feature-item .feature-icon {
+                font-size: 16px !important;
+            }
+            .features-grid .feature-item .feature-name {
+                font-size: 8px !important;
+            }
         }
 
         .menu-item {
@@ -3526,60 +3550,6 @@
             border: 2px solid var(--neon-cyan);
             border-radius: 40px;
             padding: 35px;
-        }
-        
-        /* ============================================================
-       FEATURES GRID - 2 BARIS (4 + 4)
-       ============================================================ */
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            margin: 15px 0;
-        }
-
-        .features-grid .feature-item {
-            padding: 12px 8px;
-            border-radius: 12px;
-            background: rgba(0, 255, 255, 0.05);
-            border: 1px solid rgba(0, 255, 255, 0.15);
-            text-align: center;
-            transition: all 0.3s;
-        }
-
-        .features-grid .feature-item:hover {
-            background: rgba(0, 255, 255, 0.12);
-            transform: translateY(-3px);
-            border-color: var(--neon-cyan);
-            box-shadow: 0 5px 15px rgba(0, 255, 255, 0.15);
-        }
-
-        .features-grid .feature-item .feature-icon {
-            font-size: 20px;
-            color: var(--neon-cyan);
-            margin-bottom: 5px;
-        }
-
-        .features-grid .feature-item .feature-name {
-            font-size: 10px;
-            font-weight: 600;
-            color: #ccc;
-        }
-
-        @media (max-width: 480px) {
-            .features-grid {
-                grid-template-columns: repeat(4, 1fr);
-                gap: 6px;
-            }
-            .features-grid .feature-item {
-                padding: 8px 4px;
-            }
-            .features-grid .feature-item .feature-icon {
-                font-size: 16px;
-            }
-            .features-grid .feature-item .feature-name {
-                font-size: 8px;
-            }
         }
 
         /* ============================================================
@@ -5257,7 +5227,7 @@
 
             <div class="card" id="vipCounterCard" style="display:none;"><div class="card-title"><i class="fas fa-crown"></i> VIP STATUS</div><div id="vipCounterContent"></div></div>
 
-            <div class="card"><div class="card-title"><i class="fas fa-bolt"></i> FEATURES</div><div class="features-grid" id="featuresGrid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;"></div></div>
+            <div class="card"><div class="card-title"><i class="fas fa-bolt"></i> FEATURES</div><div class="features-grid" id="featuresGrid"></div></div>
 
             <div class="card">
                 <div class="menu-item" onclick="buyVIP()"><div class="menu-icon"><i class="fas fa-crown"></i></div><span>Buy VIP / Premium</span></div>
@@ -6490,25 +6460,26 @@
         document.getElementById('popupStatus').style.color = '#00ff88';
         
         const features = [
-            { icon: 'fa-crosshairs', name: 'AimAssist - Bantuan bidikan otomatis' },
-            { icon: 'fa-lock', name: 'AimLock - Kunci target otomatis' },
-            { icon: 'fa-bullseye', name: 'AimHead - Bidikan otomatis ke kepala' },
-            { icon: 'fa-crosshairs', name: 'BulletTracking - Lacak peluru' },
-            { icon: 'fa-sliders-h', name: 'RecoilReduction - Kurangi recoil' },
-            { icon: 'fa-tachometer-alt', name: 'FpsOptimizer - Optimasi FPS' },
-            { icon: 'fa-crosshairs', name: 'SnipersAutoLock - Auto lock sniper' },
-            { icon: 'fa-shield-alt', name: 'AntiBan - Perlindungan deteksi' }
+            { name: 'AimAssist', icon: 'fa-crosshairs' },
+            { name: 'RecoilReduction', icon: 'fa-sliders-h' },
+            { name: 'AimHead', icon: 'fa-bullseye' },
+            { name: 'AimLock', icon: 'fa-lock' },
+            { name: 'FpsOptimizer', icon: 'fa-tachometer-alt' },
+            { name: 'AntiBan', icon: 'fa-shield-alt' },
+            { name: 'BulletTracking', icon: 'fa-crosshairs' },
+            { name: 'SniperAutoLock', icon: 'fa-crosshairs' }
         ];
-        
-        let featuresHtml = '';
-        features.forEach(f => {
-            featuresHtml += `
+
+        let fHtml = '';
+        features.forEach(f => { 
+            fHtml += `
                 <div class="feature-item">
-                    <i class="fas ${f.icon}"></i> ${f.name}
+                    <div class="feature-icon"><i class="fas ${f.icon}"></i></div>
+                    <div class="feature-name">${f.name}</div>
                 </div>
-            `;
+            `; 
         });
-        document.getElementById('popupPackageFeatures').innerHTML = featuresHtml;
+        document.getElementById('featuresGrid').innerHTML = fHtml;
         
         document.getElementById('packageDetailPopup').classList.add('active');
         document.body.style.overflow = 'hidden';
