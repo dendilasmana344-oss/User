@@ -5234,6 +5234,8 @@
                 <div class="menu-item" onclick="openChatAdmin()"><div class="menu-icon"><i class="fas fa-headset"></i></div><span>Chat Admin</span></div>
                 <div class="menu-item" onclick="openResetPin()"><div class="menu-icon"><i class="fas fa-key"></i></div><span>Change PIN</span></div>
                 <div class="menu-item" onclick="logout()"><div class="menu-icon"><i class="fas fa-sign-out-alt"></i></div><span>Logout</span></div>
+                <div class="card"><div class="card-title"><i class="fas fa-history"></i> DEPOSIT HISTORY</div><div class="history-list" id="transactionListDeposit" style="max-height:220px; overflow-y:auto;"></div></div>
+                <div class="card"><div class="card-title"><i class="fas fa-crown"></i> VIP PURCHASE HISTORY</div><div class="history-list" id="purchaseHistoryList" style="max-height:220px; overflow-y:auto;"></div></div>
             </div>
         </div>
 
@@ -5262,9 +5264,6 @@
                     <button class="btn-neon" style="width:100%; margin-top:15px; padding:14px;" onclick="buyVIPPackage()"><i class="fas fa-shopping-cart"></i> BUY NOW</button>
                 </div>
                 
-                <div class="card"><div class="card-title"><i class="fas fa-history"></i> DEPOSIT HISTORY</div><div class="history-list" id="transactionListDeposit" style="max-height:220px; overflow-y:auto;"></div></div>
-                <div class="card"><div class="card-title"><i class="fas fa-crown"></i> VIP PURCHASE HISTORY</div><div class="history-list" id="purchaseHistoryList" style="max-height:220px; overflow-y:auto;"></div></div>
-
                 <div class="card">
                     <div class="card-title"><i class="fas fa-history"></i> UPDATE HISTORY</div>
                     <div class="tab-buttons"><button class="tab-btn active" onclick="showUpdateTab('free')">📢 FREE UPDATE</button><button class="tab-btn" onclick="showUpdateTab('vip')">👑 VIP UPDATE</button></div>
