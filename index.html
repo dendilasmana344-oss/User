@@ -3527,6 +3527,60 @@
             border-radius: 40px;
             padding: 35px;
         }
+        
+        /* ============================================================
+       FEATURES GRID - 2 BARIS (4 + 4)
+       ============================================================ */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .features-grid .feature-item {
+            padding: 12px 8px;
+            border-radius: 12px;
+            background: rgba(0, 255, 255, 0.05);
+            border: 1px solid rgba(0, 255, 255, 0.15);
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .features-grid .feature-item:hover {
+            background: rgba(0, 255, 255, 0.12);
+            transform: translateY(-3px);
+            border-color: var(--neon-cyan);
+            box-shadow: 0 5px 15px rgba(0, 255, 255, 0.15);
+        }
+
+        .features-grid .feature-item .feature-icon {
+            font-size: 20px;
+            color: var(--neon-cyan);
+            margin-bottom: 5px;
+        }
+
+        .features-grid .feature-item .feature-name {
+            font-size: 10px;
+            font-weight: 600;
+            color: #ccc;
+        }
+
+        @media (max-width: 480px) {
+            .features-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 6px;
+            }
+            .features-grid .feature-item {
+                padding: 8px 4px;
+            }
+            .features-grid .feature-item .feature-icon {
+                font-size: 16px;
+            }
+            .features-grid .feature-item .feature-name {
+                font-size: 8px;
+            }
+        }
 
         /* ============================================================
            DUPLICATE ACCOUNT POPUP
@@ -5203,7 +5257,7 @@
 
             <div class="card" id="vipCounterCard" style="display:none;"><div class="card-title"><i class="fas fa-crown"></i> VIP STATUS</div><div id="vipCounterContent"></div></div>
 
-            <div class="card"><div class="card-title"><i class="fas fa-bolt"></i> FEATURES</div><div class="features-grid" id="featuresGrid"></div></div>
+            <div class="card"><div class="card-title"><i class="fas fa-bolt"></i> FEATURES</div><div class="features-grid" id="featuresGrid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;"></div></div>
 
             <div class="card">
                 <div class="menu-item" onclick="buyVIP()"><div class="menu-icon"><i class="fas fa-crown"></i></div><span>Buy VIP / Premium</span></div>
@@ -5244,9 +5298,6 @@
                     <div id="freeUpdateTab" class="tab-pane active"><div id="freeUpdateList" style="max-height:320px; overflow-y:auto;"></div></div>
                     <div id="vipUpdateTab" class="tab-pane"><div id="vipUpdateList" style="max-height:320px; overflow-y:auto;"></div></div>
                 </div>
-
-                <div class="card"><div class="card-title"><i class="fas fa-history"></i> DEPOSIT HISTORY</div><div class="history-list" id="transactionListDeposit" style="max-height:220px; overflow-y:auto;"></div></div>
-                <div class="card"><div class="card-title"><i class="fas fa-crown"></i> VIP PURCHASE HISTORY</div><div class="history-list" id="purchaseHistoryList" style="max-height:220px; overflow-y:auto;"></div></div>
             </div>
 
             <div class="view-container" id="chatAdminView">
@@ -5278,6 +5329,10 @@
                         <button class="btn-neon-outline btn-neon" style="flex:1;" onclick="logout()"><i class="fas fa-sign-out-alt"></i> LOGOUT</button>
                     </div>
                 </div>
+            </div>
+            
+            <div class="card"><div class="card-title"><i class="fas fa-history"></i> DEPOSIT HISTORY</div><div class="history-list" id="transactionListDeposit" style="max-height:220px; overflow-y:auto;"></div></div>
+                <div class="card"><div class="card-title"><i class="fas fa-crown"></i> VIP PURCHASE HISTORY</div><div class="history-list" id="purchaseHistoryList" style="max-height:220px; overflow-y:auto;"></div></div>
             </div>
         </div>
     </div>
@@ -8121,9 +8176,28 @@
     // ============================================================
     // FEATURES GRID
     // ============================================================
-    const features = ['AimAssist','RecoilReduction','AimHead','AimLock','FpsOptimizer','AntiBan','BulletTracking','SniperAutoLock'];
+    const features = [
+        { name: 'AimAssist', icon: 'fa-crosshairs' },
+        { name: 'RecoilReduction', icon: 'fa-sliders-h' },
+        { name: 'AimHead', icon: 'fa-bullseye' },
+        { name: 'AimLock', icon: 'fa-lock' },
+        { name: 'FpsOptimizer', icon: 'fa-tachometer-alt' },
+        { name: 'AntiBan', icon: 'fa-shield-alt' },
+        { name: 'BulletTracking', icon: 'fa-crosshairs' },
+        { name: 'SniperAutoLock', icon: 'fa-crosshairs' }
+    ];
+
     let fHtml = '';
-    features.forEach(f => { fHtml += `<div class="feature-item"><div class="feature-icon"><i class="fas fa-crosshairs"></i></div><div class="feature-name">${f}</div></div>`; });
+    features.forEach(f => { 
+        fHtml += `
+            <div class="feature-item" style="padding: 12px 8px; border-radius: 12px; background: rgba(0,255,255,0.05); border: 1px solid rgba(0,255,255,0.15);">
+                <div class="feature-icon" style="font-size: 20px; color: var(--neon-cyan); margin-bottom: 5px;">
+                    <i class="fas ${f.icon}"></i>
+                </div>
+                <div class="feature-name" style="font-size: 10px; font-weight: 600; color: #ccc;">${f.name}</div>
+            </div>
+        `; 
+    });
     document.getElementById('featuresGrid').innerHTML = fHtml;
     
     // ============================================================
