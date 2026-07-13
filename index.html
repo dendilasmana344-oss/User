@@ -1965,10 +1965,7 @@
             font-weight: bold;
             margin: 22px 0;
         }
-
-        /* ============================================================
-       FEATURES GRID - 2 BARIS (4 + 4)
-       ============================================================ */
+        
         .features-grid {
             display: grid !important;
             grid-template-columns: repeat(4, 1fr) !important;
@@ -2004,23 +2001,6 @@
             color: #ccc !important;
         }
 
-        /* RESPONSIVE - TETAP 4 KOLOM DI SEMUA UKURAN */
-        @media (max-width: 768px) {
-            .features-grid {
-                grid-template-columns: repeat(4, 1fr) !important;
-                gap: 8px !important;
-            }
-            .features-grid .feature-item {
-                padding: 10px 6px !important;
-            }
-            .features-grid .feature-item .feature-icon {
-                font-size: 18px !important;
-            }
-            .features-grid .feature-item .feature-name {
-                font-size: 9px !important;
-            }
-        }
-
         @media (max-width: 480px) {
             .features-grid {
                 grid-template-columns: repeat(4, 1fr) !important;
@@ -2030,7 +2010,7 @@
                 padding: 8px 4px !important;
             }
             .features-grid .feature-item .feature-icon {
-                font-size: 14px !important;
+                font-size: 16px !important;
             }
             .features-grid .feature-item .feature-name {
                 font-size: 8px !important;
@@ -8173,11 +8153,9 @@
     let fHtml = '';
     features.forEach(f => { 
         fHtml += `
-            <div class="feature-item" style="padding: 12px 8px; border-radius: 12px; background: rgba(0,255,255,0.05); border: 1px solid rgba(0,255,255,0.15);">
-                <div class="feature-icon" style="font-size: 20px; color: var(--neon-cyan); margin-bottom: 5px;">
-                    <i class="fas ${f.icon}"></i>
-                </div>
-                <div class="feature-name" style="font-size: 10px; font-weight: 600; color: #ccc;">${f.name}</div>
+            <div class="feature-item">
+                <div class="feature-icon"><i class="fas ${f.icon}"></i></div>
+                <div class="feature-name">${f.name}</div>
             </div>
         `; 
     });
