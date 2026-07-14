@@ -4471,6 +4471,32 @@
         }
         
         /* ============================================================
+       QRIS QR CODE DISPLAY
+       ============================================================ */
+        .qris-qr-container {
+            animation: fadeIn 0.5s ease;
+        }
+
+        .qris-qr-container img {
+            transition: all 0.3s ease;
+        }
+
+        .qris-qr-container img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 50px rgba(0, 255, 255, 0.5) !important;
+        }
+
+        /* Untuk upload proof di QRIS */
+        #uploadProofAreaQRIS {
+            margin: 15px 0;
+            display: none;
+        }
+
+        #uploadProofAreaQRIS.active {
+            display: block;
+        }
+        
+        /* ============================================================
            NEON PROMPT MODAL
            ============================================================ */
         .neon-prompt-modal {
@@ -5009,14 +5035,21 @@
         <input type="text" class="login-input" id="depositNoEwallet" placeholder="No. E-Wallet" style="margin-bottom:15px;">
         
         <div class="payment-methods" id="paymentMethods">
-            <div class="payment-method" onclick="selectPayment('DANA', '0881011076305', this)">DANA</div>
-            <div class="payment-method" onclick="selectPayment('QRIS', 'Hubungi Admin', this)">QRIS</div>
-            <div class="payment-method" onclick="selectPayment('PAYPAL', 'Hubungi Admin', this)">PAYPAL</div>
+            <div class="payment-method" onclick="selectPayment('QRIS', 'Scan QR Code', this)">📱 QRIS</div>
+            <div class="payment-method" onclick="selectPayment('PAYPAL', 'Hubungi Admin', this)">💳 PAYPAL</div>
         </div>
         
-        <div class="destination-row" id="destinationRow" style="display:none;">
-            <span class="destination-number" id="destinationNumber">0881011076305</span>
-            <button class="copy-dest-btn" onclick="copyDestinationNumber()">SALIN</button>
+        <!-- QRIS QR CODE DISPLAY -->
+        <div class="qris-qr-container" id="qrisQrContainer" style="display:none; text-align:center; margin:15px 0;">
+            <div style="background:rgba(0,0,0,0.6); border:2px solid var(--neon-cyan); border-radius:20px; padding:20px;">
+                <div style="color:var(--neon-cyan); font-size:14px; margin-bottom:10px; font-family:'Orbitron',monospace;">
+                    <i class="fas fa-qrcode"></i> SCAN QR CODE
+                </div>
+                <img id="qrisQrImage" src="QR.jpg" alt="QRIS QR Code" style="max-width:200px; width:100%; border-radius:15px; border:2px solid var(--neon-cyan); box-shadow:0 0 30px rgba(0,255,255,0.3);">
+                <div style="color:#aaa; font-size:12px; margin-top:10px;">
+                    <i class="fas fa-info-circle"></i> Scan QR Code di atas untuk melakukan pembayaran
+                </div>
+            </div>
         </div>
         
         <div class="upload-proof-area" id="uploadProofArea">
@@ -5048,6 +5081,22 @@
         <div style="display: flex; gap: 15px; margin-top: 20px;">
             <button class="btn-neon" style="flex:1;" onclick="submitDeposit()">KIRIM</button>
             <button class="btn-neon-outline btn-neon" style="flex:1;" onclick="closeDepositPopup()">BATAL</button>
+        </div>
+        
+        <!-- UPLOAD BUKTI TRANSFER - QRIS -->
+        <div class="upload-proof-area" id="uploadProofAreaQRIS">
+            <div class="login-label"><i class="fas fa-image"></i> Upload Bukti Transfer QRIS</div>
+            <div class="upload-proof-box" id="proofUploadBoxQRIS" onclick="document.getElementById('proofPhotoInputQRIS').click()">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <div class="proof-label">Klik untuk upload bukti transfer QRIS</div>
+                <div class="proof-sub">Format: JPG, PNG (Maks 5MB)</div>
+            </div>
+            <input type="file" id="proofPhotoInputQRIS" accept="image/*" style="display: none;">
+            <div class="upload-proof-preview" id="proofPreviewQRIS">
+                <img id="proofPreviewImgQRIS" src="" alt="Bukti Transfer QRIS">
+                <div class="proof-name" id="proofPreviewNameQRIS">file.jpg</div>
+                <button class="upload-proof-remove" onclick="removeProofPhotoQRIS()"><i class="fas fa-times"></i> Hapus</button>
+            </div>
         </div>
     </div>
 </div>
@@ -6568,12 +6617,22 @@
         document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('selected'));
         document.querySelectorAll('.amount-preset').forEach(a => a.classList.remove('selected'));
         document.getElementById('destinationRow').style.display = 'none';
+    
+        // Sembunyikan semua upload proof
         document.getElementById('uploadProofArea').classList.remove('active');
+        document.getElementById('uploadProofAreaQRIS').classList.remove('active');
+        document.getElementById('qrisQrContainer').style.display = 'none';
+    
+        // Reset preview
         document.getElementById('proofPreview').classList.remove('active');
-        selectedProofFile = null;
-        selectedProofPreview = null;
+        document.getElementById('proofPreviewQRIS').classList.remove('active');
         document.getElementById('proofPreviewImg').src = '';
         document.getElementById('proofPreviewName').textContent = '';
+        document.getElementById('proofPreviewImgQRIS').src = '';
+        document.getElementById('proofPreviewNameQRIS').textContent = '';
+    
+        selectedProofFile = null;
+        selectedProofPreview = null;
         document.getElementById('depositPopup').classList.add('active'); 
     }
     function closeDepositPopup() { document.getElementById('depositPopup').classList.remove('active'); }
@@ -6583,16 +6642,38 @@
         el.classList.add('selected');
         selectedPaymentMethod = method;
         selectedPaymentNumber = number;
+    
+        // Sembunyikan semua upload proof area
+        document.getElementById('uploadProofArea').classList.remove('active');
+        document.getElementById('uploadProofAreaQRIS').classList.remove('active');
+        document.getElementById('qrisQrContainer').style.display = 'none';
+    
+        if (method === 'QRIS') {
+            // Tampilkan QR Code
+            document.getElementById('qrisQrContainer').style.display = 'block';
+            // Tampilkan upload proof area untuk QRIS
+            document.getElementById('uploadProofAreaQRIS').classList.add('active');
+            // Sembunyikan destination row
+            document.getElementById('destinationRow').style.display = 'none';
+            // Setup upload proof untuk QRIS
+            setupProofUploadQRIS();
         
-        if (number !== 'Hubungi Admin') {
-            document.getElementById('destinationNumber').innerText = number;
-            document.getElementById('destinationRow').style.display = 'flex';
+        } else if (method === 'PAYPAL') {
+            // PayPal - tampilkan destination
+            if (number !== 'Hubungi Admin') {
+                document.getElementById('destinationNumber').innerText = number;
+                document.getElementById('destinationRow').style.display = 'flex';
+            } else {
+                document.getElementById('destinationRow').style.display = 'none';
+            }
+            // Tampilkan upload proof area (untuk PayPal juga butuh bukti)
+            document.getElementById('uploadProofArea').classList.add('active');
+            setupProofUpload();
+        
         } else {
+            // Method lain (jika ada)
             document.getElementById('destinationRow').style.display = 'none';
         }
-        
-        document.getElementById('uploadProofArea').classList.add('active');
-        setupProofUpload();
     }
     
     function setupProofUpload() {
@@ -6641,26 +6722,35 @@
         const nama = document.getElementById('depositNama').value.trim();
         const noEwallet = document.getElementById('depositNoEwallet').value.trim();
         const jumlah = parseInt(document.getElementById('depositJumlah').value);
-        
+    
         if (!nama) { showNeonModal('Error', 'Masukkan nama pengirim!', 'error'); return; }
         if (!noEwallet) { showNeonModal('Error', 'Masukkan no E-Wallet!', 'error'); return; }
         if (!selectedPaymentMethod) { showNeonModal('Error', 'Pilih metode pembayaran!', 'error'); return; }
         if (!jumlah || jumlah < 20000) { showNeonModal('Error', 'Minimal Rp 20.000!', 'error'); return; }
-        if (!selectedProofFile) {
+    
+        // Cek bukti transfer - QRIS atau PAYPAL
+        let proofFile = null;
+        if (selectedPaymentMethod === 'QRIS') {
+            proofFile = document.getElementById('proofPhotoInputQRIS')?.files[0] || selectedProofFile;
+        } else {
+            proofFile = document.getElementById('proofPhotoInput')?.files[0] || selectedProofFile;
+        }
+    
+        if (!proofFile) {
             showNeonModal('Error', 'Silakan upload bukti transfer!', 'error');
             return;
         }
-        
+    
         showLoading();
         let photoUrl = null;
         try {
-            photoUrl = await uploadToImgbb(selectedProofFile);
+            photoUrl = await uploadToImgbb(proofFile);
         } catch(err) {
             hideLoading();
             showNeonModal('Error', 'Gagal upload bukti foto: ' + err.message, 'error');
             return;
         }
-        
+    
         try {
             const depositData = {
                 uid: currentUID, 
@@ -6673,11 +6763,11 @@
                 hasPhoto: !!photoUrl,
                 photoUrl: photoUrl
             };
-            
+        
             await database.ref('deposits/' + currentUID).push(depositData);
-            
+        
             let chatText = `💰 DEPOSIT BARU\n\nNama: ${nama}\nE-Wallet: ${noEwallet}\nMetode: ${selectedPaymentMethod}\nJumlah: Rp ${formatRupiah(jumlah)}\nStatus: PENDING\n\n📎 Bukti Transfer: ${photoUrl}\n\nMohon menunggu konfirmasi admin.`;
-            
+        
             await database.ref('chats/' + currentUID).push({
                 sender: 'customer',
                 text: chatText,
@@ -6689,7 +6779,7 @@
                     timestamp: Date.now()
                 }
             });
-            
+        
             hideLoading();
             showNeonModal('Success', 'Deposit request sent! Menunggu konfirmasi admin.', 'success');
             closeDepositPopup();
@@ -6697,6 +6787,40 @@
             hideLoading(); 
             showNeonModal('Error', error.message, 'error'); 
         }
+    }
+    
+    function removeProofPhotoQRIS() {
+        selectedProofFile = null;
+        document.getElementById('proofPreviewQRIS').classList.remove('active');
+        document.getElementById('proofPreviewImgQRIS').src = '';
+        document.getElementById('proofPreviewNameQRIS').textContent = '';
+        document.getElementById('proofPhotoInputQRIS').value = '';
+    }
+    
+    // ============================================================
+    // SETUP UPLOAD PROOF - QRIS
+    // ============================================================
+    function setupProofUploadQRIS() {
+        const fileInput = document.getElementById('proofPhotoInputQRIS');
+        if (!fileInput) return;
+    
+        fileInput.onchange = (e) => {
+            const file = e.target.files[0];
+            if (file && file.type.startsWith('image/')) {
+                if (file.size > 5 * 1024 * 1024) {
+                    showNeonModal('Error', 'Ukuran file maksimal 5MB!', 'error');
+                    return;
+                }
+                selectedProofFile = file;
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    document.getElementById('proofPreviewImgQRIS').src = evt.target.result;
+                    document.getElementById('proofPreviewNameQRIS').textContent = file.name.substring(0, 30) + (file.name.length > 30 ? '...' : '');
+                    document.getElementById('proofPreviewQRIS').classList.add('active');
+                };
+                reader.readAsDataURL(file);
+            }
+        };
     }
 
     // ============================================================
