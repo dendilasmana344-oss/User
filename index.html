@@ -6616,7 +6616,6 @@
         document.getElementById('depositJumlah').value = '';
         document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('selected'));
         document.querySelectorAll('.amount-preset').forEach(a => a.classList.remove('selected'));
-        document.getElementById('destinationRow').style.display = 'none';
     
         // Sembunyikan semua upload proof
         document.getElementById('uploadProofArea').classList.remove('active');
@@ -6642,37 +6641,20 @@
         el.classList.add('selected');
         selectedPaymentMethod = method;
         selectedPaymentNumber = number;
-    
+
         // Sembunyikan semua upload proof area
         document.getElementById('uploadProofArea').classList.remove('active');
         document.getElementById('uploadProofAreaQRIS').classList.remove('active');
         document.getElementById('qrisQrContainer').style.display = 'none';
-    
+
         if (method === 'QRIS') {
-            // Tampilkan QR Code
             document.getElementById('qrisQrContainer').style.display = 'block';
-            // Tampilkan upload proof area untuk QRIS
             document.getElementById('uploadProofAreaQRIS').classList.add('active');
-            // Sembunyikan destination row
-            document.getElementById('destinationRow').style.display = 'none';
-            // Setup upload proof untuk QRIS
             setupProofUploadQRIS();
-        
         } else if (method === 'PAYPAL') {
-            // PayPal - tampilkan destination
-            if (number !== 'Hubungi Admin') {
-                document.getElementById('destinationNumber').innerText = number;
-                document.getElementById('destinationRow').style.display = 'flex';
-            } else {
-                document.getElementById('destinationRow').style.display = 'none';
-            }
-            // Tampilkan upload proof area (untuk PayPal juga butuh bukti)
+            // Hapus referensi destinationRow
             document.getElementById('uploadProofArea').classList.add('active');
             setupProofUpload();
-        
-        } else {
-            // Method lain (jika ada)
-            document.getElementById('destinationRow').style.display = 'none';
         }
     }
     
