@@ -4496,6 +4496,27 @@
             display: block;
         }
         
+        /* Tombol Download QR */
+        .download-qr-btn {
+            margin-top: 15px;
+            padding: 12px 25px;
+            background: linear-gradient(135deg, var(--neon-cyan), #0088ff);
+            border: none;
+            border-radius: 25px;
+            color: #000;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: 'Orbitron', monospace;
+            font-size: 13px;
+            transition: all 0.3s;
+            width: 100%;
+        }
+
+        .download-qr-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 255, 255, 0.5);
+        }
+        
         /* ============================================================
            NEON PROMPT MODAL
            ============================================================ */
@@ -5045,10 +5066,14 @@
                 <div style="color:var(--neon-cyan); font-size:14px; margin-bottom:10px; font-family:'Orbitron',monospace;">
                     <i class="fas fa-qrcode"></i> SCAN QR CODE
                 </div>
-                <img id="qrisQrImage" src="QR.jpg" alt="QRIS QR Code" style="max-width:200px; width:100%; border-radius:15px; border:2px solid var(--neon-cyan); box-shadow:0 0 30px rgba(0,255,255,0.3);">
+                <img id="qrisQrImage" src="QR.jpg" alt="QRIS QR Code" style="max-width:200px; width:100%; border-radius:15px; border:2px solid var(--neon-cyan); box-shadow:0 0 30px rgba(0,255,255,0.3); cursor:pointer;" onclick="downloadQRIS()" title="Klik untuk download QR">
                 <div style="color:#aaa; font-size:12px; margin-top:10px;">
                     <i class="fas fa-info-circle"></i> Scan QR Code di atas untuk melakukan pembayaran
                 </div>
+                <!-- TOMBOL DOWNLOAD QR -->
+                <button onclick="downloadQRIS()" style="margin-top:15px; padding:12px 25px; background:linear-gradient(135deg, var(--neon-cyan), #0088ff); border:none; border-radius:25px; color:#000; font-weight:bold; cursor:pointer; font-family:'Orbitron',monospace; font-size:13px; transition:all 0.3s; width:100%;">
+                    <i class="fas fa-download"></i> Download QR
+                </button>
             </div>
         </div>
         
@@ -6777,6 +6802,56 @@
         document.getElementById('proofPreviewImgQRIS').src = '';
         document.getElementById('proofPreviewNameQRIS').textContent = '';
         document.getElementById('proofPhotoInputQRIS').value = '';
+    }
+    
+    // ============================================================
+    // DOWNLOAD QRIS QR CODE
+    // ============================================================
+    function downloadQRIS() {
+        // Ambil elemen gambar QRIS
+        const imgElement = document.getElementById('qrisQrImage');
+        const imgSrc = imgElement.src;
+    
+        // Tampilkan loading
+        showLoading();
+    
+        // Buat link download
+        const link = document.createElement('a');
+        link.href = imgSrc;
+        link.download = 'QRIS_VIP_Files.png';
+        link.target = '_blank';
+    
+        // Untuk Android, cara alternatif menggunakan fetch
+        if (navigator.userAgent.match(/android/i)) {
+            fetch(imgSrc)
+                .then(response => response.blob())
+                .then(blob => {
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'QRIS_VIP_Files.png';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+                    hideLoading();
+                    showNeonToast('✅ QR Code berhasil di download!');
+                })
+                .catch(err => {
+                    hideLoading();
+                    console.error('Download error:', err);
+                    // Fallback: buka di tab baru
+                    window.open(imgSrc, '_blank');
+                    showNeonToast('⚠️ Buka gambar di tab baru, lalu save');
+                });
+        } else {
+            // Untuk desktop
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            hideLoading();
+            showNeonToast('✅ QR Code berhasil di download!');
+        }
     }
     
     // ============================================================
