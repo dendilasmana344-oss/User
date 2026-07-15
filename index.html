@@ -5855,6 +5855,29 @@
         toast.classList.add('show'); 
         setTimeout(() => toast.classList.remove('show'), 3000); 
     }
+    
+    // ============================================================
+    // ACTIVITY LOG - USER PANEL (DUMMY)
+    // ============================================================
+    function addActivityLog(action, details = '') {
+        // Fungsi ini hanya untuk kompatibilitas dengan fungsi edit message
+        // Tidak menyimpan log di user panel, hanya console
+        console.log(`📝 [Activity] ${action}: ${details}`);
+    
+        // Opsional: simpan ke localStorage untuk debugging
+        try {
+            const logs = JSON.parse(localStorage.getItem('user_activity_logs') || '[]');
+            logs.unshift({
+                time: new Date().toISOString(),
+                action: action,
+                details: details
+            });
+            if (logs.length > 50) logs.pop();
+            localStorage.setItem('user_activity_logs', JSON.stringify(logs));
+        } catch(e) {
+            // Silent fail
+        }
+    }
 
     function showUploadProgress(filename) {
         const el = document.getElementById('uploadProgressNeon');
@@ -6898,8 +6921,7 @@
                 editedAt: Date.now()
             });
         
-            showNeonToast('✅ Pesan berhasil diedit!');
-            addActivityLog('Edit Message', `Edited message in ${source}: ${newText.substring(0, 50)}...`);
+            showNeonToast('✅ Pesan berhasil diedit!');;
             closeEditMsgPopup();
         
             // Refresh chat sesuai sumber
