@@ -2370,6 +2370,269 @@
             background: linear-gradient(135deg, #00ff88, #00cc66);
             color: #000;
         }
+        
+        /* ============================================================
+       VIP DETAIL POPUP - USER (MODERN NEON)
+       ============================================================ */
+        .vip-detail-popup-user {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.97);
+            backdrop-filter: blur(30px);
+            z-index: 999999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .vip-detail-popup-user.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .vip-detail-popup-user .popup-box {
+            max-width: 560px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            background: linear-gradient(145deg, #0a0a0a, #1a0a0a);
+            border: 2px solid #ffd700;
+            border-radius: 40px;
+            padding: 35px 30px;
+            box-shadow: 0 0 80px rgba(255, 215, 0, 0.3), inset 0 0 40px rgba(255, 215, 0, 0.05);
+            animation: fadeIn 0.4s ease;
+            position: relative;
+        }
+
+        .vip-detail-popup-user .popup-box::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .vip-detail-popup-user .popup-box::-webkit-scrollbar-track {
+            background: rgba(255, 215, 0, 0.05);
+            border-radius: 10px;
+        }
+
+        .vip-detail-popup-user .popup-box::-webkit-scrollbar-thumb {
+            background: #ffd700;
+            border-radius: 10px;
+        }
+
+        .vip-detail-popup-user .popup-close {
+            position: sticky;
+            top: 0;
+            float: right;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 68, 68, 0.15);
+            border: 2px solid #ff4444;
+            color: #ff4444;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            margin-bottom: 10px;
+        }
+
+        .vip-detail-popup-user .popup-close:hover {
+            background: #ff4444;
+            color: #000;
+            transform: rotate(90deg) scale(1.1);
+            box-shadow: 0 0 30px rgba(255, 68, 68, 0.5);
+        }
+
+        .vip-detail-popup-user .popup-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 28px;
+            font-weight: 900;
+            color: #ffd700;
+            text-align: center;
+            margin-bottom: 20px;
+            padding-top: 5px;
+            animation: textGlowGold 2s infinite;
+            letter-spacing: 2px;
+        }
+
+        .vip-detail-popup-user .popup-divider {
+            border: none;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #ffd700, transparent);
+            margin: 15px 0;
+        }
+
+        .vip-detail-popup-user .popup-section-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 14px;
+            color: #ffd700;
+            margin-bottom: 12px;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .vip-detail-popup-user .popup-info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 12px 0 16px 0;
+        }
+
+        .vip-detail-popup-user .popup-info-item {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 14px;
+            padding: 14px 12px;
+            text-align: center;
+            border: 1px solid rgba(255, 215, 0, 0.12);
+            transition: all 0.3s;
+        }
+
+        .vip-detail-popup-user .popup-info-item:hover {
+            border-color: rgba(255, 215, 0, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .vip-detail-popup-user .popup-info-item .label {
+            font-size: 10px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .vip-detail-popup-user .popup-info-item .value {
+            font-size: 16px;
+            font-weight: bold;
+            font-family: 'Orbitron', monospace;
+            margin-top: 6px;
+        }
+
+        .vip-detail-popup-user .popup-info-item .value.gold {
+            color: #ffd700;
+        }
+
+        .vip-detail-popup-user .popup-info-item .value.green {
+            color: #00ff88;
+        }
+
+        .vip-detail-popup-user .popup-info-item .value.red {
+            color: #ff4444;
+        }
+
+        .vip-detail-popup-user .popup-info-item .value.cyan {
+            color: #00ffff;
+        }
+
+        .vip-detail-popup-user .popup-update-history {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 15px;
+            max-height: 150px;
+            overflow-y: auto;
+            margin: 10px 0;
+            border: 1px solid rgba(255, 215, 0, 0.1);
+        }
+
+        .vip-detail-popup-user .popup-update-history::-webkit-scrollbar {
+            width: 3px;
+        }
+
+        .vip-detail-popup-user .popup-update-history::-webkit-scrollbar-thumb {
+            background: #ffd700;
+            border-radius: 10px;
+        }
+
+        .vip-detail-popup-user .update-history-item {
+            padding: 8px 12px;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.05);
+            font-size: 12px;
+            color: #ccc;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .vip-detail-popup-user .update-history-item:last-child {
+            border-bottom: none;
+        }
+
+        .vip-detail-popup-user .update-history-item .update-title {
+            color: #00ffff;
+            font-weight: 500;
+        }
+
+        .vip-detail-popup-user .update-history-item .update-date {
+            color: #888;
+            font-size: 10px;
+        }
+
+        .vip-detail-popup-user .popup-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .vip-detail-popup-user .popup-actions .popup-btn {
+            flex: 1;
+            padding: 14px;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Orbitron', monospace;
+            text-align: center;
+            border: none;
+            font-size: 14px;
+            letter-spacing: 1px;
+        }
+
+        .vip-detail-popup-user .popup-actions .popup-btn-close {
+            background: linear-gradient(135deg, #ffd700, #ffaa00);
+            color: #000;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+        }
+
+        .vip-detail-popup-user .popup-actions .popup-btn-close:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.5);
+        }
+
+        @media (max-width: 500px) {
+            .vip-detail-popup-user .popup-box {
+                padding: 25px 18px;
+                border-radius: 30px;
+            }
+            .vip-detail-popup-user .popup-title {
+                font-size: 22px;
+            }
+            .vip-detail-popup-user .popup-info-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+            .vip-detail-popup-user .popup-close {
+                width: 34px;
+                height: 34px;
+                font-size: 15px;
+            }
+            .vip-detail-popup-user .popup-actions {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .vip-detail-popup-user .popup-info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
 
         /* ============================================================
            PERBAIKAN TAMPILAN PACKAGES & CARD
@@ -6248,58 +6511,65 @@
         });
     }
     
+    // ============================================================
+    // VIP DETAIL POPUP - USER (LENGKAP & MODERN)
+    // ============================================================
     function openVIPDetailUser() {
         const vip = currentVIPData;
         if (!vip) {
             showNeonToast('Tidak ada data VIP');
             return;
         }
-        
-        document.getElementById('vipDetailUserType').textContent = vip.updateType === 'quota' ? '📦 Quota (Limited)' : 
-                                                                   vip.isPermanent ? '👑 Lifetime' : 
-                                                                   vip.updateType === 'unlimited' ? '♾️ Unlimited (Time-based)' : '❓ Unknown';
-        
+    
+        // Set data ke popup
+        let typeText = vip.updateType === 'quota' ? '📦 Quota (Limited)' : 
+                       vip.isPermanent ? '👑 Lifetime' : 
+                       vip.updateType === 'unlimited' ? '♾️ Unlimited (Time-based)' : '❓ Unknown';
+        document.getElementById('vipDetailUserType').textContent = typeText;
+        document.getElementById('vipDetailUserType').style.color = '#ffd700';
+    
         const statusText = vip.status === 'active' ? '✅ Active' : '⛔ Expired';
         const statusColor = vip.status === 'active' ? '#00ff88' : '#ff4444';
         document.getElementById('vipDetailUserStatus').textContent = statusText;
         document.getElementById('vipDetailUserStatus').style.color = statusColor;
-        
+    
         document.getElementById('vipDetailUserPackage').textContent = vip.package || '-';
         document.getElementById('vipDetailUserPrice').textContent = vip.price ? 'Rp ' + formatRupiah(vip.price) : '-';
-        
+        document.getElementById('vipDetailUserPrice').style.color = '#00ff88';
+    
         const quotaTotal = vip.updateQuota || 0;
         const quotaUsed = vip.updatesUsed || 0;
         const quotaRemaining = Math.max(0, quotaTotal - quotaUsed);
         document.getElementById('vipDetailUserQuota').textContent = quotaTotal > 0 ? quotaTotal + 'x' : (vip.isPermanent ? '∞' : '-');
+        document.getElementById('vipDetailUserQuota').style.color = '#ffd700';
         document.getElementById('vipDetailUserUsed').textContent = quotaUsed > 0 || vip.isPermanent ? quotaUsed + 'x' : '-';
         document.getElementById('vipDetailUserRemaining').textContent = vip.isPermanent ? '∞' : (quotaRemaining > 0 ? quotaRemaining + 'x' : '0');
         document.getElementById('vipDetailUserRemaining').style.color = vip.isPermanent ? '#ffd700' : (quotaRemaining > 0 ? '#00ff88' : '#ff4444');
-        
+    
         let durationText = '-';
         if (vip.isPermanent) durationText = '🔒 Seumur Hidup';
         else if (vip.packageMonths) durationText = vip.packageMonths + ' Bulan';
         else if (vip.updateType === 'quota') durationText = 'Hingga Quota Habis';
         document.getElementById('vipDetailUserDuration').textContent = durationText;
-        
+        document.getElementById('vipDetailUserDuration').style.color = '#2196f3';
+    
         let expiryText = '-';
         if (vip.expiryDate && vip.expiryDate !== 'permanent') {
             const expiry = new Date(vip.expiryDate);
             const now = new Date();
             expiryText = expiry.toLocaleDateString('id-ID') + ' ' + expiry.toLocaleTimeString('id-ID');
-            if (expiry > now) {
-                document.getElementById('vipDetailUserExpiry').style.color = '#ffaa00';
-            } else {
-                document.getElementById('vipDetailUserExpiry').style.color = '#ff4444';
-                expiryText += ' ⚠️ EXPIRED';
-            }
+            document.getElementById('vipDetailUserExpiry').style.color = expiry > now ? '#ffaa00' : '#ff4444';
+            if (expiry <= now) expiryText += ' ⚠️ EXPIRED';
         } else if (vip.isPermanent) {
             expiryText = '♾️ Permanent';
             document.getElementById('vipDetailUserExpiry').style.color = '#ffd700';
         }
         document.getElementById('vipDetailUserExpiry').textContent = expiryText;
-        
+    
         document.getElementById('vipDetailUserPurchase').textContent = vip.purchaseDate ? new Date(vip.purchaseDate).toLocaleString('id-ID') : '-';
-        
+        document.getElementById('vipDetailUserPurchase').style.color = '#aaa';
+    
+        // Update History
         const historyContainer = document.getElementById('vipDetailUserHistory');
         if (vip.updateHistory && Array.isArray(vip.updateHistory) && vip.updateHistory.length > 0) {
             let historyHtml = '';
@@ -6316,27 +6586,16 @@
         } else {
             historyContainer.innerHTML = '<div style="color:#888; text-align:center; padding:20px;">Tidak ada riwayat update</div>';
         }
-        
+    
+        // Tampilkan popup
         document.getElementById('vipDetailPopupUser').classList.add('active');
         document.body.style.overflow = 'hidden';
     }
-    
+
     function closeVIPDetailPopupUser() {
         document.getElementById('vipDetailPopupUser').classList.remove('active');
         document.body.style.overflow = '';
     }
-    
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            closeVIPDetailPopupUser();
-        }
-    });
-    
-    document.getElementById('vipDetailPopupUser').addEventListener('click', function(e) {
-        if (e.target === this) {
-            closeVIPDetailPopupUser();
-        }
-    });
 
     // ============================================================
     // MAINTENANCE
@@ -7171,24 +7430,24 @@
 
     async function saveEditMessage() {
         if (!editingMessageData) return;
-    
+
         const newText = document.getElementById('editMsgTextarea').value.trim();
         if (!newText) {
             showNeonModal('Error', 'Pesan tidak boleh kosong!', 'error');
             return;
         }
-    
+
         if (newText === editingMessageData.text) {
             closeEditMsgPopup();
             return;
         }
-    
+
         showLoading();
         try {
             const { id, source, uid } = editingMessageData;
             let path = '';
-        
-            // PERBAIKAN: Path yang benar untuk setiap sumber chat
+
+            // PERBAIKAN: Path yang BENAR untuk setiap sumber chat
             if (source === 'private_chat') {
                 path = 'chats/' + uid + '/' + id;
             } else if (source === 'public_chat') {
@@ -7198,16 +7457,17 @@
             } else {
                 throw new Error('Sumber chat tidak dikenal!');
             }
-        
+
             await database.ref(path).update({
                 text: newText,
                 edited: true,
                 editedAt: Date.now()
             });
-        
+
             showNeonToast('✅ Pesan berhasil diedit!');
             closeEditMsgPopup();
-        
+            hideLoading(); // ← PENTING: hilangkan loading
+
             // Refresh chat sesuai sumber
             if (source === 'private_chat') {
                 setupChatListener();
@@ -7216,7 +7476,7 @@
             } else if (source === 'support_chat') {
                 loadSupportMessages();
             }
-        
+
         } catch (error) {
             hideLoading();
             showNeonModal('Error', 'Gagal edit pesan: ' + error.message, 'error');
@@ -7237,9 +7497,11 @@
                 } else {
                     throw new Error('Sumber chat tidak dikenal!');
                 }
+            
                 await database.ref(path).remove();
-                hideLoading();
+                hideLoading(); // ← PENTING: hilangkan loading
                 showNeonToast('✅ Pesan dihapus!');
+            
                 if (source === 'private_chat') {
                     setupChatListener();
                 } else if (source === 'public_chat') {
