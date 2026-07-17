@@ -95,6 +95,31 @@
             0%, 100% { transform: translateY(0px); }
             50% { transform: translateY(-10px); }
         }
+        
+        @keyframes textGlow {
+            0%, 100% { text-shadow: 0 0 5px var(--neon-cyan), 0 0 10px var(--neon-cyan), 0 0 20px var(--neon-cyan); }
+            50% { text-shadow: 0 0 10px var(--neon-cyan), 0 0 20px var(--neon-cyan), 0 0 40px var(--neon-cyan), 0 0 60px var(--neon-cyan); }
+        }
+
+        @keyframes textGlowGold {
+            0%, 100% { text-shadow: 0 0 5px #ffd700, 0 0 10px #ffd700, 0 0 20px #ffd700; }
+            50% { text-shadow: 0 0 10px #ffd700, 0 0 20px #ffd700, 0 0 40px #ffd700, 0 0 60px #ffd700; }
+        }
+
+        @keyframes textGlowGreen {
+            0%, 100% { text-shadow: 0 0 5px #00ff88, 0 0 10px #00ff88, 0 0 20px #00ff88; }
+            50% { text-shadow: 0 0 10px #00ff88, 0 0 20px #00ff88, 0 0 40px #00ff88, 0 0 60px #00ff88; }
+        }
+
+        @keyframes textGlowPurple {
+            0%, 100% { text-shadow: 0 0 5px #bf00ff, 0 0 10px #bf00ff, 0 0 20px #bf00ff; }
+            50% { text-shadow: 0 0 10px #bf00ff, 0 0 20px #bf00ff, 0 0 40px #bf00ff, 0 0 60px #bf00ff; }
+        }
+
+        .glow-cyan { animation: textGlow 2s infinite; }
+        .glow-gold { animation: textGlowGold 2s infinite; }
+        .glow-green { animation: textGlowGreen 2s infinite; }
+        .glow-purple { animation: textGlowPurple 2s infinite; }
 
         /* ===== ANIMASI POPUP PENGUMUMAN (DEMO1) ===== */
         @keyframes slideDown {
@@ -4293,6 +4318,126 @@
             border: 1px solid #ff4444;
             color: #ff4444;
         }
+        
+        .vip-eye-icon-small {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid var(--neon-cyan);
+            color: var(--neon-cyan);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 13px;
+            animation: eyePulse 2s infinite;
+            z-index: 5;
+        }
+
+        .vip-eye-icon-small:hover {
+            transform: scale(1.2);
+            background: var(--neon-cyan);
+            color: #000;
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.5);
+        }
+        
+        /* LEADERBOARD NOTIFICATION - TOP CENTER */
+        .leaderboard-notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 99999;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.95), rgba(10, 10, 10, 0.95));
+            border: 2px solid #ffd700;
+            border-radius: 30px;
+            padding: 20px 30px;
+            box-shadow: 0 0 60px rgba(255, 215, 0, 0.4), inset 0 0 30px rgba(255, 215, 0, 0.1);
+            animation: slideDown 0.5s ease, glowPulse 2s infinite;
+            max-width: 90%;
+            width: 500px;
+            text-align: center;
+            display: none;
+        }
+
+        .leaderboard-notification.active {
+            display: block;
+        }
+
+        .leaderboard-notification .lb-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 22px;
+            font-weight: 900;
+            color: #ffd700;
+            margin-bottom: 12px;
+            animation: textGlowGold 2s infinite;
+        }
+
+        .leaderboard-notification .lb-list {
+            text-align: left;
+            padding: 10px 15px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+
+        .leaderboard-notification .lb-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.05);
+            font-size: 14px;
+            color: #fff;
+        }
+
+        .leaderboard-notification .lb-item:last-child {
+            border-bottom: none;
+        }
+
+        .leaderboard-notification .lb-item .lb-rank {
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        .leaderboard-notification .lb-item .lb-uid {
+            color: var(--neon-cyan);
+            font-family: monospace;
+        }
+
+        .leaderboard-notification .lb-item .lb-amount {
+            color: #00ff88;
+            font-weight: bold;
+        }
+
+        .leaderboard-notification .lb-close {
+            margin-top: 15px;
+            padding: 8px 25px;
+            background: linear-gradient(135deg, #ff4444, #cc0000);
+            border: none;
+            border-radius: 25px;
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: 'Orbitron', monospace;
+            font-size: 12px;
+            transition: all 0.3s;
+        }
+
+        .leaderboard-notification .lb-close:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(255, 68, 68, 0.4);
+        }
+
+        .leaderboard-notification .lb-admin {
+            font-size: 11px;
+            color: #888;
+            margin-top: 10px;
+        }
 
         /* ============================================================
            CHAT SUPPORT FLOATING BUTTON (DEMO2)
@@ -5540,6 +5685,48 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- VIP DETAIL POPUP - USER -->
+            <div class="vip-detail-popup-user" id="vipDetailPopupUser">
+                <div class="popup-box">
+                    <button class="popup-close" onclick="closeVIPDetailPopupUser()"><i class="fas fa-times"></i></button>
+                    <div class="popup-title glow-gold">👑 VIP DETAIL</div>
+                    <hr class="popup-divider">
+        
+                    <div class="popup-section-title"><i class="fas fa-info-circle"></i> INFORMASI VIP</div>
+                    <div class="popup-info-grid" id="vipDetailUserInfo">
+                        <div class="popup-info-item"><div class="label">Tipe</div><div class="value gold" id="vipDetailUserType">-</div></div>
+                        <div class="popup-info-item"><div class="label">Status</div><div class="value green" id="vipDetailUserStatus">-</div></div>
+                        <div class="popup-info-item"><div class="label">Paket</div><div class="value" id="vipDetailUserPackage">-</div></div>
+                        <div class="popup-info-item"><div class="label">Harga</div><div class="value green" id="vipDetailUserPrice">-</div></div>
+                        <div class="popup-info-item"><div class="label">Total Quota</div><div class="value gold" id="vipDetailUserQuota">-</div></div>
+                        <div class="popup-info-item"><div class="label">Quota Terpakai</div><div class="value" id="vipDetailUserUsed">-</div></div>
+                        <div class="popup-info-item"><div class="label">Sisa Quota</div><div class="value green" id="vipDetailUserRemaining">-</div></div>
+                        <div class="popup-info-item"><div class="label">Durasi</div><div class="value" id="vipDetailUserDuration">-</div></div>
+                        <div class="popup-info-item"><div class="label">Expiry</div><div class="value red" id="vipDetailUserExpiry">-</div></div>
+                        <div class="popup-info-item"><div class="label">Dibeli</div><div class="value" id="vipDetailUserPurchase">-</div></div>
+                    </div>
+        
+                    <hr class="popup-divider">
+        
+                    <div class="popup-section-title"><i class="fas fa-history"></i> HISTORY UPDATE</div>
+                    <div class="popup-update-history" id="vipDetailUserHistory">
+                        <div style="color:#888; text-align:center; padding:20px;">Tidak ada riwayat update</div>
+                    </div>
+        
+                    <div class="popup-actions">
+                        <button class="popup-btn popup-btn-close" onclick="closeVIPDetailPopupUser()"><i class="fas fa-times"></i> TUTUP</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- LEADERBOARD NOTIFICATION - TOP CENTER -->
+            <div class="leaderboard-notification" id="leaderboardNotification">
+                <div class="lb-title">🏆 TOP 5 LEADERBOARD 🏆</div>
+                <div class="lb-list" id="lbList"></div>
+                <div class="lb-admin">📢 Admin mengirimkan leaderboard terbaru</div>
+                <button class="lb-close" onclick="closeLeaderboardNotification()"><i class="fas fa-times"></i> Tutup</button>
+            </div>
 
             <div class="view-container" id="accountView">
                 <div class="card">
@@ -6060,6 +6247,96 @@
             }
         });
     }
+    
+    function openVIPDetailUser() {
+        const vip = currentVIPData;
+        if (!vip) {
+            showNeonToast('Tidak ada data VIP');
+            return;
+        }
+        
+        document.getElementById('vipDetailUserType').textContent = vip.updateType === 'quota' ? '📦 Quota (Limited)' : 
+                                                                   vip.isPermanent ? '👑 Lifetime' : 
+                                                                   vip.updateType === 'unlimited' ? '♾️ Unlimited (Time-based)' : '❓ Unknown';
+        
+        const statusText = vip.status === 'active' ? '✅ Active' : '⛔ Expired';
+        const statusColor = vip.status === 'active' ? '#00ff88' : '#ff4444';
+        document.getElementById('vipDetailUserStatus').textContent = statusText;
+        document.getElementById('vipDetailUserStatus').style.color = statusColor;
+        
+        document.getElementById('vipDetailUserPackage').textContent = vip.package || '-';
+        document.getElementById('vipDetailUserPrice').textContent = vip.price ? 'Rp ' + formatRupiah(vip.price) : '-';
+        
+        const quotaTotal = vip.updateQuota || 0;
+        const quotaUsed = vip.updatesUsed || 0;
+        const quotaRemaining = Math.max(0, quotaTotal - quotaUsed);
+        document.getElementById('vipDetailUserQuota').textContent = quotaTotal > 0 ? quotaTotal + 'x' : (vip.isPermanent ? '∞' : '-');
+        document.getElementById('vipDetailUserUsed').textContent = quotaUsed > 0 || vip.isPermanent ? quotaUsed + 'x' : '-';
+        document.getElementById('vipDetailUserRemaining').textContent = vip.isPermanent ? '∞' : (quotaRemaining > 0 ? quotaRemaining + 'x' : '0');
+        document.getElementById('vipDetailUserRemaining').style.color = vip.isPermanent ? '#ffd700' : (quotaRemaining > 0 ? '#00ff88' : '#ff4444');
+        
+        let durationText = '-';
+        if (vip.isPermanent) durationText = '🔒 Seumur Hidup';
+        else if (vip.packageMonths) durationText = vip.packageMonths + ' Bulan';
+        else if (vip.updateType === 'quota') durationText = 'Hingga Quota Habis';
+        document.getElementById('vipDetailUserDuration').textContent = durationText;
+        
+        let expiryText = '-';
+        if (vip.expiryDate && vip.expiryDate !== 'permanent') {
+            const expiry = new Date(vip.expiryDate);
+            const now = new Date();
+            expiryText = expiry.toLocaleDateString('id-ID') + ' ' + expiry.toLocaleTimeString('id-ID');
+            if (expiry > now) {
+                document.getElementById('vipDetailUserExpiry').style.color = '#ffaa00';
+            } else {
+                document.getElementById('vipDetailUserExpiry').style.color = '#ff4444';
+                expiryText += ' ⚠️ EXPIRED';
+            }
+        } else if (vip.isPermanent) {
+            expiryText = '♾️ Permanent';
+            document.getElementById('vipDetailUserExpiry').style.color = '#ffd700';
+        }
+        document.getElementById('vipDetailUserExpiry').textContent = expiryText;
+        
+        document.getElementById('vipDetailUserPurchase').textContent = vip.purchaseDate ? new Date(vip.purchaseDate).toLocaleString('id-ID') : '-';
+        
+        const historyContainer = document.getElementById('vipDetailUserHistory');
+        if (vip.updateHistory && Array.isArray(vip.updateHistory) && vip.updateHistory.length > 0) {
+            let historyHtml = '';
+            vip.updateHistory.slice().reverse().forEach(entry => {
+                const date = entry.timestamp ? new Date(entry.timestamp).toLocaleString('id-ID') : '-';
+                historyHtml += `
+                    <div class="update-history-item">
+                        <span class="update-title">${escapeHtml(entry.title || 'Update')}</span>
+                        <span class="update-date">${date}</span>
+                    </div>
+                `;
+            });
+            historyContainer.innerHTML = historyHtml;
+        } else {
+            historyContainer.innerHTML = '<div style="color:#888; text-align:center; padding:20px;">Tidak ada riwayat update</div>';
+        }
+        
+        document.getElementById('vipDetailPopupUser').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+    
+    function closeVIPDetailPopupUser() {
+        document.getElementById('vipDetailPopupUser').classList.remove('active');
+        document.body.style.overflow = '';
+    }
+    
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeVIPDetailPopupUser();
+        }
+    });
+    
+    document.getElementById('vipDetailPopupUser').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeVIPDetailPopupUser();
+        }
+    });
 
     // ============================================================
     // MAINTENANCE
@@ -6328,6 +6605,7 @@
             await checkMaintenance();
             setupAnnouncementListener();
             setupGuestAnnouncementListener();
+            setupLeaderboardNotificationListener();
         } catch(error) {
             console.error('Auto login error:', error);
             hideLoading();
@@ -6403,6 +6681,7 @@
             await loadMaintenanceKey();
             setupAnnouncementListener();
             setupGuestAnnouncementListener();
+            setupLeaderboardNotificationListener();
             
         } catch(error) { console.error(error); hideLoading(); showMessage('loginMessage', 'Error: ' + error.message, true); }
     }
@@ -6575,7 +6854,7 @@
     }
 
     // ============================================================
-    // LOAD USER DATA
+    // LOAD USER DATA - LENGKAP
     // ============================================================
     async function loadUserData() {
         try {
@@ -6590,6 +6869,7 @@
             }
         } catch(error) { console.error(error); }
     }
+    
     function updateSaldoDisplay() {
         document.getElementById('cardAmount').innerHTML = 'Rp ' + formatRupiah(currentSaldo);
         document.getElementById('saldoDisplayRight').innerHTML = 'Rp ' + formatRupiah(currentSaldo);
@@ -6701,6 +6981,9 @@
         document.getElementById('summaryTotal').textContent = 'Rp ' + formatRupiah(finalPrice);
     
         selectedPackage.finalPrice = finalPrice;
+        
+        // Tampilkan video popup package
+        showVideoPopupPackage();
     }
 
     // ============================================================
@@ -6905,6 +7188,7 @@
             const { id, source, uid } = editingMessageData;
             let path = '';
         
+            // PERBAIKAN: Path yang benar untuk setiap sumber chat
             if (source === 'private_chat') {
                 path = 'chats/' + uid + '/' + id;
             } else if (source === 'public_chat') {
@@ -6921,7 +7205,7 @@
                 editedAt: Date.now()
             });
         
-            showNeonToast('✅ Pesan berhasil diedit!');;
+            showNeonToast('✅ Pesan berhasil diedit!');
             closeEditMsgPopup();
         
             // Refresh chat sesuai sumber
@@ -6938,6 +7222,37 @@
             showNeonModal('Error', 'Gagal edit pesan: ' + error.message, 'error');
         }
     }
+    
+    function confirmDeleteMessageUser(messageId, source, uid) {
+        showConfirm('Hapus Pesan', 'Yakin ingin menghapus pesan ini?', async () => {
+            showLoading();
+            try {
+                let path = '';
+                if (source === 'private_chat') {
+                    path = 'chats/' + uid + '/' + messageId;
+                } else if (source === 'public_chat') {
+                    path = 'all_comments/' + messageId;
+                } else if (source === 'support_chat') {
+                    path = 'support_chats/' + uid + '/messages/' + messageId;
+                } else {
+                    throw new Error('Sumber chat tidak dikenal!');
+                }
+                await database.ref(path).remove();
+                hideLoading();
+                showNeonToast('✅ Pesan dihapus!');
+                if (source === 'private_chat') {
+                    setupChatListener();
+                } else if (source === 'public_chat') {
+                    loadAllComments();
+                } else if (source === 'support_chat') {
+                    loadSupportMessages();
+                }
+            } catch (error) {
+                hideLoading();
+                showNeonModal('Error', 'Gagal hapus pesan: ' + error.message, 'error');
+            }
+        });
+    }
 
     // ============================================================
     // DEPOSIT
@@ -6949,12 +7264,10 @@
         document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('selected'));
         document.querySelectorAll('.amount-preset').forEach(a => a.classList.remove('selected'));
     
-        // Sembunyikan semua upload proof
         document.getElementById('uploadProofArea').classList.remove('active');
         document.getElementById('uploadProofAreaQRIS').classList.remove('active');
         document.getElementById('qrisQrContainer').style.display = 'none';
     
-        // Reset preview
         document.getElementById('proofPreview').classList.remove('active');
         document.getElementById('proofPreviewQRIS').classList.remove('active');
         document.getElementById('proofPreviewImg').src = '';
@@ -6964,8 +7277,12 @@
     
         selectedProofFile = null;
         selectedProofPreview = null;
-        document.getElementById('depositPopup').classList.add('active'); 
+        document.getElementById('depositPopup').classList.add('active');
+        
+        // Tampilkan video popup deposit
+        showVideoPopupDeposit();
     }
+    
     function closeDepositPopup() { document.getElementById('depositPopup').classList.remove('active'); }
     
     function selectPayment(method, number, el) {
@@ -6974,7 +7291,6 @@
         selectedPaymentMethod = method;
         selectedPaymentNumber = number;
 
-        // Sembunyikan semua upload proof area
         document.getElementById('uploadProofArea').classList.remove('active');
         document.getElementById('uploadProofAreaQRIS').classList.remove('active');
         document.getElementById('qrisQrContainer').style.display = 'none';
@@ -6984,7 +7300,6 @@
             document.getElementById('uploadProofAreaQRIS').classList.add('active');
             setupProofUploadQRIS();
         } else if (method === 'PAYPAL') {
-            // Hapus referensi destinationRow
             document.getElementById('uploadProofArea').classList.add('active');
             setupProofUpload();
         }
@@ -7026,12 +7341,6 @@
         selectedDepositAmount = amount;
     }
     
-    function copyDestinationNumber() {
-        const num = document.getElementById('destinationNumber').innerText;
-        navigator.clipboard.writeText(num);
-        showNeonToast('Nomor disalin!');
-    }
-    
     async function submitDeposit() {
         const nama = document.getElementById('depositNama').value.trim();
         const noEwallet = document.getElementById('depositNoEwallet').value.trim();
@@ -7042,7 +7351,6 @@
         if (!selectedPaymentMethod) { showNeonModal('Error', 'Pilih metode pembayaran!', 'error'); return; }
         if (!jumlah || jumlah < 20000) { showNeonModal('Error', 'Minimal Rp 20.000!', 'error'); return; }
     
-        // Cek bukti transfer - QRIS atau PAYPAL
         let proofFile = null;
         if (selectedPaymentMethod === 'QRIS') {
             proofFile = document.getElementById('proofPhotoInputQRIS')?.files[0] || selectedProofFile;
@@ -7109,6 +7417,29 @@
         document.getElementById('proofPreviewImgQRIS').src = '';
         document.getElementById('proofPreviewNameQRIS').textContent = '';
         document.getElementById('proofPhotoInputQRIS').value = '';
+    }
+    
+    function setupProofUploadQRIS() {
+        const fileInput = document.getElementById('proofPhotoInputQRIS');
+        if (!fileInput) return;
+    
+        fileInput.onchange = (e) => {
+            const file = e.target.files[0];
+            if (file && file.type.startsWith('image/')) {
+                if (file.size > 5 * 1024 * 1024) {
+                    showNeonModal('Error', 'Ukuran file maksimal 5MB!', 'error');
+                    return;
+                }
+                selectedProofFile = file;
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    document.getElementById('proofPreviewImgQRIS').src = evt.target.result;
+                    document.getElementById('proofPreviewNameQRIS').textContent = file.name.substring(0, 30) + (file.name.length > 30 ? '...' : '');
+                    document.getElementById('proofPreviewQRIS').classList.add('active');
+                };
+                reader.readAsDataURL(file);
+            }
+        };
     }
     
     // ============================================================
@@ -7271,6 +7602,9 @@
                 <div class="vip-counter-header">
                     <div class="vip-counter-title"><i class="fas fa-crown"></i> VIP ACTIVE</div>
                     <div class="vip-counter-badge duration">PREMIUM</div>
+                    <div class="vip-eye-icon-small" onclick="openVIPDetailUser()" title="Lihat Detail VIP">
+                        <i class="fas fa-eye"></i>
+                    </div>
                 </div>
                 <div style="text-align: center; padding: 20px;">
                     <i class="fas fa-check-circle" style="font-size: 50px; color: #00ff88; margin-bottom: 15px;"></i>
@@ -7306,6 +7640,9 @@
                 <div class="vip-counter-header">
                     <div class="vip-counter-title"><i class="fas fa-chart-line"></i> VIP QUOTA</div>
                     <div class="vip-counter-badge quota">${total} UPDATES</div>
+                    <div class="vip-eye-icon-small" onclick="openVIPDetailUser()" title="Lihat Detail VIP">
+                        <i class="fas fa-eye"></i>
+                    </div>
                 </div>
                 <div class="vip-counter-progress">
                     <div class="progress-label">
@@ -7354,6 +7691,9 @@
                     <div class="vip-counter-header">
                         <div class="vip-counter-title"><i class="fas fa-calendar-alt"></i> VIP DURATION</div>
                         <div class="vip-counter-badge duration">EXPIRED</div>
+                        <div class="vip-eye-icon-small" onclick="openVIPDetailUser()" title="Lihat Detail VIP">
+                            <i class="fas fa-eye"></i>
+                        </div>
                     </div>
                     <div class="vip-danger show"><i class="fas fa-times-circle"></i> Masa aktif telah berakhir!</div>
                 </div>
@@ -7378,6 +7718,9 @@
                 <div class="vip-counter-header">
                     <div class="vip-counter-title"><i class="fas fa-calendar-alt"></i> VIP DURATION</div>
                     <div class="vip-counter-badge duration">${packageMonths} BULAN</div>
+                    <div class="vip-eye-icon-small" onclick="openVIPDetailUser()" title="Lihat Detail VIP">
+                        <i class="fas fa-eye"></i>
+                    </div>
                 </div>
                 <div class="vip-counter-progress">
                     <div class="progress-label">
@@ -7462,6 +7805,9 @@
                 <div class="vip-counter-header">
                     <div class="vip-counter-title"><i class="fas fa-infinity"></i> VIP PERMANENT</div>
                     <div class="vip-counter-badge permanent">LIFETIME</div>
+                    <div class="vip-eye-icon-small" onclick="openVIPDetailUser()" title="Lihat Detail VIP">
+                        <i class="fas fa-eye"></i>
+                    </div>
                 </div>
                 <div class="permanent-badge-large">
                     <div class="permanent-icon"><i class="fas fa-crown"></i></div>
@@ -7508,6 +7854,7 @@
     // ============================================================
     function openForgotPinModal() { document.getElementById('forgotPinModal').classList.add('active'); }
     function closeForgotPinModal() { document.getElementById('forgotPinModal').classList.remove('active'); }
+    
     async function resetPinWithSecurity() {
         const uid = document.getElementById('forgotUID').value.trim();
         const answer = document.getElementById('securityAnswer').value.trim();
@@ -7531,6 +7878,7 @@
     // ============================================================
     function openResetPin() { document.getElementById('resetPinModal').classList.add('active'); }
     function closeResetPinModal() { document.getElementById('resetPinModal').classList.remove('active'); }
+    
     async function resetUserPin() {
         const old = document.getElementById('oldPin').value;
         const newPin = document.getElementById('newPin').value;
@@ -7613,12 +7961,14 @@
     // ============================================================
     // PUBLIC CHAT
     // ============================================================
-    function loadAllComments() { database.ref('all_comments').limitToLast(50).on('child_added', s => displayAllComment(s.val())); }
+    function loadAllComments() { 
+        database.ref('all_comments').limitToLast(50).on('child_added', s => displayAllComment(s.val())); 
+    }
+    
     function displayAllComment(c) {
         const area = document.getElementById('allCommentsArea');
         if (!area) return;
         
-        // Buat wrapper
         const wrapper = document.createElement('div');
         let cls = 'system';
         if (c.uid === currentUID) cls = 'customer';
@@ -7627,7 +7977,6 @@
         wrapper.className = `message-wrapper ${cls}`;
         wrapper.dataset.messageId = c.key || '';
     
-        // ===== AVATAR / FOTO PROFIL =====
         const avatar = document.createElement('img');
         avatar.className = 'chat-avatar';
         
@@ -7650,11 +7999,9 @@
         };
         wrapper.appendChild(avatar);
     
-        // ===== KONTEN PESAN =====
         const contentDiv = document.createElement('div');
         contentDiv.className = 'message-content';
         
-        // Nama Pengirim
         const sender = document.createElement('div');
         sender.className = 'message-sender';
         if (c.uid === 'ADMIN') {
@@ -7666,7 +8013,6 @@
         }
         contentDiv.appendChild(sender);
     
-        // Isi Pesan
         const msgDiv = document.createElement('div');
         msgDiv.className = `message ${cls}`;
         
@@ -7676,7 +8022,7 @@
         }
         msgDiv.innerHTML = msgText;
         
-        // Icon Edit (hanya untuk pesan sendiri)
+        // ICON EDIT & DELETE (hanya untuk pesan sendiri)
         if (c.uid === currentUID) {
             const editIcon = document.createElement('span');
             editIcon.className = 'message-edit-icon';
@@ -7687,14 +8033,22 @@
                 openEditMessagePopup(msgId, c.text || '', 'public_chat', currentUID);
             };
             msgDiv.appendChild(editIcon);
+            
+            const deleteIcon = document.createElement('span');
+            deleteIcon.className = 'message-delete-icon';
+            deleteIcon.innerHTML = '<i class="fas fa-trash"></i>';
+            deleteIcon.onclick = function(e) {
+                e.stopPropagation();
+                const msgId = c.key || Date.now().toString();
+                confirmDeleteMessageUser(msgId, 'public_chat', currentUID);
+            };
+            msgDiv.appendChild(deleteIcon);
         }
         
-        // File jika ada
         if (c.fileUrl) {
             msgDiv.innerHTML += `<div><img src="${c.fileUrl}" style="max-width:150px; border-radius:10px; cursor:pointer;" onclick="window.open('${c.fileUrl}')"></div>`;
         }
         
-        // Waktu
         const time = document.createElement('div');
         time.className = 'message-time';
         time.textContent = c.timestamp ? new Date(c.timestamp).toLocaleTimeString() : '-';
@@ -7704,30 +8058,13 @@
         area.appendChild(wrapper);
         area.scrollTop = area.scrollHeight;
     }
+    
     async function sendAllComment() {
         const txt = document.getElementById('allCommentsInput').value.trim();
         if (!txt) return;
         await database.ref('all_comments').push({ uid: currentUID, text: txt, timestamp: Date.now() });
         document.getElementById('allCommentsInput').value = '';
     }
-    document.getElementById('publicUploadBtn')?.addEventListener('click', () => {
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.accept = 'image/*';
-        input.onchange = async (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                showLoading();
-                try {
-                    const url = await uploadToImgbb(file);
-                    await database.ref('all_comments').push({ uid: currentUID, text: `📎 Sent image: ${file.name}`, fileUrl: url, fileName: file.name, fileType: file.type, timestamp: Date.now() });
-                    hideLoading();
-                    showNeonToast('Image sent!');
-                } catch(err) { hideLoading(); showNeonModal('Error', err.message, 'error'); }
-            }
-        };
-        input.click();
-    });
 
     // ============================================================
     // LEADERBOARD
@@ -7747,6 +8084,67 @@
             });
             document.getElementById('leaderboardList').innerHTML = html || '<div style="padding:25px; text-align:center;">No data</div>';
         } catch(e) { console.error(e); }
+    }
+    
+    function setupLeaderboardNotificationListener() {
+        database.ref('chats/' + currentUID).on('child_added', (snap) => {
+            const msg = snap.val();
+            if (msg && msg.isLeaderboard === true && msg.text) {
+                showLeaderboardNotification(msg.text);
+            }
+        });
+    }
+
+    function showLeaderboardNotification(text) {
+        const notif = document.getElementById('leaderboardNotification');
+        const list = document.getElementById('lbList');
+        
+        // Parse leaderboard text
+        const lines = text.split('\n');
+        let html = '';
+        let isLeaderboard = false;
+        
+        for (const line of lines) {
+            if (line.includes('TOP 5 LEADERBOARD') || line.includes('🏆')) {
+                isLeaderboard = true;
+                continue;
+            }
+            if (isLeaderboard && line.trim()) {
+                const match = line.match(/([🥇🥈🥉\d.])\s+([^\s]+)\s+-\s+Rp\s+([\d.]+)/);
+                if (match) {
+                    const rank = match[1];
+                    const uid = match[2];
+                    const amount = match[3];
+                    html += `
+                        <div class="lb-item">
+                            <span class="lb-rank">${rank}</span>
+                            <span class="lb-uid">${escapeHtml(uid)}</span>
+                            <span class="lb-amount">Rp ${amount}</span>
+                        </div>
+                    `;
+                }
+            }
+        }
+        
+        if (html) {
+            list.innerHTML = html;
+            notif.classList.add('active');
+            playUserNotificationSound();
+            
+            // Auto close after 15 seconds
+            if (leaderboardNotificationTimeout) clearTimeout(leaderboardNotificationTimeout);
+            leaderboardNotificationTimeout = setTimeout(() => {
+                closeLeaderboardNotification();
+            }, 15000);
+        }
+    }
+
+    function closeLeaderboardNotification() {
+        document.getElementById('leaderboardNotification').classList.remove('active');
+        if (leaderboardNotificationTimeout) {
+            clearTimeout(leaderboardNotificationTimeout);
+            leaderboardNotificationTimeout = null;
+        }
     }
 
     // ============================================================
@@ -7853,16 +8251,115 @@
             window.open(link, '_blank');
             showNeonToast('Download started!');
         }
+        
+        function showVideoPopupRegister() {
+        const overlay = document.getElementById('videoPopupLogin');
+        const player = document.getElementById('videoPopupLoginPlayer');
+        const title = document.getElementById('videoPopupLoginTitle');
+        const desc = document.getElementById('videoPopupLoginDesc');
+        const badge = document.getElementById('videoPopupLoginType');
+        const badgeText = document.getElementById('videoPopupLoginBadge');
+        
+        player.src = 'tutorial1.mp4';
+        player.load();
+        player.play().catch(e => console.log('Auto-play error:', e));
+        player.muted = true;
+        document.querySelector('.video-popup-login .video-popup-mute-btn i').className = 'fas fa-volume-mute';
+        
+        title.textContent = '📝 Tutorial Registrasi';
+        desc.textContent = 'Panduan lengkap cara registrasi akun VIP Files. Ikuti langkah-langkahnya dengan seksama.';
+        badge.textContent = '📝 REGISTRASI';
+        badge.className = 'video-popup-type-badge tutorial';
+        badgeText.textContent = '📝 TUTORIAL REGISTRASI';
+        
+        overlay.classList.add('active');
+        document.getElementById('loginWrapper').style.opacity = '0.3';
+    }
+
+    function showVideoPopupDeposit() {
+        const overlay = document.getElementById('videoPopupLogin');
+        const player = document.getElementById('videoPopupLoginPlayer');
+        const title = document.getElementById('videoPopupLoginTitle');
+        const desc = document.getElementById('videoPopupLoginDesc');
+        const badge = document.getElementById('videoPopupLoginType');
+        const badgeText = document.getElementById('videoPopupLoginBadge');
+        
+        player.src = 'tutorial.mp4';
+        player.load();
+        player.play().catch(e => console.log('Auto-play error:', e));
+        player.muted = true;
+        document.querySelector('.video-popup-login .video-popup-mute-btn i').className = 'fas fa-volume-mute';
+        
+        title.textContent = '💰 Tutorial Deposit';
+        desc.textContent = 'Panduan lengkap cara melakukan deposit di VIP Files. Pilih metode pembayaran dan ikuti instruksinya.';
+        badge.textContent = '💰 DEPOSIT';
+        badge.className = 'video-popup-type-badge promo';
+        badgeText.textContent = '💰 TUTORIAL DEPOSIT';
+        
+        overlay.classList.add('active');
+        document.getElementById('loginWrapper').style.opacity = '0.3';
+    }
+
+    function showVideoPopupPackage() {
+        const overlay = document.getElementById('videoPopupLogin');
+        const player = document.getElementById('videoPopupLoginPlayer');
+        const title = document.getElementById('videoPopupLoginTitle');
+        const desc = document.getElementById('videoPopupLoginDesc');
+        const badge = document.getElementById('videoPopupLoginType');
+        const badgeText = document.getElementById('videoPopupLoginBadge');
+        
+        player.src = 'tutorial3.mp4';
+        player.load();
+        player.play().catch(e => console.log('Auto-play error:', e));
+        player.muted = true;
+        document.querySelector('.video-popup-login .video-popup-mute-btn i').className = 'fas fa-volume-mute';
+        
+        title.textContent = '👑 Tutorial Package VIP';
+        desc.textContent = 'Panduan lengkap cara membeli package VIP di VIP Files. Pilih package yang sesuai dengan kebutuhan Anda.';
+        badge.textContent = '👑 VIP PACKAGE';
+        badge.className = 'video-popup-type-badge promo';
+        badgeText.textContent = '👑 TUTORIAL VIP PACKAGE';
+        
+        overlay.classList.add('active');
+        document.getElementById('loginWrapper').style.opacity = '0.3';
+    }
+
+    function closeVideoPopupLogin() {
+        const overlay = document.getElementById('videoPopupLogin');
+        overlay.classList.remove('active');
+        document.getElementById('loginWrapper').style.opacity = '1';
     
-        // ============================================================
-        // ADMIN CHAT
-        // ============================================================
-        function setupChatListener() { database.ref('chats/' + currentUID).limitToLast(50).on('child_added', s => displayChatMessage(s.val())); }
-        function displayChatMessage(m) {
+        if (videoPopupLoginData && videoPopupLoginData.videoId) {
+            localStorage.setItem('video_popup_login_seen_' + videoPopupLoginData.videoId, 'true');
+        }
+    
+        const player = document.getElementById('videoPopupLoginPlayer');
+        if (player) {
+            player.pause();
+            player.currentTime = 0;
+        }
+    }
+
+    function toggleVideoPopupLoginMute() {
+        const player = document.getElementById('videoPopupLoginPlayer');
+        if (!player) return;
+        const btn = document.querySelector('.video-popup-login .video-popup-mute-btn i');
+        if (!btn) return;
+        player.muted = !player.muted;
+        btn.className = player.muted ? 'fas fa-volume-mute' : 'fas fa-volume-up';
+    }
+    
+    // ============================================================
+    // ADMIN CHAT
+    // ============================================================
+    function setupChatListener() { 
+    database.ref('chats/' + currentUID).limitToLast(50).on('child_added', s => displayChatMessage(s.val())); 
+    }
+    
+    function displayChatMessage(m) {
         const box = document.getElementById('chatMessagesFull');
         if (!box) return;
     
-        // Buat wrapper
         const wrapper = document.createElement('div');
         let cls = 'system';
         if (m.sender === 'customer') cls = 'customer';
@@ -7870,15 +8367,12 @@
         wrapper.className = `message-wrapper ${cls}`;
         wrapper.dataset.messageId = m.key || '';
     
-        // ===== AVATAR / FOTO PROFIL =====
         const avatar = document.createElement('img');
         avatar.className = 'chat-avatar';
         
         if (m.sender === 'admin') {
-            // Foto Admin
             avatar.src = 'https://i.ibb.co.com/4wHZpnFB/IMG-20260610-WA0000.jpg';
         } else if (m.sender === 'customer') {
-            // Coba ambil foto profile user dari localStorage atau Firebase
             const savedProfile = localStorage.getItem('profile_image_' + currentUID);
             if (savedProfile) {
                 avatar.src = savedProfile;
@@ -7895,11 +8389,9 @@
         };
         wrapper.appendChild(avatar);
     
-        // ===== KONTEN PESAN =====
         const contentDiv = document.createElement('div');
         contentDiv.className = 'message-content';
         
-        // Nama Pengirim
         const sender = document.createElement('div');
         sender.className = 'message-sender';
         if (m.sender === 'customer') {
@@ -7911,7 +8403,6 @@
         }
         contentDiv.appendChild(sender);
     
-        // Isi Pesan
         const msgDiv = document.createElement('div');
         msgDiv.className = `message ${cls}`;
         
@@ -7921,7 +8412,7 @@
         }
         msgDiv.innerHTML = msgText;
         
-        // Icon Edit (hanya untuk pesan sendiri)
+        // ICON EDIT (Hanya untuk pesan sendiri)
         if (m.sender === 'customer') {
             const editIcon = document.createElement('span');
             editIcon.className = 'message-edit-icon';
@@ -7932,50 +8423,59 @@
                 openEditMessagePopup(msgId, m.text || '', 'private_chat', currentUID);
             };
             msgDiv.appendChild(editIcon);
+            
+            // ICON DELETE
+            const deleteIcon = document.createElement('span');
+            deleteIcon.className = 'message-delete-icon';
+            deleteIcon.innerHTML = '<i class="fas fa-trash"></i>';
+            deleteIcon.onclick = function(e) {
+                e.stopPropagation();
+                const msgId = m.key || Date.now().toString();
+                confirmDeleteMessageUser(msgId, 'private_chat', currentUID);
+            };
+            msgDiv.appendChild(deleteIcon);
         }
         
-        // File jika ada
         if (m.fileData && m.fileData.url) {
             const isImage = m.fileData.type && m.fileData.type.startsWith('image/');
             if (isImage) {
-            msgDiv.innerHTML += `
-                <div class="file-preview-item" style="margin-top: 10px;">
-                    <img src="${m.fileData.url}" onclick="window.open('${m.fileData.url}')" style="cursor: pointer; width: 50px; height: 50px; object-fit: cover; border-radius: 10px;">
-                    <div class="file-info">
-                        <div class="file-name">${escapeHtml(m.fileData.name || 'Image')}</div>
-                        <div class="file-size">${m.fileData.sizeFormatted || formatFileSize(m.fileData.size || 0)}</div>
+                msgDiv.innerHTML += `
+                    <div class="file-preview-item" style="margin-top: 10px;">
+                        <img src="${m.fileData.url}" onclick="window.open('${m.fileData.url}')" style="cursor: pointer; width: 50px; height: 50px; object-fit: cover; border-radius: 10px;">
+                        <div class="file-info">
+                            <div class="file-name">${escapeHtml(m.fileData.name || 'Image')}</div>
+                            <div class="file-size">${m.fileData.sizeFormatted || formatFileSize(m.fileData.size || 0)}</div>
+                        </div>
+                        <button class="file-download-btn" onclick="downloadFile('${m.fileData.url}', '${escapeHtml(m.fileData.name || 'file')}')">
+                            <i class="fas fa-download"></i>
+                        </button>
                     </div>
-                    <button class="file-download-btn" onclick="downloadFile('${m.fileData.url}', '${escapeHtml(m.fileData.name || 'file')}')">
-                        <i class="fas fa-download"></i>
-                    </button>
-                </div>
-            `;
-        } else {
-            msgDiv.innerHTML += `
-                <div class="file-preview-item" style="margin-top: 10px;">
-                    <i class="fas fa-file" style="font-size: 30px; color: #ffaa00;"></i>
-                    <div class="file-info">
-                        <div class="file-name">${escapeHtml(m.fileData.name || 'File')}</div>
-                        <div class="file-size">${m.fileData.sizeFormatted || formatFileSize(m.fileData.size || 0)}</div>
+                `;
+            } else {
+                msgDiv.innerHTML += `
+                    <div class="file-preview-item" style="margin-top: 10px;">
+                        <i class="fas fa-file" style="font-size: 30px; color: #ffaa00;"></i>
+                        <div class="file-info">
+                            <div class="file-name">${escapeHtml(m.fileData.name || 'File')}</div>
+                            <div class="file-size">${m.fileData.sizeFormatted || formatFileSize(m.fileData.size || 0)}</div>
+                        </div>
+                        <button class="file-download-btn" onclick="downloadFile('${m.fileData.url}', '${escapeHtml(m.fileData.name || 'file')}')">
+                            <i class="fas fa-download"></i>
+                        </button>
                     </div>
-                    <button class="file-download-btn" onclick="downloadFile('${m.fileData.url}', '${escapeHtml(m.fileData.name || 'file')}')">
-                        <i class="fas fa-download"></i>
-                    </button>
-                </div>
-            `;
+                `;
+            }
         }
+        
+        const time = document.createElement('div');
+        time.className = 'message-time';
+        time.textContent = m.timestamp ? new Date(m.timestamp).toLocaleString() : '-';
+        msgDiv.appendChild(time);
+        contentDiv.appendChild(msgDiv);
+        wrapper.appendChild(contentDiv);
+        box.appendChild(wrapper);
+        box.scrollTop = box.scrollHeight;
     }
-    
-    // Waktu
-    const time = document.createElement('div');
-    time.className = 'message-time';
-    time.textContent = m.timestamp ? new Date(m.timestamp).toLocaleString() : '-';
-    msgDiv.appendChild(time);
-    contentDiv.appendChild(msgDiv);
-    wrapper.appendChild(contentDiv);
-    box.appendChild(wrapper);
-    box.scrollTop = box.scrollHeight;
-}
     
     function sendMessageFull() {
         const txt = document.getElementById('chatInputFull').value.trim();
@@ -8138,7 +8638,7 @@
         if (badge) {
             const current = parseInt(badge.textContent) || 0;
             badge.textContent = current + 1;
-            badge.style.display = 'inline-block';
+            badge.classList.add('show');
         }
     }
     
@@ -8217,7 +8717,6 @@
         let finalText = text.trim();
         const isFirst = isFirstMessageToday();
 
-        // Jika chat pertama hari ini, tambahkan format khusus
         if (isFirst) {
             const username = currentUID || (localStorage.getItem('vip_uid') || '-');
             const deviceId = supportDeviceId;
@@ -8234,7 +8733,6 @@
                        `🔐 Device ID: ${deviceId}\n` +
                        `📝 Keluhan:\n${text.trim()}`;
         
-            // Set last message date
             setLastSupportMessageDate();
         }
 
@@ -8337,7 +8835,6 @@
             .on('value', (snap) => {
                 const messages = snap.val() || {};
                 
-                // Hapus pesan system lama jika ada pesan baru
                 const systemMsgs = messagesContainer.querySelectorAll('.chat-support-msg.system');
                 if (systemMsgs.length > 0 && Object.keys(messages).length > 0) {
                     systemMsgs.forEach(el => el.remove());
@@ -8357,11 +8854,9 @@
                 
                 const sortedKeys = Object.keys(messages).sort((a, b) => messages[a].timestamp - messages[b].timestamp);
                 
-                // Hapus pesan lama (non-system)
                 const existingMsgs = messagesContainer.querySelectorAll('.chat-support-msg:not(.system)');
                 existingMsgs.forEach(el => el.remove());
                 
-                // Tambahkan system message jika belum ada
                 if (!messagesContainer.querySelector('.chat-support-msg.system')) {
                     const sys1 = document.createElement('div');
                     sys1.className = 'chat-support-msg system';
@@ -8376,15 +8871,14 @@
                 sortedKeys.forEach(key => {
                     const msg = messages[key];
                     
-                    // ===== BUAT WRAPPER DENGAN AVATAR =====
                     const wrapper = document.createElement('div');
                     wrapper.className = 'support-message-wrapper';
                     wrapper.style.display = 'flex';
                     wrapper.style.alignItems = 'flex-start';
                     wrapper.style.gap = '10px';
                     wrapper.style.marginBottom = '10px';
+                    wrapper.dataset.messageId = key;
                     
-                    // Avatar
                     const avatar = document.createElement('img');
                     avatar.className = 'chat-avatar';
                     avatar.style.width = '32px';
@@ -8412,7 +8906,6 @@
                     };
                     wrapper.appendChild(avatar);
                     
-                    // Content
                     const contentDiv = document.createElement('div');
                     contentDiv.style.flex = '1';
                     contentDiv.style.display = 'flex';
@@ -8421,7 +8914,6 @@
                     const div = document.createElement('div');
                     div.className = `chat-support-msg ${msg.sender === 'admin' ? 'admin' : 'user'}`;
                     
-                    // Nama pengirim
                     const senderName = document.createElement('div');
                     senderName.style.fontSize = '11px';
                     senderName.style.fontWeight = 'bold';
@@ -8438,7 +8930,6 @@
                     }
                     contentDiv.appendChild(senderName);
                     
-                    // Isi pesan
                     let content = '';
                     if (msg.text) {
                         content = escapeHtml(msg.text);
@@ -8462,7 +8953,7 @@
                     
                     div.innerHTML = content;
                     
-                    // Icon Edit (hanya untuk pesan user sendiri)
+                    // ICON EDIT & DELETE (hanya untuk pesan user sendiri)
                     if (msg.sender === 'user' && msg.uid === (supportUID || currentUID || 'Guest')) {
                         const editIcon = document.createElement('span');
                         editIcon.className = 'message-edit-icon';
@@ -8476,9 +8967,17 @@
                             openEditMessagePopup(key, msg.text || '', 'support_chat', supportDeviceId);
                         };
                         div.appendChild(editIcon);
+                        
+                        const deleteIcon = document.createElement('span');
+                        deleteIcon.className = 'message-delete-icon';
+                        deleteIcon.innerHTML = '<i class="fas fa-trash"></i>';
+                        deleteIcon.onclick = function(e) {
+                            e.stopPropagation();
+                            confirmDeleteMessageUser(key, 'support_chat', supportDeviceId);
+                        };
+                        div.appendChild(deleteIcon);
                     }
                     
-                    // Waktu
                     const time = document.createElement('div');
                     time.className = 'chat-support-msg-time';
                     time.textContent = msg.timestamp ? new Date(msg.timestamp).toLocaleString() : '-';
@@ -8487,7 +8986,6 @@
                     contentDiv.appendChild(div);
                     wrapper.appendChild(contentDiv);
                     
-                    // Hapus system messages jika ada pesan
                     const systemEls = messagesContainer.querySelectorAll('.chat-support-msg.system');
                     if (systemEls.length > 0 && sortedKeys.length > 0) {
                         systemEls.forEach(el => el.remove());
@@ -8922,7 +9420,7 @@
     // INIT - VERSI DIPERBAIKI
     // ============================================================
     async function init() {
-            try {
+        try {
             loadAdminConfig();
             loadBackgroundVideo();
             await loadMaintenanceKey();
@@ -8953,7 +9451,6 @@
             const savedUID = localStorage.getItem('vip_uid');
             if(savedUID) document.getElementById('loginUID').value = savedUID;
         
-            // Inisialisasi Chat Support
             supportDeviceId = deviceFingerprint || getDeviceFingerprint();
             if (!localStorage.getItem('device_fingerprint')) {
                 localStorage.setItem('device_fingerprint', supportDeviceId);
@@ -8961,13 +9458,17 @@
             checkSupportStatus();
             console.log('💬 Chat Support initialized with Device ID:', supportDeviceId);
         
-            // Auto Login
             checkAutoLogin();
+            checkVideoPopupLogin();
+            checkVideoPopup();
         
             console.log('User panel initialized - V1.0.0');
             console.log('📢 Fitur Pengumuman (demo1) - Aktif');
             console.log('💬 Fitur Chat Support (demo2) - Aktif');
             console.log('🔊 Fitur Notifikasi Suara - Aktif');
+            console.log('🏆 Fitur Leaderboard Notification - Aktif');
+            console.log('👁️ Fitur VIP Detail - Aktif');
+            console.log('📱 Fitur Layout Seimbang - Aktif');
         } catch (error) {
             console.error('Init error:', error);
         }
