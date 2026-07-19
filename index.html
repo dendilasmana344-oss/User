@@ -6147,15 +6147,17 @@
     }
 
     // ============================================================
-    // DEVICE FINGERPRINT
+    // DEVICE FINGERPRINT - UNIK DAN KONSISTEN
     // ============================================================
     function getDeviceFingerprint() {
-        const savedFingerprint = localStorage.getItem('device_fingerprint');
+        // Cek localStorage dulu
+        let savedFingerprint = localStorage.getItem('device_fingerprint');
         if (savedFingerprint) {
             console.log('✅ Device ID loaded from storage:', savedFingerprint);
             return savedFingerprint;
         }
     
+        // Buat fingerprint dari banyak komponen
         const components = [
             navigator.userAgent,
             screen.width + 'x' + screen.height,
@@ -6166,8 +6168,11 @@
             navigator.deviceMemory || '',
             new Date().getTimezoneOffset(),
             !!navigator.maxTouchPoints,
-            screen.availWidth + 'x' + screen.availHeight
+            screen.availWidth + 'x' + screen.availHeight,
+            // Tambahkan timestamp untuk memastikan unik
+            Date.now().toString(36)
         ];
+    
         const combined = components.join('|');
         let hash = 0;
         for (let i = 0; i < combined.length; i++) {
@@ -6177,6 +6182,7 @@
         }
         const fp = 'FP_' + Math.abs(hash).toString(36).toUpperCase();
     
+        // Simpan ke localStorage
         localStorage.setItem('device_fingerprint', fp);
         console.log('🆕 New Device ID created:', fp);
         return fp;
@@ -6743,15 +6749,20 @@
     function showMessage(el, msg, isError) { const elem = document.getElementById(el); elem.innerHTML = '<i class="fas fa-' + (isError ? 'exclamation-triangle' : 'check-circle') + '"></i> ' + msg; elem.classList.add('show'); if(!isError) elem.classList.add('success'); setTimeout(() => elem.classList.remove('show'), 3000); }
 
     // ============================================================
-    // AUTO LOGIN
+    // CHECK AUTO LOGIN - LENGKAP
     // ============================================================
     async function checkAutoLogin() {
         const savedUID = localStorage.getItem('vip_files_uid') || localStorage.getItem('vip_uid');
         if (!savedUID) {
             return;
         }
-        
-        const deviceId = getDeviceFingerprint();
+    
+        // PASTIKAN Device ID ada
+        let deviceId = getDeviceFingerprint();
+        if (!deviceId) {
+            deviceId = 'FP_' + Math.random().toString(36).substring(2, 10).toUpperCase();
+            localStorage.setItem('device_fingerprint', deviceId);
+        }
     
         showLoading();
         try {
@@ -6763,7 +6774,38 @@
                 hideLoading();
                 return;
             }
-    
+        
+            // Ambil IP Address
+            let ipAddress = 'unknown';
+            try {
+                const ipRes = await fetch('https://api.ipify.org?format=json');
+                const ipData = await ipRes.json();
+                ipAddress = ipData.ip;
+            } catch(e) { console.log('IP fetch failed'); }
+        
+            const userAgent = navigator.userAgent;
+        
+            // UPDATE DATA USER LENGKAP
+            await database.ref('users/' + savedUID).update({
+                status: 'online',
+                lastLogin: new Date().toISOString(),
+                lastIP: ipAddress,
+                device: userAgent,
+                deviceId: deviceId,
+                // Jika registrasiIP belum ada, set sekarang
+                registrasiIP: user.registrasiIP || ipAddress,
+                registrasiDevice: user.registrasiDevice || deviceId
+            });
+        
+            await database.ref('sessions/' + savedUID).set({
+                sessionId: Date.now().toString(),
+                timestamp: Date.now(),
+                ipAddress: ipAddress,
+                userAgent: userAgent,
+                deviceId: deviceId
+            });
+        
+            // Cek banned
             const bannedSnap = await database.ref('banned_users/' + savedUID).once('value');
             if (bannedSnap.exists() && bannedSnap.val().status === 'banned') {
                 localStorage.removeItem('vip_files_uid');
@@ -6772,34 +6814,11 @@
                 showForceLogoutModal('⚠️ AKUN ANDA DIBLOKIR ⚠️\n\nAkun Anda telah diblokir oleh admin.\nHubungi admin untuk informasi lebih lanjut.', 5);
                 return;
             }
-    
+        
             currentUID = savedUID;
-    
-            let ipAddress = 'unknown';
-            let userAgent = navigator.userAgent;
-            try {
-                const ipRes = await fetch('https://api.ipify.org?format=json');
-                const ipData = await ipRes.json();
-                ipAddress = ipData.ip;
-            } catch(e) { console.log('IP fetch failed'); }
-    
-            await database.ref('users/' + currentUID).update({
-                status: 'online',
-                lastLogin: new Date().toISOString(),
-                lastIP: ipAddress,
-                device: userAgent,
-                deviceId: deviceFingerprint
-            });
-            await database.ref('sessions/' + currentUID).set({
-                sessionId: Date.now().toString(),
-                timestamp: Date.now(),
-                ipAddress: ipAddress,
-                userAgent: userAgent
-            });
-    
             await loadMaintenanceKey();
             await loadUserData();
-            
+        
             setupChatNotifUser();
             setupPublicNotifUser();
             setupSupportChatNotif();
@@ -6808,11 +6827,20 @@
             document.getElementById('mainLayout').style.display = 'block';
             document.getElementById('uidDisplay').textContent = 'UID: ' + currentUID;
             document.getElementById('uidDisplayRight').textContent = currentUID;
+        
             let cardNum = currentUID.replace(/[^A-Za-z0-9]/g, '').slice(-16).padStart(16, 'X');
             document.getElementById('cardNumber').textContent = cardNum.replace(/(.{4})/g, '$1 ');
             document.getElementById('cardName').textContent = currentUID;
-            loadAllComments(); loadLeaderboard(); loadTransactionHistory(); loadPurchaseHistory();
-            setupChatListener(); monitorAdminStatus(); loadVIPStatus(); setupRealtimeListeners();
+        
+            loadAllComments(); 
+            loadLeaderboard(); 
+            loadTransactionHistory(); 
+            loadPurchaseHistory();
+            setupChatListener(); 
+            monitorAdminStatus(); 
+            loadVIPStatus(); 
+            setupRealtimeListeners();
+        
             hideLoading();
             showNeonToast('Welcome back, ' + currentUID + '!');
             checkVideoPopup();
@@ -6820,8 +6848,8 @@
             await checkMaintenance();
             setupAnnouncementListener();
             setupGuestAnnouncementListener();
-            // Setup listener untuk leaderboard notification
             setupLeaderboardNotificationListener();
+        
         } catch(error) {
             console.error('Auto login error:', error);
             hideLoading();
@@ -6829,67 +6857,93 @@
     }
 
     // ============================================================
-    // SUBMIT LOGIN
+    // SUBMIT LOGIN - LENGKAP DENGAN DEVICE ID & IP
     // ============================================================
     async function submitLogin() {
         isManualLogout = false;
         forceLogoutCount = 0;
-        
+    
         const uid = document.getElementById('loginUID').value.trim();
         if (!uid) { showMessage('loginMessage', 'Enter username!', true); return; }
         if (loginPin.length < 6) { showMessage('loginMessage', 'PIN must be 6 digits!', true); return; }
-        const deviceId = getDeviceFingerprint();
+    
+        // PASTIKAN Device ID ada
+        let deviceId = getDeviceFingerprint();
+        if (!deviceId) {
+            deviceId = 'FP_' + Math.random().toString(36).substring(2, 10).toUpperCase();
+            localStorage.setItem('device_fingerprint', deviceId);
+        }
+    
         showLoading();
         try {
+            // Cek banned
             const bannedSnap = await database.ref('banned_users/' + uid).once('value');
             if (bannedSnap.exists() && bannedSnap.val().status === 'banned') { 
                 showForceLogoutModal('⚠️ AKUN ANDA DIBLOKIR ⚠️\n\nAkun Anda telah diblokir oleh admin karena melanggar aturan.\nHubungi admin untuk informasi lebih lanjut.\n\nAnda akan diarahkan ke halaman login.', 5);
                 hideLoading(); 
                 return; 
             }
-            
+        
+            // Cek user
             const userSnap = await database.ref('users/' + uid).once('value');
             const user = userSnap.val();
             if (!user) { showMessage('loginMessage', 'User not found!', true); clearLoginPin(); hideLoading(); return; }
             if (user.pin !== loginPin) { showMessage('loginMessage', 'Wrong PIN!', true); clearLoginPin(); hideLoading(); return; }
-            
+        
             currentUID = uid;
             if (document.getElementById('rememberUID').checked) localStorage.setItem('vip_uid', uid);
             localStorage.setItem('vip_files_uid', uid);
-            
+        
+            // Ambil IP Address
             let ipAddress = 'unknown';
-            let userAgent = navigator.userAgent;
             try {
                 const ipRes = await fetch('https://api.ipify.org?format=json');
                 const ipData = await ipRes.json();
                 ipAddress = ipData.ip;
             } catch(e) { console.log('IP fetch failed'); }
-            
+        
+            const userAgent = navigator.userAgent;
+        
+            // UPDATE DATA USER LENGKAP
             await database.ref('users/' + uid).update({ 
                 status: 'online', 
                 lastLogin: new Date().toISOString(),
                 lastIP: ipAddress,
                 device: userAgent,
-                deviceId: deviceFingerprint
+                deviceId: deviceId,
+                registrasiIP: user.registrasiIP || ipAddress,
+                registrasiDevice: user.registrasiDevice || deviceId
             });
+        
             await database.ref('sessions/' + uid).set({ 
                 sessionId: Date.now().toString(), 
                 timestamp: Date.now(),
                 ipAddress: ipAddress,
-                userAgent: userAgent
+                userAgent: userAgent,
+                deviceId: deviceId
             });
-            
+        
             await loadMaintenanceKey();
             await loadUserData();
+        
             document.getElementById('loginWrapper').classList.add('hide');
             document.getElementById('mainLayout').style.display = 'block';
             document.getElementById('uidDisplay').textContent = 'UID: ' + uid;
             document.getElementById('uidDisplayRight').textContent = uid;
+        
             let cardNum = uid.replace(/[^A-Za-z0-9]/g, '').slice(-16).padStart(16, 'X');
             document.getElementById('cardNumber').textContent = cardNum.replace(/(.{4})/g, '$1 ');
             document.getElementById('cardName').textContent = uid;
-            loadAllComments(); loadLeaderboard(); loadTransactionHistory(); loadPurchaseHistory();
-            setupChatListener(); monitorAdminStatus(); loadVIPStatus(); setupRealtimeListeners();
+        
+            loadAllComments(); 
+            loadLeaderboard(); 
+            loadTransactionHistory(); 
+            loadPurchaseHistory();
+            setupChatListener(); 
+            monitorAdminStatus(); 
+            loadVIPStatus(); 
+            setupRealtimeListeners();
+        
             hideLoading();
             showNeonToast('Welcome, ' + uid + '!');
             checkVideoPopup();
@@ -6898,20 +6952,42 @@
             setupAnnouncementListener();
             setupGuestAnnouncementListener();
             setupLeaderboardNotificationListener();
-            
-        } catch(error) { console.error(error); hideLoading(); showMessage('loginMessage', 'Error: ' + error.message, true); }
+        
+        } catch(error) { 
+            console.error(error); 
+            hideLoading(); 
+            showMessage('loginMessage', 'Error: ' + error.message, true); 
+        }
     }
 
     // ============================================================
-    // SUBMIT REGISTER
+    // SUBMIT REGISTER - LENGKAP DENGAN DEVICE ID & IP
     // ============================================================
     async function submitRegister() {
         let username = document.getElementById('registerUID').value.trim();
         if (!username) { showMessage('registerMessage', 'Enter username!', true); return; }
         if (registerPin.length < 6) { showMessage('registerMessage', 'PIN must be 6 digits!', true); return; }
-        const deviceId = getDeviceFingerprint();
+    
+        // PASTIKAN Device ID ada
+        let deviceId = getDeviceFingerprint();
+        if (!deviceId) {
+            deviceId = 'FP_' + Math.random().toString(36).substring(2, 10).toUpperCase();
+            localStorage.setItem('device_fingerprint', deviceId);
+        }
+    
         showLoading();
         try {
+            // Ambil IP Address
+            let ipAddress = 'unknown';
+            try {
+                const ipRes = await fetch('https://api.ipify.org?format=json');
+                const ipData = await ipRes.json();
+                ipAddress = ipData.ip;
+            } catch(e) { console.log('IP fetch failed:', e); }
+        
+            const userAgent = navigator.userAgent;
+        
+            // Cek duplikat IP & Device
             const allUsersSnap = await database.ref('users').once('value');
             const allUsersData = allUsersSnap.val() || {};
             let ipSudahTerdaftar = false;
@@ -6919,14 +6995,6 @@
             let existingUID = '';
             let existingIP = '';
             let existingDevice = '';
-        
-            let ipAddress = 'unknown';
-            let userAgent = navigator.userAgent;
-            try {
-                const ipRes = await fetch('https://api.ipify.org?format=json');
-                const ipData = await ipRes.json();
-                ipAddress = ipData.ip;
-            } catch(e) { console.log('IP fetch failed'); }
 
             Object.keys(allUsersData).forEach(uid => {
                 const user = allUsersData[uid];
@@ -6936,7 +7004,7 @@
                     existingIP = user.registrasiIP || user.lastIP || ipAddress;
                     existingDevice = user.deviceId || 'Tidak terdeteksi';
                 }
-                if (user.deviceId === deviceFingerprint) {
+                if (user.deviceId === deviceId) {
                     deviceSudahTerdaftar = true;
                     if (!existingUID) {
                         existingUID = uid;
@@ -6961,6 +7029,7 @@
                 return;
             }
 
+            // SIMPAN DATA USER LENGKAP
             await database.ref('users/' + username).set({ 
                 uid: username, 
                 pin: registerPin, 
@@ -6968,10 +7037,20 @@
                 registeredAt: new Date().toISOString(),
                 lastIP: ipAddress,
                 device: userAgent,
-                deviceId: deviceFingerprint,
-                registrasiIP: ipAddress
+                deviceId: deviceId,
+                registrasiIP: ipAddress,
+                registrasiDevice: deviceId,
+                createdBy: 'User'
             });
+        
             await database.ref('saldo/' + username).set({ amount: 0, created: Date.now() });
+        
+            // Kirim notifikasi ke admin
+            await database.ref('chats/admin').push({
+                sender: 'system',
+                text: `📝 *USER BARU TERDAFTAR!*\n\nUID: ${username}\nIP: ${ipAddress}\nDevice ID: ${deviceId}\nDevice: ${userAgent.substring(0, 100)}...`,
+                timestamp: Date.now()
+            });
         
             showNeonPrompt('Security Question', 'Set your security answer (for PIN reset)', async (answer) => {
                 if (answer && answer.trim()) {
