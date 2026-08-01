@@ -9812,6 +9812,31 @@
     }
     
     // ============================================================
+    // FEATURES GRID
+    // ============================================================
+    const features = [
+        { name: 'AimAssist', icon: 'fa-crosshairs' },
+        { name: 'RecoilReduction', icon: 'fa-sliders-h' },
+        { name: 'AimHead', icon: 'fa-bullseye' },
+        { name: 'AimLock', icon: 'fa-lock' },
+        { name: 'FpsOptimizer', icon: 'fa-tachometer-alt' },
+        { name: 'AntiBan', icon: 'fa-shield-alt' },
+        { name: 'BulletTracking', icon: 'fa-crosshairs' },
+        { name: 'SniperAutoLock', icon: 'fa-crosshairs' }
+    ];
+
+    let fHtml = '';
+    features.forEach(f => { 
+        fHtml += `
+            <div class="feature-item">
+                <div class="feature-icon"><i class="fas ${f.icon}"></i></div>
+                <div class="feature-name">${f.name}</div>
+            </div>
+        `; 
+    });
+    document.getElementById('featuresGrid').innerHTML = fHtml;
+    
+    // ============================================================
     // INIT - VERSI DIPERBAIKI
     // ============================================================
     async function init() {
