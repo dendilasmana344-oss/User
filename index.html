@@ -4115,6 +4115,152 @@
             border-radius: 40px;
             padding: 35px;
         }
+        
+        /* ============================================================
+       PHANTOMSTORE OVERLAY 3D ULTRA REALISTIS
+       ============================================================ */
+        .phantom-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(30px);
+            z-index: 99999999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.8s ease;
+        }
+        
+        .phantom-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .phantom-overlay .phantom-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 52px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #ffd700, #ff6b6b, #ffd700, #bf00ff, #ffd700);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientShift 2s ease infinite;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+            letter-spacing: 4px;
+            margin-bottom: 10px;
+            position: relative;
+            transform: perspective(800px) rotateX(5deg) rotateY(-5deg);
+            transition: all 0.3s;
+        }
+        
+        .phantom-overlay .phantom-sub {
+            font-family: 'Orbitron', monospace;
+            font-size: 18px;
+            color: #888;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            margin-bottom: 30px;
+            opacity: 0.7;
+            transform: perspective(800px) rotateX(3deg);
+        }
+        
+        .phantom-overlay .phantom-loading {
+            width: 80px;
+            height: 80px;
+            border: 4px solid rgba(255, 215, 0, 0.1);
+            border-top-color: #ffd700;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 30px;
+            box-shadow: 0 0 50px rgba(255, 215, 0, 0.2);
+        }
+        
+        .phantom-overlay .phantom-progress-container {
+            width: 80%;
+            max-width: 400px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            height: 12px;
+            overflow: hidden;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            position: relative;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+        }
+        
+        .phantom-overlay .phantom-progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #ffd700, #ff6b6b, #bf00ff);
+            background-size: 200% 200%;
+            animation: gradientShift 1s ease infinite;
+            border-radius: 15px;
+            transition: width 0.3s ease;
+            position: relative;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+        }
+        
+        .phantom-overlay .phantom-progress-text {
+            font-family: 'Orbitron', monospace;
+            font-size: 28px;
+            color: #ffd700;
+            margin-top: 15px;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+        
+        .phantom-overlay .phantom-status {
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            color: #888;
+            margin-top: 10px;
+            animation: neonPulse 2s infinite;
+        }
+        
+        /* SLIDE IN/OUT TEXT 3D */
+        .phantom-slide-text {
+            position: absolute;
+            font-family: 'Orbitron', monospace;
+            font-size: 120px;
+            font-weight: 900;
+            color: transparent;
+            -webkit-text-stroke: 2px rgba(255, 215, 0, 0.2);
+            text-shadow: 0 0 80px rgba(255, 215, 0, 0.1);
+            pointer-events: none;
+            white-space: nowrap;
+            transform: perspective(800px) rotateX(20deg) rotateY(10deg);
+            opacity: 0.15;
+            animation: slideInOut 4s ease-in-out infinite;
+            z-index: 0;
+        }
+        
+        @keyframes slideInOut {
+            0% { transform: perspective(800px) rotateX(20deg) rotateY(10deg) translateX(-120%); opacity: 0; }
+            10% { opacity: 0.15; }
+            50% { transform: perspective(800px) rotateX(20deg) rotateY(10deg) translateX(0%); opacity: 0.2; }
+            90% { opacity: 0.15; }
+            100% { transform: perspective(800px) rotateX(20deg) rotateY(10deg) translateX(120%); opacity: 0; }
+        }
+        
+        .phantom-slide-text:nth-child(2) {
+            animation-delay: 2s;
+            font-size: 80px;
+            transform: perspective(800px) rotateX(-15deg) rotateY(-15deg);
+            opacity: 0.1;
+        }
+        
+        .phantom-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
         /* ============================================================
            FORGOT PIN MODAL
@@ -5084,6 +5230,35 @@
                 padding: 8px 10px;
             }
         }
+        
+        /* ============================================================
+       VIDEO FULLSCREEN TOGGLE
+       ============================================================ */
+        .video-fullscreen-btn {
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid var(--neon-cyan);
+            border-radius: 50%;
+            color: var(--neon-cyan);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 18px;
+            z-index: 10;
+        }
+
+        .video-fullscreen-btn:hover {
+            background: var(--neon-cyan);
+            color: #000;
+            transform: scale(1.1);
+            box-shadow: 0 0 20px var(--neon-cyan);
+        }
 
         /* ============================================================
        QRIS QR CODE DISPLAY
@@ -5745,6 +5920,25 @@
 </div>
 
 <!-- ============================================================
+     PHANTOMSTORE OVERLAY - DOWNLOAD RESOURCE
+     ============================================================ -->
+<div class="phantom-overlay" id="phantomOverlay">
+    <div class="phantom-slide-text">👑 PhantomStore 👑</div>
+    <div class="phantom-slide-text">👑 PhantomStore 👑</div>
+    
+    <div class="phantom-content">
+        <div class="phantom-title">👑 PhantomStore 👑</div>
+        <div class="phantom-sub">Loading Resources...</div>
+        <div class="phantom-loading"></div>
+        <div class="phantom-progress-container">
+            <div class="phantom-progress-fill" id="phantomProgressFill" style="width:0%;"></div>
+        </div>
+        <div class="phantom-progress-text" id="phantomProgressText">0%</div>
+        <div class="phantom-status" id="phantomStatus">Mempersiapkan resource...</div>
+    </div>
+</div>
+
+<!-- ============================================================
      PACKAGE DETAIL POPUP
      ============================================================ -->
 <div class="package-detail-popup" id="packageDetailPopup">
@@ -5957,6 +6151,35 @@
         </div>
         <div style="margin-top: 15px; font-size: 12px; color: #888; text-align:center;">
             <i class="fas fa-info-circle"></i> Hubungi admin di Telegram untuk mendapatkan jawaban keamanan
+        </div>
+    </div>
+</div>
+
+<!-- ============================================================
+     VIDEO POPUP - FORGOT PASSWORD (tutorial6.mp4)
+     ============================================================ -->
+<div class="video-popup-login" id="videoPopupForgot">
+    <div class="video-popup-content">
+        <button class="video-popup-close" onclick="closeVideoPopupForgot()">✕</button>
+        <div class="video-popup-type-badge tutorial">📖 TUTORIAL</div>
+        <div class="video-popup-title">🔑 Lupa PIN / Password</div>
+        <div class="video-popup-desc">Panduan lengkap cara reset PIN jika Anda lupa.</div>
+        <div class="video-popup-player">
+            <video id="videoPopupForgotPlayer" autoplay loop playsinline>
+                <source src="tutorial6.mp4" type="video/mp4">
+            </video>
+            <button class="video-popup-mute-btn" onclick="toggleVideoPopupForgotMute()">
+                <i class="fas fa-volume-mute"></i>
+            </button>
+            <button class="video-fullscreen-btn" onclick="toggleVideoFullscreen('videoPopupForgotPlayer')">
+                <i class="fas fa-expand"></i>
+            </button>
+        </div>
+        <div style="text-align: center; margin-top: 15px;">
+            <span class="video-popup-badge">📝 TUTORIAL LUPA PIN</span>
+        </div>
+        <div class="video-popup-actions">
+            <button class="video-popup-btn video-popup-btn-primary" onclick="closeVideoPopupForgot()">OK, Saya Mengerti</button>
         </div>
     </div>
 </div>
@@ -6814,64 +7037,64 @@
 
         document.getElementById('keyPopup').classList.add('active');
         document.getElementById('keyInput').value = '';
-        document.getElementById('keyStatus').className = 'key-status';
-        document.getElementById('keyStatus').textContent = '';
-        setTimeout(() => { document.getElementById('keyInput').focus(); }, 300);
-        document.body.style.overflow = 'hidden';
-    }
-
-    function closeKeyPopup() {
-        document.getElementById('keyPopup').classList.remove('active');
-        document.body.style.overflow = '';
-    }
-
-    function submitKey() {
-        const input = document.getElementById('keyInput').value.trim();
-        const status = document.getElementById('keyStatus');
-
-        if (!input) {
-            status.className = 'key-status error';
-            status.textContent = '❌ Masukkan kunci terlebih dahulu!';
-            return;
-        }
-
-        if (input === maintenanceKey) {
-            status.className = 'key-status success';
-            status.textContent = '✅ Kunci benar! Maintenance dinonaktifkan untuk Anda.';
-            
-            isMaintenanceOverridden = true;
-            maintenanceOverrideActive = true;
-            localStorage.setItem('maintenance_override_' + currentUID, 'true');
-            localStorage.setItem('maintenance_override_key', input);
-            localStorage.setItem('maintenance_override_date', new Date().toISOString());
-            
-            if (maintenanceInterval) {
-                clearInterval(maintenanceInterval);
-                maintenanceInterval = null;
-            }
-            
-            document.getElementById('maintenancePage').classList.remove('active');
-            document.getElementById('loginWrapper').style.display = 'flex';
-            document.getElementById('mainLayout').style.display = 'block';
-            
-            showNeonToast('✅ Akses maintenance berhasil!');
-            
-            setTimeout(() => { closeKeyPopup(); }, 1500);
-            
-            if (window.maintenanceIntervalId) {
-                clearInterval(window.maintenanceIntervalId);
-            }
-            window.maintenanceIntervalId = setInterval(() => { checkMaintenance(); }, 30000);
-            
-        } else {
-            status.className = 'key-status error';
-            status.textContent = '❌ Kunci salah! Coba lagi.';
-            document.getElementById('keyInput').value = '';
+            document.getElementById('keyStatus').className = 'key-status';
+            document.getElementById('keyStatus').textContent = '';
             setTimeout(() => { document.getElementById('keyInput').focus(); }, 300);
+            document.body.style.overflow = 'hidden';
         }
-    }
-
-    async function checkMaintenance() {
+    
+        function closeKeyPopup() {
+            document.getElementById('keyPopup').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    
+        function submitKey() {
+            const input = document.getElementById('keyInput').value.trim();
+            const status = document.getElementById('keyStatus');
+    
+            if (!input) {
+                status.className = 'key-status error';
+                status.textContent = '❌ Masukkan kunci terlebih dahulu!';
+                return;
+            }
+    
+            if (input === maintenanceKey) {
+                status.className = 'key-status success';
+                status.textContent = '✅ Kunci benar! Maintenance dinonaktifkan untuk Anda.';
+                
+                isMaintenanceOverridden = true;
+                maintenanceOverrideActive = true;
+                localStorage.setItem('maintenance_override_' + currentUID, 'true');
+                localStorage.setItem('maintenance_override_key', input);
+                localStorage.setItem('maintenance_override_date', new Date().toISOString());
+                
+                if (maintenanceInterval) {
+                    clearInterval(maintenanceInterval);
+                    maintenanceInterval = null;
+                }
+                
+                document.getElementById('maintenancePage').classList.remove('active');
+                document.getElementById('loginWrapper').style.display = 'flex';
+                document.getElementById('mainLayout').style.display = 'block';
+                
+                showNeonToast('✅ Akses maintenance berhasil!');
+                
+                setTimeout(() => { closeKeyPopup(); }, 1500);
+                
+                if (window.maintenanceIntervalId) {
+                    clearInterval(window.maintenanceIntervalId);
+                }
+                window.maintenanceIntervalId = setInterval(() => { checkMaintenance(); }, 30000);
+                
+            } else {
+                status.className = 'key-status error';
+                status.textContent = '❌ Kunci salah! Coba lagi.';
+                document.getElementById('keyInput').value = '';
+                setTimeout(() => { document.getElementById('keyInput').focus(); }, 300);
+            }
+        }
+    
+        async function checkMaintenance() {
         try {
             if (!maintenanceKeyLoaded) {
                 await loadMaintenanceKey();
@@ -6888,31 +7111,64 @@
                 maintenanceOverrideActive = true;
                 document.getElementById('maintenancePage').classList.remove('active');
                 document.getElementById('loginWrapper').style.display = 'flex';
-                document.getElementById('mainLayout').style.display = 'block';
-                return;
+            document.getElementById('mainLayout').style.display = 'block';
+            return;
+        }
+        
+        // CEK APAKAH MAINTENANCE BENAR-BENAR AKTIF
+        if (m && m.status === 'active') {
+            // Cek apakah sudah melewati waktu endTime
+            if (m.endTime) {
+                const endTime = new Date(m.endTime).getTime();
+                if (Date.now() > endTime) {
+                    // Maintenance sudah selesai - nonaktifkan otomatis
+                    await database.ref('maintenance').update({ 
+                        status: 'inactive',
+                        autoDeactivatedAt: Date.now(),
+                        autoDeactivatedReason: 'Waktu maintenance habis'
+                    });
+                    
+                    // Refresh status
+                    document.getElementById('maintenancePage').classList.remove('active');
+                    document.getElementById('loginWrapper').style.display = 'flex';
+                    document.getElementById('mainLayout').style.display = 'block';
+                    
+                    if (maintenanceInterval) {
+                        clearInterval(maintenanceInterval);
+                        maintenanceInterval = null;
+                    }
+                    
+                    showNeonToast('✅ Maintenance selesai!');
+                    return;
+                }
             }
             
-            if (m && m.status === 'active') {
-                maintenanceOverrideActive = false;
-                document.getElementById('maintenancePage').classList.add('active');
-                document.getElementById('loginWrapper').style.display = 'none';
-                document.getElementById('mainLayout').style.display = 'none';
-                document.getElementById('maintenanceTitle').innerHTML = m.title || 'MAINTENANCE MODE';
-                document.getElementById('maintenanceMessage').innerHTML = m.message || 'Sistem sedang dalam pemeliharaan.';
-                if (m.endTime) {
-                    maintenanceEndTime = new Date(m.endTime).getTime();
-                    updateMaintenanceTimer();
-                    if (maintenanceInterval) clearInterval(maintenanceInterval);
-                    maintenanceInterval = setInterval(updateMaintenanceTimer, 1000);
-                }
-            } else {
-                document.getElementById('maintenancePage').classList.remove('active');
-                if (maintenanceInterval) { clearInterval(maintenanceInterval); maintenanceInterval = null; }
+            // Maintenance masih aktif
+            maintenanceOverrideActive = false;
+            document.getElementById('maintenancePage').classList.add('active');
+            document.getElementById('loginWrapper').style.display = 'none';
+            document.getElementById('mainLayout').style.display = 'none';
+            document.getElementById('maintenanceTitle').innerHTML = m.title || 'MAINTENANCE MODE';
+            document.getElementById('maintenanceMessage').innerHTML = m.message || 'Sistem sedang dalam pemeliharaan.';
+            
+            if (m.endTime) {
+                maintenanceEndTime = new Date(m.endTime).getTime();
+                updateMaintenanceTimer();
+                if (maintenanceInterval) clearInterval(maintenanceInterval);
+                maintenanceInterval = setInterval(updateMaintenanceTimer, 1000);
             }
-        } catch (error) { 
-            console.error('checkMaintenance error:', error); 
+        } else {
+            // Maintenance tidak aktif
+            document.getElementById('maintenancePage').classList.remove('active');
+            if (maintenanceInterval) {
+                clearInterval(maintenanceInterval);
+                maintenanceInterval = null;
+            }
         }
+    } catch (error) { 
+        console.error('checkMaintenance error:', error); 
     }
+}
 
     function updateMaintenanceTimer() {
         if (!maintenanceEndTime) return;
@@ -7571,178 +7827,187 @@
                 </div>
             `; 
         });
-        document.getElementById('featuresGrid').innerHTML = fHtml;
+            document.getElementById('featuresGrid').innerHTML = fHtml;
+            
+            document.getElementById('packageDetailPopup').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
         
-        document.getElementById('packageDetailPopup').classList.add('active');
-        document.body.style.overflow = 'hidden';
-    }
-    
-    function closePackageDetail() {
-        document.getElementById('packageDetailPopup').classList.remove('active');
-        document.body.style.overflow = '';
-    }
-    
-    function buyFromPopup() {
-        if (popupSelectedPackage) {
-            closePackageDetail();
-            const index = packages.indexOf(popupSelectedPackage);
-            if (index !== -1) {
-                selectPackage(index);
-                document.getElementById('premiumPackagesContent').scrollIntoView({ behavior: 'smooth' });
+        function closePackageDetail() {
+            document.getElementById('packageDetailPopup').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
+        function buyFromPopup() {
+            if (popupSelectedPackage) {
+                closePackageDetail();
+                const index = packages.indexOf(popupSelectedPackage);
+                if (index !== -1) {
+                    selectPackage(index);
+                    document.getElementById('premiumPackagesContent').scrollIntoView({ behavior: 'smooth' });
+                }
             }
         }
-    }
-    
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            closePackageDetail();
-        }
-    });
-    
-    document.getElementById('packageDetailPopup').addEventListener('click', function(e) {
-        if (e.target === this) {
-            closePackageDetail();
-        }
-    });
-
-    // ============================================================
-    // BUY VIP
-    // ============================================================
-    function buyVIP() { navigateWithLoading('dashboard'); document.getElementById('premiumPackagesContent').scrollIntoView({ behavior: 'smooth' }); }
-    
-    async function buyVIPPackage() {
-        if (!selectedPackage) {
-            showNeonModal('Error', 'Pilih paket dulu!', 'error');
-            return;
-        }
-    
-        const priceToPay = selectedPackage.finalPrice || selectedPackage.price;
-    
-        if (currentSaldo < priceToPay) {
-            showNeonModal('Saldo Tidak Cukup', `Saldo: Rp ${formatRupiah(currentSaldo)}\nRequired: Rp ${formatRupiah(priceToPay)}`, 'error');
-            showDepositPopup();
-            return;
-        }
-    
-        showLoading();
-        try {
-            await database.ref('saldo/' + currentUID).set({ amount: currentSaldo - priceToPay, last_updated: Date.now() });
-            currentSaldo -= priceToPay;
-            updateSaldoDisplay();
         
-            await database.ref('purchases/' + currentUID).push({
-                uid: currentUID,
-                originalPrice: selectedPackage.price,
-                price: priceToPay,
-                discount: globalDiscount.active ? globalDiscount.percentage : 0,
-                package: selectedPackage.label,
-                packageType: selectedPackage.type,
-                status: 'pending',
-                timestamp: Date.now()
-            });
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closePackageDetail();
+            }
+        });
         
-            await database.ref('chats/' + currentUID).push({
-                sender: 'system',
-                text: `✅ VIP Purchase Request Sent!\nPackage: ${selectedPackage.label}\nOriginal: Rp ${formatRupiah(selectedPackage.price)}\nFinal: Rp ${formatRupiah(priceToPay)}\nDiscount: ${globalDiscount.active ? globalDiscount.percentage + '%' : '0%'}`,
-                timestamp: Date.now()
-            });
+        document.getElementById('packageDetailPopup').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closePackageDetail();
+            }
+        });
+    
+        // ============================================================
+        // BUY VIP
+        // ============================================================
+        function buyVIP() { navigateWithLoading('dashboard'); document.getElementById('premiumPackagesContent').scrollIntoView({ behavior: 'smooth' }); }
         
-            sendUserNotification('👑 VIP Purchase', `Request pembelian VIP ${selectedPackage.label} telah dikirim ke admin.`, `vip_purchase_${Date.now()}`);
+        async function buyVIPPackage() {
+            if (!selectedPackage) {
+                showNeonModal('Error', 'Pilih paket dulu!', 'error');
+                return;
+            }
         
-            hideLoading();
-            showNeonModal('Success', 'Request sent! Menunggu persetujuan admin.', 'success');
-        } catch(error) {
-            hideLoading();
-            showNeonModal('Error', error.message, 'error');
+            const priceToPay = selectedPackage.finalPrice || selectedPackage.price;
+        
+            if (currentSaldo < priceToPay) {
+                showNeonModal('Saldo Tidak Cukup', `Saldo: Rp ${formatRupiah(currentSaldo)}\nRequired: Rp ${formatRupiah(priceToPay)}`, 'error');
+                showDepositPopup();
+                return;
+            }
+        
+            showLoading();
+            try {
+                await database.ref('saldo/' + currentUID).set({ amount: currentSaldo - priceToPay, last_updated: Date.now() });
+                currentSaldo -= priceToPay;
+                updateSaldoDisplay();
+            
+                await database.ref('purchases/' + currentUID).push({
+                    uid: currentUID,
+                    originalPrice: selectedPackage.price,
+                    price: priceToPay,
+                    discount: globalDiscount.active ? globalDiscount.percentage : 0,
+                    package: selectedPackage.label,
+                    packageType: selectedPackage.type,
+                    status: 'pending',
+                    timestamp: Date.now()
+                });
+            
+                await database.ref('chats/' + currentUID).push({
+                    sender: 'system',
+                    text: `✅ VIP Purchase Request Sent!\nPackage: ${selectedPackage.label}\nOriginal: Rp ${formatRupiah(selectedPackage.price)}\nFinal: Rp ${formatRupiah(priceToPay)}\nDiscount: ${globalDiscount.active ? globalDiscount.percentage + '%' : '0%'}`,
+                    timestamp: Date.now()
+                });
+            
+                sendUserNotification('👑 VIP Purchase', `Request pembelian VIP ${selectedPackage.label} telah dikirim ke admin.`, `vip_purchase_${Date.now()}`);
+            
+                hideLoading();
+                showNeonModal('Success', 'Request sent! Menunggu persetujuan admin.', 'success');
+            } catch(error) {
+                hideLoading();
+                showNeonModal('Error', error.message, 'error');
+            }
         }
-    }
     
     // ============================================================
     // EDIT MESSAGE FUNCTIONS - PERBAIKAN (TIDAK KIRIM PESAN BARU)
     // ============================================================
 
-    function openEditMessagePopup(messageId, currentText, source, uid) {
-        editingMessageData = {
-            id: messageId,
-            text: currentText,
-            source: source,
-            uid: uid
-        };
-
-        document.getElementById('editMsgTextarea').value = currentText;
-        document.getElementById('editMsgPopup').classList.add('active');
-        document.body.style.overflow = 'hidden';
-        setTimeout(() => {
-            document.getElementById('editMsgTextarea').focus();
-            document.getElementById('editMsgTextarea').select();
-        }, 300);
+    async function saveEditMessage() {
+    if (!editingMessageData) {
+        console.log('❌ Tidak ada data pesan untuk diedit');
+        return;
     }
+
+    const newText = document.getElementById('editMsgTextarea').value.trim();
+    if (!newText) {
+        showNeonModal('Error', 'Pesan tidak boleh kosong!', 'error');
+        return;
+    }
+
+    if (newText === editingMessageData.text) {
+        closeEditMsgPopup();
+        return;
+    }
+
+    showLoading();
+    try {
+        const { id, source, uid, sender } = editingMessageData;
+        let path = '';
+        
+        if (source === 'private_chat') {
+            path = 'chats/' + uid + '/' + id;
+        } else if (source === 'public_chat') {
+            path = 'all_comments/' + id;
+        } else if (source === 'support_chat') {
+            path = 'support_chats/' + uid + '/messages/' + id;
+        } else {
+            throw new Error('Sumber chat tidak dikenal!');
+        }
+        
+        // UPDATE PESAN LAMA - PERTAHANKAN SENDER ASLI
+        const updateData = {
+            text: newText,
+            edited: true,
+            editedAt: Date.now()
+        };
+        
+        // Jika ada sender di data, pertahankan
+        if (editingMessageData.originalSender) {
+            updateData.sender = editingMessageData.originalSender;
+        }
+        
+        await database.ref(path).update(updateData);
+        
+        hideLoading();
+        showNeonToast('✅ Pesan berhasil diedit!');
+        closeEditMsgPopup();
+        
+        // Refresh chat sesuai sumber
+        if (source === 'private_chat') {
+            setupChatListener();
+        } else if (source === 'public_chat') {
+            loadAllComments();
+        } else if (source === 'support_chat') {
+            loadSupportMessages();
+        }
+        
+        console.log('✅ Pesan berhasil diedit di:', path);
+        
+    } catch (error) {
+        hideLoading();
+        showNeonModal('Error', 'Gagal edit pesan: ' + error.message, 'error');
+        console.error('Error edit message:', error);
+    }
+}
+
+// PERBAIKI openEditMessagePopup - simpan sender asli
+function openEditMessagePopup(messageId, currentText, source, uid, sender) {
+    editingMessageData = {
+        id: messageId,
+        text: currentText,
+        source: source,
+        uid: uid,
+        originalSender: sender || 'user'
+    };
+
+    document.getElementById('editMsgTextarea').value = currentText;
+    document.getElementById('editMsgPopup').classList.add('active');
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => {
+        document.getElementById('editMsgTextarea').focus();
+        document.getElementById('editMsgTextarea').select();
+    }, 300);
+}
 
     function closeEditMsgPopup() {
         document.getElementById('editMsgPopup').classList.remove('active');
         document.body.style.overflow = '';
         editingMessageData = null;
-    }
-
-    async function saveEditMessage() {
-        if (!editingMessageData) {
-            console.log('❌ Tidak ada data pesan untuk diedit');
-            return;
-        }
-
-        const newText = document.getElementById('editMsgTextarea').value.trim();
-        if (!newText) {
-            showNeonModal('Error', 'Pesan tidak boleh kosong!', 'error');
-            return;
-        }
-
-        if (newText === editingMessageData.text) {
-            closeEditMsgPopup();
-            return;
-        }
-
-        showLoading();
-        try {
-            const { id, source, uid } = editingMessageData;
-            let path = '';
-        
-            if (source === 'private_chat') {
-                path = 'chats/' + uid + '/' + id;
-            } else if (source === 'public_chat') {
-                path = 'all_comments/' + id;
-            } else if (source === 'support_chat') {
-                path = 'support_chats/' + uid + '/messages/' + id;
-            } else {
-                throw new Error('Sumber chat tidak dikenal!');
-            }
-        
-            // UPDATE PESAN LAMA, BUKAN BUAT BARU!
-            await database.ref(path).update({
-                text: newText,
-                edited: true,
-                editedAt: Date.now()
-            });
-        
-            hideLoading();
-            showNeonToast('✅ Pesan berhasil diedit!');
-            closeEditMsgPopup();
-        
-            // Refresh chat sesuai sumber
-            if (source === 'private_chat') {
-                setupChatListener();
-            } else if (source === 'public_chat') {
-                loadAllComments();
-            } else if (source === 'support_chat') {
-                loadSupportMessages();
-            }
-        
-            console.log('✅ Pesan berhasil diedit di:', path);
-        
-        } catch (error) {
-            hideLoading();
-            showNeonModal('Error', 'Gagal edit pesan: ' + error.message, 'error');
-            console.error('Error edit message:', error);
-        }
     }
     
     // ============================================================
@@ -8754,19 +9019,30 @@
                 } else {
                     throw new Error('Sumber chat tidak dikenal!');
                 }
+                
+                console.log('🗑️ Menghapus:', path);
                 await database.ref(path).remove();
+                
                 hideLoading();
                 showNeonToast('✅ Pesan dihapus!');
+                
                 if (source === 'private_chat') {
                     setupChatListener();
                 } else if (source === 'public_chat') {
-                    loadAllComments();
+                    // HAPUS LAMA DAN MUAT ULANG
+                    const area = document.getElementById('allCommentsArea');
+                    if (area) {
+                        // Hapus semua pesan dan muat ulang
+                        area.innerHTML = '';
+                        loadAllComments();
+                    }
                 } else if (source === 'support_chat') {
                     loadSupportMessages();
                 }
             } catch (error) {
                 hideLoading();
                 showNeonModal('Error', 'Gagal hapus pesan: ' + error.message, 'error');
+                console.error('Error delete:', error);
             }
         });
     }
@@ -8786,31 +9062,215 @@
             if (file) {
                 showLoading();
                 try {
-                    const url = await uploadToImgbb(file);
-                    await database.ref('all_comments').push({ uid: currentUID, text: `📎 Sent image: ${file.name}`, fileUrl: url, fileName: file.name, fileType: file.type, timestamp: Date.now() });
-                    hideLoading();
-                    showNeonToast('Image sent!');
-                } catch(err) { hideLoading(); showNeonModal('Error', err.message, 'error'); }
+                        const url = await uploadToImgbb(file);
+                        await database.ref('all_comments').push({ uid: currentUID, text: `📎 Sent image: ${file.name}`, fileUrl: url, fileName: file.name, fileType: file.type, timestamp: Date.now() });
+                        hideLoading();
+                        showNeonToast('Image sent!');
+                    } catch(err) { hideLoading(); showNeonModal('Error', err.message, 'error'); }
+                }
+            };
+            input.click();
+        });
+        
+        // ============================================================
+    // VIDEO POPUP 3 JAM - PACKAGE & DEPOSIT
+    // ============================================================
+    const videoPopupTimestamps = {
+        package: { lastShown: 0, cooldown: 3 * 60 * 60 * 1000 }, // 3 jam
+        deposit: { lastShown: 0, cooldown: 3 * 60 * 60 * 1000 }, // 3 jam
+        forgot: { lastShown: 0, cooldown: 3 * 60 * 60 * 1000 } // 3 jam
+    };
+    
+    function canShowVideoPopup(type) {
+        const now = Date.now();
+        const data = videoPopupTimestamps[type];
+        if (!data) return true;
+        return (now - data.lastShown) > data.cooldown;
+    }
+    
+    function recordVideoPopupShown(type) {
+        videoPopupTimestamps[type].lastShown = Date.now();
+        localStorage.setItem('video_popup_' + type + '_last_shown', Date.now().toString());
+    }
+    
+    function loadVideoPopupTimestamps() {
+        ['package', 'deposit', 'forgot'].forEach(type => {
+            const saved = localStorage.getItem('video_popup_' + type + '_last_shown');
+            if (saved) {
+                videoPopupTimestamps[type].lastShown = parseInt(saved);
             }
+        });
+    }
+    
+    // Panggil di init
+    loadVideoPopupTimestamps();
+    
+    // ============================================================
+    // VIDEO FULLSCREEN
+    // ============================================================
+    function toggleVideoFullscreen(videoId) {
+        const video = document.getElementById(videoId);
+        if (!video) return;
+        
+        if (video.requestFullscreen) {
+            video.requestFullscreen();
+        } else if (video.webkitRequestFullscreen) {
+            video.webkitRequestFullscreen();
+        } else if (video.msRequestFullscreen) {
+            video.msRequestFullscreen();
+        }
+    }
+    
+    // ============================================================
+    // VIDEO POPUP PACKAGE (3 JAM)
+    // ============================================================
+    function showVideoPopupPackage() {
+        if (!canShowVideoPopup('package')) {
+            console.log('⏳ Video popup package masih dalam cooldown (3 jam)');
+            return;
+        }
+        
+        const overlay = document.getElementById('videoPopupLogin');
+        const player = document.getElementById('videoPopupLoginPlayer');
+        const title = document.getElementById('videoPopupLoginTitle');
+        const desc = document.getElementById('videoPopupLoginDesc');
+        const badge = document.getElementById('videoPopupLoginType');
+        const badgeText = document.getElementById('videoPopupLoginBadge');
+        
+        player.src = 'tutorial3.mp4';
+        player.load();
+        player.play().catch(e => console.log('Auto-play error:', e));
+        player.muted = true;
+        document.querySelector('.video-popup-login .video-popup-mute-btn i').className = 'fas fa-volume-mute';
+        
+        title.textContent = '👑 Tutorial Package VIP';
+        desc.textContent = 'Panduan lengkap cara membeli package VIP di VIP Files. Pilih package yang sesuai dengan kebutuhan Anda.';
+        badge.textContent = '👑 VIP PACKAGE';
+        badge.className = 'video-popup-type-badge promo';
+            badgeText.textContent = '👑 TUTORIAL VIP PACKAGE';
+            
+            // Tambahkan fullscreen button
+            addFullscreenButton(player);
+            
+            overlay.classList.add('active');
+            document.getElementById('loginWrapper').style.opacity = '0.3';
+            
+            recordVideoPopupShown('package');
+        }
+        
+        // ============================================================
+        // VIDEO POPUP DEPOSIT (3 JAM)
+        // ============================================================
+        function showVideoPopupDeposit() {
+            if (!canShowVideoPopup('deposit')) {
+                console.log('⏳ Video popup deposit masih dalam cooldown (3 jam)');
+                return;
+            }
+            
+            const overlay = document.getElementById('videoPopupLogin');
+            const player = document.getElementById('videoPopupLoginPlayer');
+            const title = document.getElementById('videoPopupLoginTitle');
+            const desc = document.getElementById('videoPopupLoginDesc');
+            const badge = document.getElementById('videoPopupLoginType');
+            const badgeText = document.getElementById('videoPopupLoginBadge');
+            
+            player.src = 'tutorial.mp4';
+            player.load();
+            player.play().catch(e => console.log('Auto-play error:', e));
+            player.muted = true;
+            document.querySelector('.video-popup-login .video-popup-mute-btn i').className = 'fas fa-volume-mute';
+            
+            title.textContent = '💰 Tutorial Deposit';
+            desc.textContent = 'Panduan lengkap cara melakukan deposit di VIP Files. Pilih metode pembayaran dan ikuti instruksinya.';
+            badge.textContent = '💰 DEPOSIT';
+            badge.className = 'video-popup-type-badge promo';
+            badgeText.textContent = '💰 TUTORIAL DEPOSIT';
+            
+            // Tambahkan fullscreen button
+            addFullscreenButton(player);
+            
+            overlay.classList.add('active');
+            document.getElementById('loginWrapper').style.opacity = '0.3';
+            
+            recordVideoPopupShown('deposit');
+        }
+        
+        // ============================================================
+        // VIDEO POPUP FORGOT PASSWORD (3 JAM)
+        // ============================================================
+        function showVideoPopupForgot() {
+            if (!canShowVideoPopup('forgot')) {
+                console.log('⏳ Video popup forgot masih dalam cooldown (3 jam)');
+                return;
+            }
+            
+            const overlay = document.getElementById('videoPopupForgot');
+            const player = document.getElementById('videoPopupForgotPlayer');
+            
+            player.load();
+            player.play().catch(e => console.log('Auto-play error:', e));
+            player.muted = true;
+            document.querySelector('#videoPopupForgot .video-popup-mute-btn i').className = 'fas fa-volume-mute';
+            
+            overlay.classList.add('active');
+            document.getElementById('loginWrapper').style.opacity = '0.3';
+            
+            recordVideoPopupShown('forgot');
+        }
+        
+        function closeVideoPopupForgot() {
+            const overlay = document.getElementById('videoPopupForgot');
+            overlay.classList.remove('active');
+            document.getElementById('loginWrapper').style.opacity = '1';
+            const player = document.getElementById('videoPopupForgotPlayer');
+            if (player) {
+                player.pause();
+                player.currentTime = 0;
+            }
+        }
+        
+        function toggleVideoPopupForgotMute() {
+            const player = document.getElementById('videoPopupForgotPlayer');
+            if (!player) return;
+            const btn = document.querySelector('#videoPopupForgot .video-popup-mute-btn i');
+            if (!btn) return;
+            player.muted = !player.muted;
+            btn.className = player.muted ? 'fas fa-volume-mute' : 'fas fa-volume-up';
+        }
+        
+        // Helper: Tambahkan fullscreen button ke video player
+        function addFullscreenButton(player) {
+            const container = player.closest('.video-popup-player');
+            if (!container) return;
+            
+            // Cek apakah sudah ada button fullscreen
+        if (container.querySelector('.video-fullscreen-btn')) return;
+        
+        const fsBtn = document.createElement('button');
+        fsBtn.className = 'video-fullscreen-btn';
+        fsBtn.innerHTML = '<i class="fas fa-expand"></i>';
+        fsBtn.onclick = function(e) {
+            e.stopPropagation();
+            toggleVideoFullscreen(player.id || 'videoPopupLoginPlayer');
         };
-        input.click();
-    });
-
-    // ============================================================
-    // LEADERBOARD
-    // ============================================================
-    async function loadLeaderboard() {
-        try {
-            const deposits = (await database.ref('deposits').once('value')).val() || {};
-            let totals = {};
-            Object.keys(deposits).forEach(uid => { let t=0; Object.keys(deposits[uid]).forEach(k => { if(deposits[uid][k].status==='approved') t+=deposits[uid][k].jumlah||0; }); if(t>0) totals[uid]=t; });
-            const sorted = Object.keys(totals).map(uid=>({uid,total:totals[uid]})).sort((a,b)=>b.total-a.total).slice(0,5);
-            const vip = (await database.ref('vip_members').once('value')).val() || {};
-            let html = '';
-            sorted.forEach((item,i) => {
-                const isVip = !!(vip[item.uid] && vip[item.uid].status==='active');
-                const rank = i===0?'🥇':i===1?'🥈':i===2?'🥉':(i+1)+'.';
-                html += `<div class="leaderboard-item"><span style="width:45px; color:#ffaa00;">${rank}</span><span style="flex:1; font-family:monospace;">${escapeHtml(item.uid)} ${isVip?'<i class="fas fa-crown" style="color:#ffd700;"></i>':''}</span><span style="color:#00ff88;">Rp ${formatRupiah(item.total)}</span></div>`;
+        container.appendChild(fsBtn);
+    }
+    
+        // ============================================================
+        // LEADERBOARD
+        // ============================================================
+        async function loadLeaderboard() {
+            try {
+                const deposits = (await database.ref('deposits').once('value')).val() || {};
+                let totals = {};
+                Object.keys(deposits).forEach(uid => { let t=0; Object.keys(deposits[uid]).forEach(k => { if(deposits[uid][k].status==='approved') t+=deposits[uid][k].jumlah||0; }); if(t>0) totals[uid]=t; });
+                const sorted = Object.keys(totals).map(uid=>({uid,total:totals[uid]})).sort((a,b)=>b.total-a.total).slice(0,5);
+                const vip = (await database.ref('vip_members').once('value')).val() || {};
+                let html = '';
+                sorted.forEach((item,i) => {
+                    const isVip = !!(vip[item.uid] && vip[item.uid].status==='active');
+                    const rank = i===0?'🥇':i===1?'🥈':i===2?'🥉':(i+1)+'.';
+                    html += `<div class="leaderboard-item"><span style="width:45px; color:#ffaa00;">${rank}</span><span style="flex:1; font-family:monospace;">${escapeHtml(item.uid)} ${isVip?'<i class="fas fa-crown" style="color:#ffd700;"></i>':''}</span><span style="color:#00ff88;">Rp ${formatRupiah(item.total)}</span></div>`;
             });
             document.getElementById('leaderboardList').innerHTML = html || '<div style="padding:25px; text-align:center;">No data</div>';
         } catch(e) { console.error(e); }
@@ -8981,136 +9441,193 @@
         });
     }
 
-    // 3. CEK DAN TAMPILKAN PROXY WARNING - VERSI DIPERBAIKI
-    async function checkProxyAndBlock() {
-        // Cek apakah sudah pernah warning sebelumnya
-        if (localStorage.getItem('proxy_warning_shown') === 'true') {
-            console.log('⚠️ Proxy warning sudah pernah ditampilkan, skip');
-            return;
-        }
+    // ============================================================
+// PROTEKSI PROXY & VPN - VERSI DIPERBAIKI
+// ============================================================
 
-        // Cek IP publik terlebih dahulu
-        let publicIP = '';
+async function checkProxyAndBlock() {
+    // Cek apakah sudah pernah warning
+    if (localStorage.getItem('proxy_warning_shown') === 'true') {
+        console.log('⚠️ Proxy warning sudah pernah ditampilkan, skip');
+        return;
+    }
+
+    // Cek IP publik
+    let publicIP = '';
+    try {
+        const ipRes = await fetch('https://api.ipify.org?format=json');
+        const ipData = await ipRes.json();
+        publicIP = ipData.ip;
+        console.log('🌐 Public IP detected:', publicIP);
+    } catch(e) {
+        console.log('⚠️ Gagal mendeteksi IP publik');
+        return;
+    }
+
+    // Skip untuk IP private
+    if (publicIP === '127.0.0.1' || publicIP === 'localhost' || 
+        publicIP.startsWith('192.168.') || publicIP.startsWith('10.') || 
+        publicIP.startsWith('172.16.') || publicIP.startsWith('172.17.') ||
+        publicIP.startsWith('172.18.') || publicIP.startsWith('172.19.') ||
+        publicIP.startsWith('172.20.') || publicIP.startsWith('172.21.') ||
+        publicIP.startsWith('172.22.') || publicIP.startsWith('172.23.') ||
+        publicIP.startsWith('172.24.') || publicIP.startsWith('172.25.') ||
+        publicIP.startsWith('172.26.') || publicIP.startsWith('172.27.') ||
+        publicIP.startsWith('172.28.') || publicIP.startsWith('172.29.') ||
+        publicIP.startsWith('172.30.') || publicIP.startsWith('172.31.')) {
+        console.log('✅ IP Private/Local, skip proxy detection');
+        return;
+    }
+
+    // Gunakan beberapa API untuk deteksi proxy
+    let isProxy = false;
+    
+    try {
+        // 1. ipapi.co
+        const resp1 = await fetch(`https://ipapi.co/${publicIP}/json/`);
+        const data1 = await resp1.json();
+        if (data1 && data1.proxy === true) {
+            isProxy = true;
+            console.log('⚠️ Proxy terdeteksi oleh ipapi.co');
+        }
+    } catch(e) {
+        console.log('⚠️ Gagal cek ipapi.co');
+    }
+
+    // 2. ipinfo.io (privacy check)
+    if (!isProxy) {
         try {
-            const ipRes = await fetch('https://api.ipify.org?format=json');
-            const ipData = await ipRes.json();
-            publicIP = ipData.ip;
-            console.log('🌐 Public IP detected:', publicIP);
-        } catch(e) {
-            console.log('⚠️ Gagal mendeteksi IP publik');
-            return;
-        }
-
-        // Jika IP adalah localhost atau IP private, skip deteksi
-        if (publicIP === '127.0.0.1' || publicIP === 'localhost' || 
-            publicIP.startsWith('192.168.') || publicIP.startsWith('10.') || 
-            publicIP.startsWith('172.16.') || publicIP.startsWith('172.17.') ||
-            publicIP.startsWith('172.18.') || publicIP.startsWith('172.19.') ||
-            publicIP.startsWith('172.20.') || publicIP.startsWith('172.21.') ||
-            publicIP.startsWith('172.22.') || publicIP.startsWith('172.23.') ||
-            publicIP.startsWith('172.24.') || publicIP.startsWith('172.25.') ||
-            publicIP.startsWith('172.26.') || publicIP.startsWith('172.27.') ||
-            publicIP.startsWith('172.28.') || publicIP.startsWith('172.29.') ||
-            publicIP.startsWith('172.30.') || publicIP.startsWith('172.31.')) {
-            console.log('✅ IP Private/Local, skip proxy detection');
-            return;
-        }
-
-        // Cek proxy menggunakan layanan eksternal (lebih akurat)
-        try {
-            // Gunakan ipapi.co untuk deteksi proxy
-            const checkResp = await fetch(`https://ipapi.co/${publicIP}/json/`);
-            const checkData = await checkResp.json();
-        
-            // Jika API merespon dan proxy = true, baru blokir
-            if (checkData && checkData.proxy === true) {
-                console.log('⚠️ Proxy terdeteksi oleh ipapi.co');
-                showProxyWarning();
-                return;
-            }
-        } catch(e) {
-            console.log('⚠️ Gagal cek proxy via ipapi.co, lanjutkan');
-        }
-
-        // Cek juga menggunakan ipinfo.io sebagai alternatif
-        try {
-            const ipInfoResp = await fetch(`https://ipinfo.io/${publicIP}/json`);
-            const ipInfoData = await ipInfoResp.json();
-        
-            // Jika ada indikasi proxy/vpn
-            if (ipInfoData && (ipInfoData.privacy && ipInfoData.privacy.proxy === true)) {
+            const resp2 = await fetch(`https://ipinfo.io/${publicIP}/json`);
+            const data2 = await resp2.json();
+            if (data2 && data2.privacy && data2.privacy.proxy === true) {
+                isProxy = true;
                 console.log('⚠️ Proxy terdeteksi oleh ipinfo.io');
-                showProxyWarning();
-                return;
             }
         } catch(e) {
-            console.log('⚠️ Gagal cek proxy via ipinfo.io, lanjutkan');
+            console.log('⚠️ Gagal cek ipinfo.io');
         }
-
-        console.log('✅ Tidak terdeteksi proxy, akses diizinkan');
     }
 
-    function showProxyWarning() {
-        const overlay = document.getElementById('proxyWarningOverlay');
-    
-        // Isi detail
-        document.getElementById('proxyDetectedIP').textContent = 'Terkait Proxy/VPN';
-        document.getElementById('proxyDetectedDevice').textContent = getPermanentUID();
-        document.getElementById('proxyDetectedUA').textContent = navigator.userAgent.substring(0, 80) + '...';
-    
-        overlay.classList.add('active');
-        document.body.style.overflow = 'hidden';
-    
-        // Log ke Firebase
+    // 3. Cek WebRTC leak (hanya jika ada indikasi)
+    if (!isProxy) {
         try {
-            database.ref('proxy_detections').push({
-                uid: getPermanentUID(),
-                userAgent: navigator.userAgent,
-                timestamp: Date.now(),
-                screen: screen.width + 'x' + screen.height,
-                detected: 'proxy'
+            const rtc = new RTCPeerConnection({
+                iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
             });
-        } catch(e) {}
-    }
-
-    function closeProxyWarning() {
-        const overlay = document.getElementById('proxyWarningOverlay');
-        overlay.classList.remove('active');
-        document.body.style.overflow = '';
-        localStorage.setItem('proxy_warning_shown', 'true');
+                const offer = await rtc.createOffer();
+                await rtc.setLocalDescription(offer);
+                
+                const candidates = await new Promise((resolve) => {
+                    const candidates = [];
+                    rtc.onicecandidate = (e) => {
+                        if (e.candidate) {
+                            candidates.push(e.candidate.candidate);
+                        } else {
+                            resolve(candidates);
+                        }
+                    };
+                    setTimeout(() => resolve(candidates), 3000);
+                });
+                
+                // Cek apakah ada IP publik yang berbeda dari IP utama
+                for (const cand of candidates) {
+                    if (cand && !cand.includes('192.168.') && !cand.includes('10.') && 
+                        !cand.includes('172.16.') && !cand.includes('172.17.') &&
+                        !cand.includes('172.18.') && !cand.includes('172.19.') &&
+                        !cand.includes('172.20.') && !cand.includes('172.21.') &&
+                        !cand.includes('172.22.') && !cand.includes('172.23.') &&
+                        !cand.includes('172.24.') && !cand.includes('172.25.') &&
+                        !cand.includes('172.26.') && !cand.includes('172.27.') &&
+                        !cand.includes('172.28.') && !cand.includes('172.29.') &&
+                        !cand.includes('172.30.') && !cand.includes('172.31.')) {
+                        // IP publik ditemukan di WebRTC - mungkin proxy
+                        const ipMatch = cand.match(/(\d{1,3}\.){3}\d{1,3}/);
+                        if (ipMatch && ipMatch[0] !== publicIP) {
+                            isProxy = true;
+                            console.log('⚠️ WebRTC IP mismatch:', ipMatch[0], 'vs', publicIP);
+                        }
+                    }
+                }
+            } catch(e) {
+                console.log('⚠️ WebRTC check error:', e);
+            }
+        }
     
-        // Tampilkan overlay permanen
-        const blockOverlay = document.createElement('div');
-        blockOverlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.98);z-index:99999999;display:flex;justify-content:center;align-items:center;flex-direction:column;padding:20px;';
-        blockOverlay.innerHTML = `
-            <div style="text-align:center;max-width:400px;">
-                <i class="fas fa-ban" style="font-size:80px;color:#ff4444;margin-bottom:20px;text-shadow:0 0 30px #ff4444;"></i>
-                <h1 style="font-family:'Orbitron',monospace;color:#ff4444;font-size:28px;text-shadow:0 0 15px #ff4444;">AKSES DIBLOKIR</h1>
-                <p style="color:#ccc;margin:20px 0;line-height:1.8;">Anda menggunakan Proxy/VPN yang tidak diizinkan.<br>Akses ke sistem <strong style="color:#ff4444;">DIBLOKIR PERMANEN</strong>.</p>
-                <p style="color:#888;font-size:12px;">Hubungi admin jika Anda merasa ini adalah kesalahan.</p>
-            </div>
-        `;
-        document.body.appendChild(blockOverlay);
+        // 4. Cek User-Agent untuk indikasi headless browser
+        const ua = navigator.userAgent.toLowerCase();
+        if (ua.includes('headless') || ua.includes('phantom') || ua.includes('selenium')) {
+            isProxy = true;
+            console.log('⚠️ Headless browser terdeteksi');
+        }
+    
+        if (isProxy) {
+            showProxyWarning();
+        } else {
+            console.log('✅ Tidak terdeteksi proxy, akses diizinkan');
+        }
     }
-
-    // 4. GUNAKAN UID PERMANEN UNTUK SEGALA HAL
-    function getDeviceFingerprint() {
-        const permUID = getPermanentUID();
-        return permUID;
-    }
-
-    // Panggil deteksi proxy saat init - DENGAN DELAY AGAR TIDAK MENGGANGGU
-    async function initProxyProtection() {
-        // Tunggu 3 detik agar semua selesai load
-        await new Promise(resolve => setTimeout(resolve, 3000));
-        await checkProxyAndBlock();
-    }
-
-    // Jalankan di awal dengan delay
-    setTimeout(() => {
-        initProxyProtection();
-    }, 3000);
-
+    
+        function showProxyWarning() {
+            const overlay = document.getElementById('proxyWarningOverlay');
+        
+            // Isi detail
+            document.getElementById('proxyDetectedIP').textContent = 'Terkait Proxy/VPN';
+            document.getElementById('proxyDetectedDevice').textContent = getPermanentUID();
+            document.getElementById('proxyDetectedUA').textContent = navigator.userAgent.substring(0, 80) + '...';
+        
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        
+            // Log ke Firebase
+            try {
+                database.ref('proxy_detections').push({
+                    uid: getPermanentUID(),
+                    userAgent: navigator.userAgent,
+                    timestamp: Date.now(),
+                    screen: screen.width + 'x' + screen.height,
+                    detected: 'proxy'
+                });
+            } catch(e) {}
+        }
+    
+        function closeProxyWarning() {
+            const overlay = document.getElementById('proxyWarningOverlay');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+            localStorage.setItem('proxy_warning_shown', 'true');
+        
+            // Tampilkan overlay permanen
+            const blockOverlay = document.createElement('div');
+            blockOverlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.98);z-index:99999999;display:flex;justify-content:center;align-items:center;flex-direction:column;padding:20px;';
+            blockOverlay.innerHTML = `
+                <div style="text-align:center;max-width:400px;">
+                    <i class="fas fa-ban" style="font-size:80px;color:#ff4444;margin-bottom:20px;text-shadow:0 0 30px #ff4444;"></i>
+                    <h1 style="font-family:'Orbitron',monospace;color:#ff4444;font-size:28px;text-shadow:0 0 15px #ff4444;">AKSES DIBLOKIR</h1>
+                    <p style="color:#ccc;margin:20px 0;line-height:1.8;">Anda menggunakan Proxy/VPN yang tidak diizinkan.<br>Akses ke sistem <strong style="color:#ff4444;">DIBLOKIR PERMANEN</strong>.</p>
+                    <p style="color:#888;font-size:12px;">Hubungi admin jika Anda merasa ini adalah kesalahan.</p>
+                </div>
+            `;
+            document.body.appendChild(blockOverlay);
+        }
+    
+        // 4. GUNAKAN UID PERMANEN UNTUK SEGALA HAL
+        function getDeviceFingerprint() {
+            const permUID = getPermanentUID();
+            return permUID;
+        }
+    
+        // Panggil deteksi proxy saat init - DENGAN DELAY AGAR TIDAK MENGGANGGU
+        async function initProxyProtection() {
+            // Tunggu 3 detik agar semua selesai load
+            await new Promise(resolve => setTimeout(resolve, 3000));
+            await checkProxyAndBlock();
+        }
+    
+        // Jalankan di awal dengan delay
+        setTimeout(() => {
+            initProxyProtection();
+        }, 3000);
+    
     // ============================================================
     // HISTORY
     // ============================================================
@@ -9347,6 +9864,122 @@
     }
     
     function openChatAdmin() { navigateWithLoading('chat'); }
+    
+    // ============================================================
+// DOWNLOAD RESOURCE - PHANTOMSTORE OVERLAY
+// ============================================================
+const RESOURCE_FILES = [
+    { name: 'video1.mp4', size: 2500000, type: 'video' },
+    { name: 'video2.mp4', size: 2800000, type: 'video' },
+    { name: 'video3.mp4', size: 2200000, type: 'video' },
+    { name: 'video4.mp4', size: 3000000, type: 'video' },
+    { name: 'video5.mp4', size: 2600000, type: 'video' },
+    { name: 'video6.mp4', size: 2400000, type: 'video' },
+    { name: 'video7.mp4', size: 2700000, type: 'video' },
+    { name: 'video8.mp4', size: 2900000, type: 'video' },
+    { name: 'game1.mp4', size: 1800000, type: 'video' },
+    { name: 'game2.mp4', size: 1900000, type: 'video' },
+    { name: 'game3.mp4', size: 2000000, type: 'video' },
+    { name: 'game4.mp4', size: 2100000, type: 'video' },
+    { name: 'game5.mp4', size: 2200000, type: 'video' },
+    { name: 'tutorial1.mp4', size: 1500000, type: 'video' },
+    { name: 'tutorial.mp4', size: 1600000, type: 'video' },
+    { name: 'tutorial3.mp4', size: 1700000, type: 'video' },
+    { name: 'tutorial6.mp4', size: 1800000, type: 'video' },
+    { name: 'nada.mp3', size: 200000, type: 'audio' },
+    { name: 'QR.jpg', size: 100000, type: 'image' }
+];
+
+let resourceDownloaded = false;
+
+function checkResourceDownloaded() {
+    const downloaded = localStorage.getItem('phantom_resources_downloaded');
+    if (downloaded === 'true') {
+        resourceDownloaded = true;
+        return true;
+    }
+    return false;
+}
+
+async function downloadResources() {
+    if (checkResourceDownloaded()) {
+        console.log('✅ Resource sudah di download sebelumnya');
+        return;
+    }
+
+    const overlay = document.getElementById('phantomOverlay');
+    const progressFill = document.getElementById('phantomProgressFill');
+    const progressText = document.getElementById('phantomProgressText');
+    const statusText = document.getElementById('phantomStatus');
+
+    overlay.classList.add('active');
+
+    let totalSize = RESOURCE_FILES.reduce((sum, f) => sum + f.size, 0);
+    let downloadedSize = 0;
+    let completedFiles = 0;
+
+    const totalFiles = RESOURCE_FILES.length;
+
+    for (const file of RESOURCE_FILES) {
+        statusText.textContent = `📥 Mengunduh ${file.name}... (${completedFiles}/${totalFiles})`;
+        
+        // Simulasi download dengan progress
+        const chunks = 20;
+        const chunkSize = file.size / chunks;
+        
+        for (let i = 0; i < chunks; i++) {
+            downloadedSize += chunkSize;
+            const percent = Math.min(Math.round((downloadedSize / totalSize) * 100), 100);
+            
+            progressFill.style.width = percent + '%';
+            progressText.textContent = percent + '%';
+            
+            // Simulasi delay download
+            await new Promise(resolve => setTimeout(resolve, 80 + Math.random() * 60));
+        }
+        
+        completedFiles++;
+        
+        // Simpan file ke cache
+        try {
+            const cache = await caches.open('phantom_resources');
+            const response = await fetch(file.name);
+            if (response.ok) {
+                await cache.put(file.name, response);
+            }
+        } catch(e) {
+            console.log('⚠️ Gagal cache:', file.name, e);
+        }
+    }
+
+    // Tandai selesai
+    localStorage.setItem('phantom_resources_downloaded', 'true');
+    resourceDownloaded = true;
+
+    statusText.textContent = '✅ Semua resource berhasil di download!';
+    progressFill.style.width = '100%';
+    progressText.textContent = '100%';
+
+    await new Promise(resolve => setTimeout(resolve, 1500));
+
+    overlay.classList.remove('active');
+    
+    // Tampilkan toast sukses
+    showNeonToast('✅ Resource berhasil di download!');
+    console.log('✅ Semua resource selesai di download');
+}
+
+// Panggil download saat init
+async function initResourceDownload() {
+    // Tunggu 2 detik agar halaman stabil
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    await downloadResources();
+}
+
+// Jalankan
+setTimeout(() => {
+    initResourceDownload();
+}, 3000);
 
     // ============================================================
     // CHAT FILE UPLOAD - USER
