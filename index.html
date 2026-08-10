@@ -2384,83 +2384,869 @@
         }
         
         /* ============================================================
-       DAILY REWARD
+       TRANSFER SALDO - MODERN
        ============================================================ */
-.daily-reward-card {
-    background: linear-gradient(135deg, rgba(255,215,0,0.1), rgba(255,170,0,0.05));
-    border: 2px solid #ffd700;
-    border-radius: 25px;
-    padding: 25px;
-    text-align: center;
-    margin: 15px 0;
-    position: relative;
-    overflow: hidden;
-    animation: borderGlow 2s infinite;
-}
-
-.daily-reward-card .reward-icon {
-    font-size: 60px;
-    margin-bottom: 10px;
-    animation: float 2s ease-in-out infinite;
-}
-
-.daily-reward-card .reward-amount {
-    font-size: 32px;
-    font-weight: bold;
-    color: #ffd700;
-    font-family: 'Orbitron', monospace;
-}
-
-.daily-reward-card .reward-sub {
-    color: #888;
-    font-size: 13px;
-    margin-top: 5px;
-}
-
-.daily-reward-card .reward-btn {
-    margin-top: 15px;
-    padding: 12px 40px;
-    background: linear-gradient(135deg, #ffd700, #ffaa00);
-    border: none;
-    border-radius: 30px;
-    font-weight: bold;
-    color: #000;
-    cursor: pointer;
-    font-size: 16px;
-    transition: all 0.3s;
-    font-family: 'Orbitron', monospace;
-}
-
-.daily-reward-card .reward-btn:hover {
-    transform: translateY(-3px) scale(1.05);
-    box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4);
-}
-
-.daily-reward-card .reward-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    transform: none !important;
-}
-
-.daily-reward-card .streak {
-    margin-top: 10px;
-    color: #ffaa00;
-    font-size: 14px;
-}
-
-.daily-reward-card .streak i {
-    color: #ff6b6b;
-}
-
-.reward-history-item {
-    padding: 10px 15px;
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: 12px;
-    margin-bottom: 8px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
+        .transfer-modal .modal-content {
+            max-width: 450px;
+            background: linear-gradient(145deg, #0a0a0a, #0f0f0f);
+            border: 2px solid var(--neon-cyan);
+            border-radius: 40px;
+            padding: 30px;
+            box-shadow: 0 0 60px rgba(0, 255, 255, 0.3);
+        }
+        
+        .transfer-modal .modal-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 22px;
+            color: var(--neon-cyan);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .transfer-modal .modal-title i {
+            font-size: 28px;
+            color: #ffd700;
+        }
+        
+        .transfer-modal .modal-input {
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 14px 18px;
+            color: white;
+            font-size: 14px;
+            transition: all 0.3s;
+            width: 100%;
+            outline: none;
+        }
+        
+        .transfer-modal .modal-input:focus {
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.3);
+        }
+        
+        .transfer-modal .modal-input::placeholder {
+            color: #666;
+        }
+        
+        .transfer-user-info {
+            background: rgba(0, 255, 255, 0.08);
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 18px;
+            margin: 15px 0;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .transfer-user-info.active {
+            display: block;
+        }
+        
+        .transfer-user-info .user-found {
+            color: #00ff88;
+            font-weight: bold;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .transfer-user-info .user-detail {
+            color: #aaa;
+            font-size: 13px;
+            margin-top: 8px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .transfer-user-info .user-detail .status {
+            padding: 3px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        
+        .transfer-user-info .user-detail .status.online {
+            background: rgba(0, 255, 136, 0.2);
+            color: #00ff88;
+            border: 1px solid #00ff88;
+        }
+        
+        .transfer-user-info .user-detail .status.offline {
+            background: rgba(158, 158, 158, 0.2);
+            color: #9e9e9e;
+            border: 1px solid #9e9e9e;
+        }
+        
+        .transfer-amount-display {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            margin: 15px 0;
+            border: 2px solid rgba(0, 255, 255, 0.15);
+        }
+        
+        .transfer-amount-display .amount {
+            font-size: 36px;
+            font-weight: bold;
+            color: #00ff88;
+            font-family: 'Orbitron', monospace;
+        }
+        
+        .transfer-amount-display .label {
+            color: #888;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        
+        .transfer-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        
+        .transfer-actions .btn {
+            flex: 1;
+            padding: 14px;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Orbitron', monospace;
+            border: none;
+            font-size: 14px;
+            text-align: center;
+        }
+        
+        .transfer-actions .btn-send {
+            background: linear-gradient(135deg, var(--neon-cyan), #0088ff);
+            color: #000;
+        }
+        
+        .transfer-actions .btn-send:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.4);
+        }
+        
+        .transfer-actions .btn-cancel {
+            background: rgba(255, 68, 68, 0.15);
+            color: #ff4444;
+            border: 2px solid #ff4444;
+        }
+        
+        .transfer-actions .btn-cancel:hover {
+            background: #ff4444;
+            color: #000;
+            transform: translateY(-3px);
+        }
+        
+        /* ============================================================
+           DAILY REWARD - MODERN
+           ============================================================ */
+        .daily-reward-modern {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.12), rgba(255, 170, 0, 0.05));
+            border: 2px solid #ffd700;
+            border-radius: 28px;
+            padding: 25px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .daily-reward-modern::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.08) 0%, transparent 70%);
+            animation: spin 20s linear infinite;
+            pointer-events: none;
+        }
+        
+        .daily-reward-modern .reward-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .daily-reward-modern .reward-icon-big {
+            font-size: 52px;
+            animation: float 2s ease-in-out infinite;
+        }
+        
+        .daily-reward-modern .reward-amount-big {
+            font-size: 34px;
+            font-weight: 900;
+            color: #ffd700;
+            font-family: 'Orbitron', monospace;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+        }
+        
+        .daily-reward-modern .reward-sub {
+            color: #aaa;
+            font-size: 13px;
+            margin-top: 4px;
+        }
+        
+        .daily-reward-modern .reward-streak {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 30px;
+            padding: 8px 18px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            margin: 12px 0;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .daily-reward-modern .reward-streak .streak-icon {
+            font-size: 24px;
+        }
+        
+        .daily-reward-modern .reward-streak .streak-text {
+            font-size: 16px;
+            font-weight: bold;
+            color: #ffaa00;
+        }
+        
+        .daily-reward-modern .reward-streak .streak-count {
+            font-size: 20px;
+            font-weight: 900;
+            color: #ff6b6b;
+            font-family: 'Orbitron', monospace;
+            margin-left: auto;
+        }
+        
+        .daily-reward-modern .reward-btn-modern {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #ffd700, #ffaa00);
+            border: none;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 18px;
+            color: #000;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Orbitron', monospace;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.2);
+        }
+        
+        .daily-reward-modern .reward-btn-modern:hover:not(:disabled) {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 10px 40px rgba(255, 215, 0, 0.4);
+        }
+        
+        .daily-reward-modern .reward-btn-modern:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        
+        .daily-reward-modern .reward-btn-modern .btn-icon {
+            margin-right: 10px;
+        }
+        
+        .daily-reward-modern .reward-status {
+            text-align: center;
+            margin-top: 12px;
+            font-size: 14px;
+            color: #888;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .daily-reward-modern .reward-status.success {
+            color: #00ff88;
+        }
+        
+        .daily-reward-modern .reward-status.error {
+            color: #ff4444;
+        }
+        
+        .daily-reward-modern .reward-history-title {
+            color: #aaa;
+            font-size: 14px;
+            margin: 18px 0 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .daily-reward-modern .reward-history-list {
+            max-height: 160px;
+            overflow-y: auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .daily-reward-modern .reward-history-list::-webkit-scrollbar {
+            width: 4px;
+        }
+        
+        .daily-reward-modern .reward-history-list::-webkit-scrollbar-track {
+            background: rgba(255, 215, 0, 0.05);
+            border-radius: 10px;
+        }
+        
+        .daily-reward-modern .reward-history-list::-webkit-scrollbar-thumb {
+            background: #ffd700;
+            border-radius: 10px;
+        }
+        
+        .daily-reward-modern .history-item-modern {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 14px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 14px;
+            margin-bottom: 8px;
+            border-left: 3px solid #ffd700;
+            transition: all 0.3s;
+        }
+        
+        .daily-reward-modern .history-item-modern:hover {
+            background: rgba(0, 0, 0, 0.5);
+            transform: translateX(5px);
+        }
+        
+        .daily-reward-modern .history-item-modern .h-date {
+            font-size: 13px;
+            color: #ccc;
+        }
+        
+        .daily-reward-modern .history-item-modern .h-amount {
+            font-size: 16px;
+            font-weight: bold;
+            color: #ffd700;
+        }
+        
+        .daily-reward-modern .history-item-modern .h-streak {
+            font-size: 12px;
+            color: #ff6b6b;
+        }
+        
+        /* ============================================================
+           RATING & REVIEW - MODERN
+           ============================================================ */
+        .rating-modern {
+            padding: 5px 0;
+        }
+        
+        .rating-modern .rating-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            border: 1px solid rgba(0, 255, 255, 0.1);
+        }
+        
+        .rating-modern .rating-big {
+            font-size: 52px;
+            font-weight: 900;
+            color: #ffd700;
+            font-family: 'Orbitron', monospace;
+            line-height: 1;
+        }
+        
+        .rating-modern .rating-big .star-icon {
+            font-size: 36px;
+        }
+        
+        .rating-modern .rating-info {
+            flex: 1;
+        }
+        
+        .rating-modern .rating-info .total {
+            font-size: 14px;
+            color: #888;
+        }
+        
+        .rating-modern .rating-info .stars-display {
+            font-size: 28px;
+            color: #ffd700;
+            letter-spacing: 2px;
+        }
+        
+        .rating-modern .rating-info .percent {
+            font-size: 14px;
+            color: #00ff88;
+            font-weight: bold;
+        }
+        
+        .rating-modern .rating-divider {
+            border: none;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.2), transparent);
+            margin: 18px 0;
+        }
+        
+        .rating-modern .rating-form-title {
+            color: #aaa;
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .rating-modern .rating-stars-input {
+            display: flex;
+            gap: 8px;
+            margin: 12px 0;
+            font-size: 38px;
+        }
+        
+        .rating-modern .rating-stars-input .star {
+            cursor: pointer;
+            color: #444;
+            transition: all 0.3s;
+            text-shadow: none;
+        }
+        
+        .rating-modern .rating-stars-input .star:hover {
+            transform: scale(1.2);
+        }
+        
+        .rating-modern .rating-stars-input .star.active {
+            color: #ffd700;
+            text-shadow: 0 0 25px rgba(255, 215, 0, 0.5);
+        }
+        
+        .rating-modern .rating-textarea {
+            width: 100%;
+            min-height: 80px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid rgba(0, 255, 255, 0.15);
+            border-radius: 18px;
+            padding: 14px 18px;
+            color: white;
+            font-size: 14px;
+            outline: none;
+            resize: vertical;
+            transition: all 0.3s;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .rating-modern .rating-textarea:focus {
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.2);
+        }
+        
+        .rating-modern .rating-textarea::placeholder {
+            color: #666;
+        }
+        
+        .rating-modern .rating-submit-btn {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #ffd700, #ffaa00);
+            border: none;
+            border-radius: 30px;
+            font-weight: bold;
+            color: #000;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Orbitron', monospace;
+            font-size: 14px;
+            margin-top: 12px;
+        }
+        
+        .rating-modern .rating-submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+        }
+        
+        .rating-modern .reviews-title {
+            color: #aaa;
+            font-size: 14px;
+            margin: 20px 0 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .rating-modern .reviews-list {
+            max-height: 280px;
+            overflow-y: auto;
+        }
+        
+        .rating-modern .reviews-list::-webkit-scrollbar {
+            width: 4px;
+        }
+        
+        .rating-modern .reviews-list::-webkit-scrollbar-track {
+            background: rgba(0, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+        
+        .rating-modern .reviews-list::-webkit-scrollbar-thumb {
+            background: var(--neon-cyan);
+            border-radius: 10px;
+        }
+        
+        .rating-modern .review-item {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 18px;
+            padding: 16px 18px;
+            margin-bottom: 12px;
+            border-left: 4px solid #ffd700;
+            transition: all 0.3s;
+        }
+        
+        .rating-modern .review-item:hover {
+            transform: translateX(5px);
+            background: rgba(0, 0, 0, 0.5);
+        }
+        
+        .rating-modern .review-item .r-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+        
+        .rating-modern .review-item .r-uid {
+            font-weight: bold;
+            color: var(--neon-cyan);
+            font-size: 15px;
+        }
+        
+        .rating-modern .review-item .r-stars {
+            color: #ffd700;
+            font-size: 18px;
+        }
+        
+        .rating-modern .review-item .r-text {
+            color: #ccc;
+            font-size: 14px;
+            line-height: 1.6;
+            margin: 6px 0;
+        }
+        
+        .rating-modern .review-item .r-date {
+            font-size: 11px;
+            color: #888;
+            margin-top: 6px;
+        }
+        
+        .rating-modern .review-item .r-reply {
+            margin-top: 10px;
+            background: rgba(0, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 12px 16px;
+            border-left: 3px solid var(--neon-cyan);
+        }
+        
+        .rating-modern .review-item .r-reply .reply-label {
+            font-size: 12px;
+            color: #ffaa00;
+            font-weight: bold;
+        }
+        
+        .rating-modern .review-item .r-reply .reply-text {
+            font-size: 13px;
+            color: #ddd;
+            margin-top: 4px;
+        }
+        
+        /* ============================================================
+           CUSTOMIZATION - MODERN
+           ============================================================ */
+        .customization-modern {
+            padding: 5px 0;
+        }
+        
+        .customization-modern .custom-group {
+            margin-bottom: 20px;
+        }
+        
+        .customization-modern .custom-label {
+            color: var(--neon-cyan);
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Orbitron', monospace;
+        }
+        
+        .customization-modern .theme-options {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .customization-modern .theme-options .theme-btn {
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            font-size: 14px;
+            border: 2px solid rgba(0, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.5);
+            color: #aaa;
+        }
+        
+        .customization-modern .theme-options .theme-btn:hover {
+            transform: translateY(-3px);
+        }
+        
+        .customization-modern .theme-options .theme-btn.active {
+            border-color: #00ff88;
+            background: rgba(0, 255, 136, 0.15);
+            color: #00ff88;
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.2);
+        }
+        
+        .customization-modern .theme-options .theme-btn.dark {
+            border-color: var(--neon-cyan);
+        }
+        
+        .customization-modern .theme-options .theme-btn.dark.active {
+            border-color: #00ff88;
+            background: rgba(0, 255, 136, 0.15);
+        }
+        
+        .customization-modern .theme-options .theme-btn.light {
+            border-color: #ccc;
+            color: #ccc;
+        }
+        
+        .customization-modern .theme-options .theme-btn.light.active {
+            border-color: #00ff88;
+            background: rgba(0, 255, 136, 0.15);
+            color: #00ff88;
+        }
+        
+        .customization-modern .theme-options .theme-btn.neon {
+            border-color: #bf00ff;
+            color: #bf00ff;
+        }
+        
+        .customization-modern .theme-options .theme-btn.neon.active {
+            border-color: #00ff88;
+            background: rgba(0, 255, 136, 0.15);
+            color: #00ff88;
+        }
+        
+        .customization-modern .font-options {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        
+        .customization-modern .font-options .font-btn {
+            padding: 8px 16px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid rgba(0, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.5);
+            color: #aaa;
+        }
+        
+        .customization-modern .font-options .font-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .customization-modern .font-options .font-btn.active {
+            border-color: #00ff88;
+            background: rgba(0, 255, 136, 0.15);
+            color: #00ff88;
+        }
+        
+        .customization-modern .font-options .font-btn.small {
+            font-size: 12px;
+        }
+        
+        .customization-modern .font-options .font-btn.medium {
+            font-size: 16px;
+        }
+        
+        .customization-modern .font-options .font-btn.large {
+            font-size: 20px;
+        }
+        
+        .customization-modern .custom-select {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid rgba(0, 255, 255, 0.2);
+            border-radius: 20px;
+            color: white;
+            font-size: 14px;
+            outline: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .customization-modern .custom-select:focus {
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.2);
+        }
+        
+        .customization-modern .custom-select option {
+            background: #0a0a0a;
+            color: white;
+        }
+        
+        .customization-modern .custom-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        
+        .customization-modern .custom-actions .btn {
+            flex: 1;
+            padding: 14px;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Orbitron', monospace;
+            border: none;
+            font-size: 14px;
+            text-align: center;
+        }
+        
+        .customization-modern .custom-actions .btn-save {
+            background: linear-gradient(135deg, var(--neon-cyan), #0088ff);
+            color: #000;
+        }
+        
+        .customization-modern .custom-actions .btn-save:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.4);
+        }
+        
+        .customization-modern .custom-actions .btn-reset {
+            background: rgba(255, 68, 68, 0.15);
+            color: #ff4444;
+            border: 2px solid #ff4444;
+        }
+        
+        .customization-modern .custom-actions .btn-reset:hover {
+            background: #ff4444;
+            color: #000;
+            transform: translateY(-3px);
+        }
+        
+        /* ============================================================
+           RESPONSIVE - MODERN
+           ============================================================ */
+        @media (max-width: 768px) {
+            .transfer-actions {
+                flex-direction: column;
+            }
+            
+            .customization-modern .custom-actions {
+                flex-direction: column;
+            }
+            
+            .daily-reward-modern .reward-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .rating-modern .rating-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .rating-modern .rating-stars-input {
+                justify-content: center;
+                font-size: 30px;
+            }
+            
+            .daily-reward-modern .reward-streak {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .customization-modern .theme-options {
+                justify-content: center;
+            }
+            
+            .customization-modern .font-options {
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .transfer-modal .modal-content {
+                padding: 20px;
+            }
+            
+            .daily-reward-modern {
+                padding: 18px;
+            }
+            
+            .daily-reward-modern .reward-amount-big {
+                font-size: 28px;
+            }
+            
+            .daily-reward-modern .reward-btn-modern {
+                font-size: 15px;
+                padding: 14px;
+            }
+            
+            .rating-modern .rating-big {
+                font-size: 38px;
+            }
+            
+            .rating-modern .rating-stars-input {
+                font-size: 26px;
+                gap: 4px;
+            }
+            
+            .customization-modern .theme-options .theme-btn {
+                padding: 10px 16px;
+                font-size: 12px;
+            }
+            
+            .customization-modern .font-options .font-btn {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+        }
+        
+        /* ============================================================
+           ANIMATION - GLOW PULSE
+           ============================================================ */
+        @keyframes glowPulseGold {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.2); }
+            50% { box-shadow: 0 0 40px rgba(255, 215, 0, 0.4); }
+        }
+        
+        .glow-gold-pulse {
+            animation: glowPulseGold 2s infinite;
+        }
         
         /* ============================================================
        PROXY WARNING POPUP
@@ -4527,426 +5313,426 @@
         }
         
         /* ============================================================
-   RESPONSIVE IMPROVEMENTS
-   ============================================================ */
+        RESPONSIVE IMPROVEMENTS
+        ============================================================ */
 
-/* Mobile First */
-@media (max-width: 768px) {
-    /* Container */
-    .container, .main-layout {
-        padding: 10px !important;
-        padding-bottom: 80px !important;
-    }
-    
-    /* Cards */
-    .card {
-        padding: 15px !important;
-        border-radius: 20px !important;
-    }
-    
-    .card-title {
-        font-size: 16px !important;
-        flex-wrap: wrap !important;
-    }
-    
-    /* Dashboard Grid */
-    .dashboard-grid {
-        grid-template-columns: 1fr 1fr !important;
-        gap: 10px !important;
-    }
-    
-    .dashboard-card {
-        padding: 15px !important;
-    }
-    
-    .card-value {
-        font-size: 24px !important;
-    }
-    
-    /* Charts */
-    #dashboard .card > div > div {
-        grid-template-columns: 1fr !important;
-    }
-    
-    canvas {
-        height: 150px !important;
-    }
-    
-    /* Tabs */
-    .tab-container {
-        padding: 10px !important;
-        gap: 6px !important;
-        overflow-x: auto !important;
-        flex-wrap: nowrap !important;
-        -webkit-overflow-scrolling: touch;
-    }
-    
-    .tab {
-        padding: 8px 14px !important;
-        font-size: 10px !important;
-        white-space: nowrap !important;
-        flex-shrink: 0 !important;
-    }
-    
-    /* Login */
-    .login-card {
-        padding: 25px 20px !important;
-    }
-    
-    .login-title {
-        font-size: 24px !important;
-    }
-    
-    .pin-char {
-        width: 35px !important;
-        height: 35px !important;
-        font-size: 16px !important;
-    }
-    
-    /* Chat */
-    .chat-area {
-        height: 250px !important;
-        padding: 12px !important;
-    }
-    
-    .message {
-        max-width: 90% !important;
-        font-size: 12px !important;
-        padding: 8px 12px !important;
-    }
-    
-    .chat-input-row {
-        padding: 4px 8px !important;
-        flex-wrap: wrap !important;
-    }
-    
-    .chat-input {
-        font-size: 13px !important;
-        padding: 10px !important;
-        min-width: 120px !important;
-    }
-    
-    .upload-btn, .send-btn, .chat-upload-btn, .chat-send-btn {
-        width: 40px !important;
-        height: 40px !important;
-        font-size: 16px !important;
-    }
-    
-    /* Bottom Navigation */
-    .bottom-nav {
-        height: 60px !important;
-    }
-    
-    .nav-item {
-        font-size: 10px !important;
-        padding: 6px 2px !important;
-    }
-    
-    .nav-item i {
-        font-size: 18px !important;
-    }
-    
-    /* Profile */
-    .profile-image {
-        width: 60px !important;
-        height: 60px !important;
-    }
-    
-    .uid-row {
-        padding: 8px 12px !important;
-        flex-wrap: wrap !important;
-    }
-    
-    .uid-text {
-        font-size: 12px !important;
-        word-break: break-all !important;
-    }
-    
-    /* Features Grid */
-    .features-grid {
-        grid-template-columns: repeat(3, 1fr) !important;
-        gap: 6px !important;
-    }
-    
-    .features-grid .feature-item {
-        padding: 8px 4px !important;
-    }
-    
-    .features-grid .feature-item .feature-icon {
-        font-size: 16px !important;
-    }
-    
-    .features-grid .feature-item .feature-name {
-        font-size: 8px !important;
-    }
-    
-    /* Price Grid */
-    .price-grid {
-        grid-template-columns: 1fr 1fr !important;
-        gap: 10px !important;
-    }
-    
-    .price-card {
-        padding: 12px 8px !important;
-        min-height: 120px !important;
-    }
-    
-    .price-card .price-amount {
-        font-size: 18px !important;
-    }
-    
-    /* VIP Counter */
-    .vip-stats-grid {
-        grid-template-columns: 1fr 1fr !important;
-        gap: 8px !important;
-    }
-    
-    .vip-stat-value {
-        font-size: 18px !important;
-    }
-    
-    /* Countdown */
-    .countdown-display {
-        gap: 4px !important;
-    }
-    
-    .countdown-box {
-        padding: 6px !important;
-    }
-    
-    .countdown-number {
-        font-size: 16px !important;
-    }
-    
-    /* Modals */
-    .modal-content, .deposit-content, .video-popup-content {
-        padding: 20px !important;
-        border-radius: 25px !important;
-    }
-    
-    .modal-title {
-        font-size: 18px !important;
-    }
-    
-    /* Admin Specific */
-    .admin-profile {
-        flex-direction: column !important;
-        text-align: center !important;
-    }
-    
-    .admin-actions {
-        justify-content: center !important;
-    }
-    
-    .chat-container {
-        height: 400px !important;
-        padding: 12px !important;
-    }
-    
-    .chat-messages {
-        max-height: 200px !important;
-        min-height: 150px !important;
-    }
-    
-    .chat-selector-neon, .chat-support-selector {
-        flex-direction: column !important;
-        padding: 12px !important;
-    }
-    
-    .chat-select-neon, .chat-support-select {
-        min-width: unset !important;
-        width: 100% !important;
-    }
-    
-    /* Customer List */
-    .customer-item {
-        padding: 15px !important;
-    }
-    
-    .customer-details-grid {
-        grid-template-columns: 1fr !important;
-        gap: 8px !important;
-    }
-    
-    .customer-header {
-        flex-direction: column !important;
-        align-items: flex-start !important;
-        gap: 8px !important;
-    }
-    
-    .saldo-edit-row {
-        flex-direction: column !important;
-        align-items: stretch !important;
-    }
-    
-    .saldo-edit-input {
-        width: 100% !important;
-        min-width: unset !important;
-    }
-    
-    /* VIP List Grid */
-    #vipMemberList .vip-grid-container {
-        grid-template-columns: 1fr !important;
-    }
-    
-    #packagesList .packages-grid-container {
-        grid-template-columns: 1fr !important;
-    }
-    
-    /* Video Popup */
-    .video-popup-content {
-        padding: 20px !important;
-    }
-    
-    .video-popup-title {
-        font-size: 18px !important;
-    }
-    
-    .video-popup-close {
-        width: 32px !important;
-        height: 32px !important;
-        font-size: 14px !important;
-    }
-    
-    /* Notification */
-    .notification-container {
-        top: 60px !important;
-        right: 10px !important;
-        max-width: calc(100% - 20px) !important;
-    }
-    
-    .notification-toast {
-        padding: 12px 15px !important;
-    }
-    
-    /* Support Chat */
-    .chat-support-admin-container {
-        height: 400px !important;
-        padding: 12px !important;
-    }
-    
-    .chat-support-messages-admin {
-        max-height: 200px !important;
-        min-height: 150px !important;
-    }
-    
-    .chat-support-input-admin {
-        flex-wrap: wrap !important;
-    }
-    
-    /* Gallery */
-    .gallery {
-        grid-template-columns: 1fr 1fr !important;
-    }
-    
-    /* Reviews */
-    #reviewsList > div {
-        padding: 12px !important;
-    }
-}
-
-/* Extra Small */
-@media (max-width: 400px) {
-    .dashboard-grid {
-        grid-template-columns: 1fr !important;
-    }
-    
-    .features-grid {
-        grid-template-columns: repeat(2, 1fr) !important;
-    }
-    
-    .price-grid {
-        grid-template-columns: 1fr !important;
-    }
-    
-    .vip-stats-grid {
-        grid-template-columns: 1fr !important;
-    }
-    
-    .payment-methods {
-        grid-template-columns: 1fr 1fr !important;
-    }
-    
-    .amount-presets {
-        grid-template-columns: 1fr 1fr !important;
-    }
-    
-    .gallery {
-        grid-template-columns: 1fr !important;
-    }
-    
-    .filter-tabs {
-        flex-wrap: wrap !important;
-    }
-    
-    .filter-tab {
-        font-size: 10px !important;
-        padding: 6px 12px !important;
-    }
-    
-    .tab {
-        font-size: 9px !important;
-        padding: 6px 10px !important;
-    }
-}
-
-/* Touch-friendly */
-@media (hover: none) {
-    .btn, .tab, .menu-item, .nav-item, .pin-key {
-        -webkit-tap-highlight-color: transparent !important;
-    }
-    
-    .btn:active, .tab:active, .menu-item:active, .nav-item:active {
-        transform: scale(0.95) !important;
-    }
-}
-
-/* Smooth scrolling */
-* {
-    -webkit-overflow-scrolling: touch;
-}
-
-/* Better touch for buttons */
-.btn, .tab, .menu-item, .nav-item, .pin-key, .payment-method, .amount-preset {
-    touch-action: manipulation !important;
-    user-select: none !important;
-    -webkit-touch-callout: none !important;
-}
-
-/* Fix for input zoom on iOS */
-input, select, textarea {
-    font-size: 16px !important;
-}
-
-@media (max-width: 768px) {
-    input, select, textarea {
-        font-size: 14px !important;
-    }
-}
-
-/* Fix for modals on mobile */
-.modal-overlay.active {
-    padding: 10px !important;
-    align-items: flex-start !important;
-    padding-top: 40px !important;
-}
-
-.modal-content {
-    max-height: 85vh !important;
-    margin-bottom: 20px !important;
-}
-
-/* Fix for overflow */
-body {
-    overflow-x: hidden !important;
-}
-
-/* Fix for iOS safe area */
-@supports (padding: max(0px)) {
-    .bottom-nav {
-        padding-bottom: env(safe-area-inset-bottom) !important;
-    }
-}
+        /* Mobile First */
+        @media (max-width: 768px) {
+            /* Container */
+            .container, .main-layout {
+                padding: 10px !important;
+                padding-bottom: 80px !important;
+            }
+            
+            /* Cards */
+            .card {
+                padding: 15px !important;
+                border-radius: 20px !important;
+            }
+            
+            .card-title {
+                font-size: 16px !important;
+                flex-wrap: wrap !important;
+            }
+            
+            /* Dashboard Grid */
+            .dashboard-grid {
+                grid-template-columns: 1fr 1fr !important;
+                gap: 10px !important;
+            }
+            
+            .dashboard-card {
+                padding: 15px !important;
+            }
+            
+            .card-value {
+                font-size: 24px !important;
+            }
+            
+            /* Charts */
+            #dashboard .card > div > div {
+                grid-template-columns: 1fr !important;
+            }
+            
+            canvas {
+                height: 150px !important;
+            }
+            
+            /* Tabs */
+            .tab-container {
+                padding: 10px !important;
+                gap: 6px !important;
+                overflow-x: auto !important;
+                flex-wrap: nowrap !important;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .tab {
+                padding: 8px 14px !important;
+                font-size: 10px !important;
+                white-space: nowrap !important;
+                flex-shrink: 0 !important;
+            }
+            
+            /* Login */
+            .login-card {
+                padding: 25px 20px !important;
+            }
+            
+            .login-title {
+                font-size: 24px !important;
+            }
+            
+            .pin-char {
+                width: 35px !important;
+                height: 35px !important;
+                font-size: 16px !important;
+            }
+            
+            /* Chat */
+            .chat-area {
+                height: 250px !important;
+                padding: 12px !important;
+            }
+            
+            .message {
+                max-width: 90% !important;
+                font-size: 12px !important;
+                padding: 8px 12px !important;
+            }
+            
+            .chat-input-row {
+                padding: 4px 8px !important;
+                flex-wrap: wrap !important;
+            }
+            
+            .chat-input {
+                font-size: 13px !important;
+                padding: 10px !important;
+                min-width: 120px !important;
+            }
+            
+            .upload-btn, .send-btn, .chat-upload-btn, .chat-send-btn {
+                width: 40px !important;
+                height: 40px !important;
+                font-size: 16px !important;
+            }
+            
+            /* Bottom Navigation */
+            .bottom-nav {
+                height: 60px !important;
+            }
+            
+            .nav-item {
+                font-size: 10px !important;
+                padding: 6px 2px !important;
+            }
+            
+            .nav-item i {
+                font-size: 18px !important;
+            }
+            
+            /* Profile */
+            .profile-image {
+                width: 60px !important;
+                height: 60px !important;
+            }
+            
+            .uid-row {
+                padding: 8px 12px !important;
+                flex-wrap: wrap !important;
+            }
+            
+            .uid-text {
+                font-size: 12px !important;
+                word-break: break-all !important;
+            }
+            
+            /* Features Grid */
+            .features-grid {
+                grid-template-columns: repeat(3, 1fr) !important;
+                gap: 6px !important;
+            }
+            
+            .features-grid .feature-item {
+                padding: 8px 4px !important;
+            }
+            
+            .features-grid .feature-item .feature-icon {
+                font-size: 16px !important;
+            }
+            
+            .features-grid .feature-item .feature-name {
+                font-size: 8px !important;
+            }
+            
+            /* Price Grid */
+            .price-grid {
+                grid-template-columns: 1fr 1fr !important;
+                gap: 10px !important;
+            }
+            
+            .price-card {
+                padding: 12px 8px !important;
+                min-height: 120px !important;
+            }
+            
+            .price-card .price-amount {
+                font-size: 18px !important;
+            }
+            
+            /* VIP Counter */
+            .vip-stats-grid {
+                grid-template-columns: 1fr 1fr !important;
+                gap: 8px !important;
+            }
+            
+            .vip-stat-value {
+                font-size: 18px !important;
+            }
+            
+            /* Countdown */
+            .countdown-display {
+                gap: 4px !important;
+            }
+            
+            .countdown-box {
+                padding: 6px !important;
+            }
+            
+            .countdown-number {
+                font-size: 16px !important;
+            }
+            
+            /* Modals */
+            .modal-content, .deposit-content, .video-popup-content {
+                padding: 20px !important;
+                border-radius: 25px !important;
+            }
+            
+            .modal-title {
+                font-size: 18px !important;
+            }
+            
+            /* Admin Specific */
+            .admin-profile {
+                flex-direction: column !important;
+                text-align: center !important;
+            }
+            
+            .admin-actions {
+                justify-content: center !important;
+            }
+            
+            .chat-container {
+                height: 400px !important;
+                padding: 12px !important;
+            }
+            
+            .chat-messages {
+                max-height: 200px !important;
+                min-height: 150px !important;
+            }
+            
+            .chat-selector-neon, .chat-support-selector {
+                flex-direction: column !important;
+                padding: 12px !important;
+            }
+            
+            .chat-select-neon, .chat-support-select {
+                min-width: unset !important;
+                width: 100% !important;
+            }
+            
+            /* Customer List */
+            .customer-item {
+                padding: 15px !important;
+            }
+            
+            .customer-details-grid {
+                grid-template-columns: 1fr !important;
+                gap: 8px !important;
+            }
+            
+            .customer-header {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                gap: 8px !important;
+            }
+            
+            .saldo-edit-row {
+                flex-direction: column !important;
+                align-items: stretch !important;
+            }
+            
+            .saldo-edit-input {
+                width: 100% !important;
+                min-width: unset !important;
+            }
+            
+            /* VIP List Grid */
+            #vipMemberList .vip-grid-container {
+                grid-template-columns: 1fr !important;
+            }
+            
+            #packagesList .packages-grid-container {
+                grid-template-columns: 1fr !important;
+            }
+            
+            /* Video Popup */
+            .video-popup-content {
+                padding: 20px !important;
+            }
+            
+            .video-popup-title {
+                font-size: 18px !important;
+            }
+            
+            .video-popup-close {
+                width: 32px !important;
+                height: 32px !important;
+                font-size: 14px !important;
+            }
+            
+            /* Notification */
+            .notification-container {
+                top: 60px !important;
+                right: 10px !important;
+                max-width: calc(100% - 20px) !important;
+            }
+            
+            .notification-toast {
+                padding: 12px 15px !important;
+            }
+            
+            /* Support Chat */
+            .chat-support-admin-container {
+                height: 400px !important;
+                padding: 12px !important;
+            }
+            
+            .chat-support-messages-admin {
+                max-height: 200px !important;
+                min-height: 150px !important;
+            }
+            
+            .chat-support-input-admin {
+                flex-wrap: wrap !important;
+            }
+            
+            /* Gallery */
+            .gallery {
+                grid-template-columns: 1fr 1fr !important;
+            }
+            
+            /* Reviews */
+            #reviewsList > div {
+                padding: 12px !important;
+            }
+        }
+        
+        /* Extra Small */
+        @media (max-width: 400px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr !important;
+            }
+            
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
+            
+            .price-grid {
+                grid-template-columns: 1fr !important;
+            }
+            
+            .vip-stats-grid {
+                grid-template-columns: 1fr !important;
+            }
+            
+            .payment-methods {
+                grid-template-columns: 1fr 1fr !important;
+            }
+            
+            .amount-presets {
+                grid-template-columns: 1fr 1fr !important;
+            }
+            
+            .gallery {
+                grid-template-columns: 1fr !important;
+            }
+            
+            .filter-tabs {
+                flex-wrap: wrap !important;
+            }
+            
+            .filter-tab {
+                font-size: 10px !important;
+                padding: 6px 12px !important;
+            }
+            
+            .tab {
+                font-size: 9px !important;
+                padding: 6px 10px !important;
+            }
+        }
+        
+        /* Touch-friendly */
+        @media (hover: none) {
+            .btn, .tab, .menu-item, .nav-item, .pin-key {
+                -webkit-tap-highlight-color: transparent !important;
+            }
+            
+            .btn:active, .tab:active, .menu-item:active, .nav-item:active {
+                transform: scale(0.95) !important;
+            }
+        }
+        
+        /* Smooth scrolling */
+        * {
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        /* Better touch for buttons */
+        .btn, .tab, .menu-item, .nav-item, .pin-key, .payment-method, .amount-preset {
+            touch-action: manipulation !important;
+            user-select: none !important;
+            -webkit-touch-callout: none !important;
+        }
+        
+        /* Fix for input zoom on iOS */
+        input, select, textarea {
+            font-size: 16px !important;
+        }
+        
+        @media (max-width: 768px) {
+            input, select, textarea {
+                font-size: 14px !important;
+            }
+        }
+        
+        /* Fix for modals on mobile */
+        .modal-overlay.active {
+            padding: 10px !important;
+            align-items: flex-start !important;
+            padding-top: 40px !important;
+        }
+        
+        .modal-content {
+            max-height: 85vh !important;
+            margin-bottom: 20px !important;
+        }
+        
+        /* Fix for overflow */
+        body {
+            overflow-x: hidden !important;
+        }
+        
+        /* Fix for iOS safe area */
+        @supports (padding: max(0px)) {
+            .bottom-nav {
+                padding-bottom: env(safe-area-inset-bottom) !important;
+            }
+        }
 
         /* ============================================================
            WELCOME POPUP
@@ -6528,32 +7314,39 @@ body {
     <span>Transfer Saldo</span>
 </div>
 
-<!-- Transfer Modal -->
-<div class="modal-overlay" id="transferModal">
-    <div class="modal-content" style="max-width:450px;">
+<!-- TRANSFER MODAL - MODERN -->
+<div class="modal-overlay transfer-modal" id="transferModal">
+    <div class="modal-content">
         <div class="modal-header">
             <h2 class="modal-title"><i class="fas fa-exchange-alt"></i> Transfer Saldo</h2>
             <button class="modal-close" onclick="closeTransferModal()">✕</button>
         </div>
         <div class="modal-form-group">
             <label class="modal-label"><i class="fas fa-user"></i> UID Tujuan</label>
-            <input type="text" class="modal-input" id="transferUID" placeholder="Masukkan UID tujuan">
+            <input type="text" class="modal-input" id="transferUID" placeholder="Masukkan UID tujuan" style="text-transform:uppercase;">
+        </div>
+        <div class="transfer-user-info" id="transferUserInfo">
+            <div class="user-found"><i class="fas fa-check-circle"></i> User ditemukan!</div>
+            <div class="user-detail" id="transferUserDetail">
+                <span>📅 Bergabung: -</span>
+                <span class="status offline">⚪ Offline</span>
+            </div>
         </div>
         <div class="modal-form-group">
             <label class="modal-label"><i class="fas fa-money-bill"></i> Jumlah</label>
-            <input type="number" class="modal-input" id="transferAmount" placeholder="Minimal Rp 1.000" min="1000">
+            <input type="number" class="modal-input" id="transferAmount" placeholder="Minimal Rp 1.000" min="1000" step="1000">
+        </div>
+        <div class="transfer-amount-display">
+            <div class="label">Total Transfer</div>
+            <div class="amount" id="transferAmountDisplay">Rp 0</div>
         </div>
         <div class="modal-form-group">
             <label class="modal-label"><i class="fas fa-pen"></i> Catatan (Opsional)</label>
-            <textarea class="modal-textarea" id="transferNote" placeholder="Catatan transfer..." style="min-height:60px;"></textarea>
+            <textarea class="modal-input" id="transferNote" placeholder="Catatan transfer..." style="min-height:60px; resize:vertical;"></textarea>
         </div>
-        <div id="transferUserInfo" style="display:none; background:rgba(0,255,255,0.05); border-radius:15px; padding:15px; margin:10px 0; border:1px solid rgba(0,255,255,0.2);">
-            <div style="color:var(--neon-cyan);">👤 User ditemukan!</div>
-            <div id="transferUserDetail" style="font-size:13px; color:#888; margin-top:5px;"></div>
-        </div>
-        <div class="modal-actions">
-            <button class="btn btn-primary" onclick="processTransfer()"><i class="fas fa-paper-plane"></i> Kirim</button>
-            <button class="btn btn-danger" onclick="closeTransferModal()"><i class="fas fa-times"></i> Batal</button>
+        <div class="transfer-actions">
+            <button class="btn btn-send" onclick="processTransfer()"><i class="fas fa-paper-plane"></i> Kirim</button>
+            <button class="btn btn-cancel" onclick="closeTransferModal()"><i class="fas fa-times"></i> Batal</button>
         </div>
     </div>
 </div>
