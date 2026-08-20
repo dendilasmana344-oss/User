@@ -2974,47 +2974,80 @@
         }
         
         /* ============================================================
-           CUSTOMIZATION - MODERN
-           ============================================================ */
+   CUSTOMIZATION - MODERN (DIPERBAIKI SESUAI GAMBAR)
+   ============================================================ */
         .customization-modern {
             padding: 5px 0;
         }
         
         .customization-modern .custom-group {
-            margin-bottom: 20px;
+            margin-bottom: 22px;
+        }
+        
+        .customization-modern .custom-group .custom-group-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
         }
         
         .customization-modern .custom-label {
             color: var(--neon-cyan);
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 600;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
             font-family: 'Orbitron', monospace;
+            letter-spacing: 1px;
         }
         
+        .customization-modern .custom-label .label-icon {
+            margin-right: 8px;
+        }
+        
+        /* THEME OPTIONS - SEPERTI GAMBAR */
         .customization-modern .theme-options {
             display: flex;
             gap: 12px;
             flex-wrap: wrap;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 12px 16px;
+            border-radius: 20px;
+            border: 1px solid rgba(0, 255, 255, 0.1);
         }
         
         .customization-modern .theme-options .theme-btn {
-            padding: 12px 24px;
-            border-radius: 25px;
+            padding: 10px 28px;
+            border-radius: 30px;
             cursor: pointer;
-            transition: all 0.3s;
-            font-weight: bold;
-            font-size: 14px;
-            border: 2px solid rgba(0, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 13px;
+            border: 2px solid rgba(0, 255, 255, 0.15);
             background: rgba(0, 0, 0, 0.5);
-            color: #aaa;
+            color: #888;
+            font-family: 'Poppins', sans-serif;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .customization-modern .theme-options .theme-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+            transition: left 0.5s;
+        }
+        
+        .customization-modern .theme-options .theme-btn:hover::before {
+            left: 100%;
         }
         
         .customization-modern .theme-options .theme-btn:hover {
             transform: translateY(-3px);
+            border-color: var(--neon-cyan);
         }
         
         .customization-modern .theme-options .theme-btn.active {
@@ -3024,65 +3057,77 @@
             box-shadow: 0 0 30px rgba(0, 255, 136, 0.2);
         }
         
-        .customization-modern .theme-options .theme-btn.dark {
-            border-color: var(--neon-cyan);
+        .customization-modern .theme-options .theme-btn .theme-dot {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+            vertical-align: middle;
+            border: 1px solid rgba(255,255,255,0.2);
         }
         
-        .customization-modern .theme-options .theme-btn.dark.active {
-            border-color: #00ff88;
-            background: rgba(0, 255, 136, 0.15);
+        .customization-modern .theme-options .theme-btn.dark .theme-dot {
+            background: #1a1a2e;
         }
         
-        .customization-modern .theme-options .theme-btn.light {
-            border-color: #ccc;
-            color: #ccc;
+        .customization-modern .theme-options .theme-btn.light .theme-dot {
+            background: #f5f5f5;
         }
         
-        .customization-modern .theme-options .theme-btn.light.active {
-            border-color: #00ff88;
-            background: rgba(0, 255, 136, 0.15);
-            color: #00ff88;
+        .customization-modern .theme-options .theme-btn.neon .theme-dot {
+            background: #bf00ff;
         }
         
-        .customization-modern .theme-options .theme-btn.neon {
-            border-color: #bf00ff;
-            color: #bf00ff;
-        }
-        
-        .customization-modern .theme-options .theme-btn.neon.active {
-            border-color: #00ff88;
-            background: rgba(0, 255, 136, 0.15);
-            color: #00ff88;
-        }
-        
+        /* FONT SIZE OPTIONS - SEPERTI GAMBAR */
         .customization-modern .font-options {
             display: flex;
             gap: 12px;
             align-items: center;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 12px 16px;
+            border-radius: 20px;
+            border: 1px solid rgba(0, 255, 255, 0.1);
+            flex-wrap: wrap;
+        }
+        
+        .customization-modern .font-options .font-size-label {
+            color: #888;
+            font-size: 12px;
+            font-weight: 500;
+            margin-right: 8px;
+            font-family: 'Poppins', sans-serif;
         }
         
         .customization-modern .font-options .font-btn {
-            padding: 8px 16px;
-            border-radius: 15px;
+            padding: 8px 20px;
+            border-radius: 25px;
             cursor: pointer;
             transition: all 0.3s;
-            border: 2px solid rgba(0, 255, 255, 0.2);
+            border: 2px solid rgba(0, 255, 255, 0.15);
             background: rgba(0, 0, 0, 0.5);
-            color: #aaa;
+            color: #888;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            min-width: 44px;
+            text-align: center;
         }
         
         .customization-modern .font-options .font-btn:hover {
             transform: translateY(-2px);
+            border-color: var(--neon-cyan);
+            color: #fff;
         }
         
         .customization-modern .font-options .font-btn.active {
             border-color: #00ff88;
             background: rgba(0, 255, 136, 0.15);
             color: #00ff88;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.15);
         }
         
         .customization-modern .font-options .font-btn.small {
-            font-size: 12px;
+            font-size: 13px;
         }
         
         .customization-modern .font-options .font-btn.medium {
@@ -3093,56 +3138,74 @@
             font-size: 20px;
         }
         
+        /* LANGUAGE SELECT - SEPERTI GAMBAR */
+        .customization-modern .language-select-wrapper {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 8px 12px;
+            border-radius: 20px;
+            border: 1px solid rgba(0, 255, 255, 0.1);
+        }
+        
         .customization-modern .custom-select {
             width: 100%;
-            padding: 14px 18px;
+            padding: 14px 20px;
             background: rgba(0, 0, 0, 0.8);
-            border: 2px solid rgba(0, 255, 255, 0.2);
-            border-radius: 20px;
+            border: 2px solid rgba(0, 255, 255, 0.15);
+            border-radius: 25px;
             color: white;
             font-size: 14px;
             outline: none;
             cursor: pointer;
             transition: all 0.3s;
+            font-family: 'Poppins', sans-serif;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2300ffff' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
         }
         
         .customization-modern .custom-select:focus {
             border-color: var(--neon-cyan);
-            box-shadow: 0 0 25px rgba(0, 255, 255, 0.2);
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.2);
         }
         
         .customization-modern .custom-select option {
             background: #0a0a0a;
             color: white;
+            padding: 10px;
         }
         
+        /* BUTTONS - SEPERTI GAMBAR */
         .customization-modern .custom-actions {
             display: flex;
             gap: 12px;
-            margin-top: 20px;
+            margin-top: 22px;
         }
         
         .customization-modern .custom-actions .btn {
             flex: 1;
-            padding: 14px;
+            padding: 14px 24px;
             border-radius: 30px;
-            font-weight: bold;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
             font-family: 'Orbitron', monospace;
             border: none;
             font-size: 14px;
             text-align: center;
+            letter-spacing: 0.5px;
         }
         
         .customization-modern .custom-actions .btn-save {
             background: linear-gradient(135deg, var(--neon-cyan), #0088ff);
             color: #000;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.2);
         }
         
         .customization-modern .custom-actions .btn-save:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.4);
+            box-shadow: 0 10px 40px rgba(0, 255, 255, 0.4);
         }
         
         .customization-modern .custom-actions .btn-reset {
@@ -3155,6 +3218,48 @@
             background: #ff4444;
             color: #000;
             transform: translateY(-3px);
+        }
+        
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .customization-modern .custom-actions {
+                flex-direction: column;
+            }
+            
+            .customization-modern .theme-options {
+                justify-content: center;
+                padding: 10px 12px;
+            }
+            
+            .customization-modern .theme-options .theme-btn {
+                padding: 8px 18px;
+                font-size: 12px;
+            }
+            
+            .customization-modern .font-options {
+                justify-content: center;
+                padding: 10px 12px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .customization-modern .theme-options .theme-btn {
+                padding: 6px 14px;
+                font-size: 11px;
+                flex: 1;
+                min-width: 60px;
+                text-align: center;
+            }
+            
+            .customization-modern .font-options .font-btn {
+                padding: 6px 14px;
+                min-width: 36px;
+            }
+            
+            .customization-modern .custom-select {
+                padding: 12px 16px;
+                font-size: 13px;
+            }
         }
         
         /* ============================================================
@@ -8736,44 +8841,64 @@
 </div>
 
 <!-- Di user panel - tambahkan di account view -->
+<!-- Di user panel - ganti dengan ini -->
 <div class="card">
-    <div class="card-title glow-cyan"><i class="fas fa-palette"></i> Customization</div>
+    <div class="card-title glow-cyan"><i class="fas fa-palette"></i> <span data-i18n="customization.title">Customization</span></div>
     
-    <div class="modal-form-group">
-        <label class="modal-label"><i class="fas fa-moon"></i> Tema</label>
-        <div style="display:flex; gap:12px; flex-wrap:wrap;">
-            <button class="theme-btn active" data-theme="dark" onclick="setTheme('dark')" style="padding:10px 20px; border-radius:15px; border:2px solid var(--neon-cyan); background:rgba(0,0,0,0.8); color:white; cursor:pointer; transition:all 0.3s;">
-                🌙 Dark
-            </button>
-            <button class="theme-btn" data-theme="light" onclick="setTheme('light')" style="padding:10px 20px; border-radius:15px; border:2px solid #ccc; background:#f5f5f5; color:#333; cursor:pointer; transition:all 0.3s;">
-                ☀️ Light
-            </button>
-            <button class="theme-btn" data-theme="neon" onclick="setTheme('neon')" style="padding:10px 20px; border-radius:15px; border:2px solid #ff00ff; background:rgba(255,0,255,0.1); color:#ff00ff; cursor:pointer; transition:all 0.3s;">
-                💜 Neon
-            </button>
+    <div class="customization-modern">
+        <!-- TEMA -->
+        <div class="custom-group">
+            <div class="custom-group-header">
+                <span class="custom-label"><i class="fas fa-moon label-icon"></i> <span data-i18n="customization.theme">Tema</span></span>
+            </div>
+            <div class="theme-options">
+                <button class="theme-btn dark active" data-theme="dark" onclick="setTheme('dark')">
+                    <span class="theme-dot"></span> <span data-i18n="theme.dark">Dark</span>
+                </button>
+                <button class="theme-btn light" data-theme="light" onclick="setTheme('light')">
+                    <span class="theme-dot"></span> <span data-i18n="theme.light">Light</span>
+                </button>
+                <button class="theme-btn neon" data-theme="neon" onclick="setTheme('neon')">
+                    <span class="theme-dot"></span> <span data-i18n="theme.neon">Neon</span>
+                </button>
+            </div>
         </div>
-    </div>
-    
-    <div class="modal-form-group">
-        <label class="modal-label"><i class="fas fa-font"></i> Font Size</label>
-        <div style="display:flex; gap:12px; align-items:center;">
-            <button class="font-size-btn" data-size="small" onclick="setFontSize('small')" style="padding:6px 12px; border-radius:10px; border:1px solid var(--neon-cyan); background:rgba(0,0,0,0.3); color:white; cursor:pointer; font-size:12px;">A</button>
-            <button class="font-size-btn active" data-size="medium" onclick="setFontSize('medium')" style="padding:6px 12px; border-radius:10px; border:2px solid var(--neon-cyan); background:rgba(0,255,255,0.2); color:white; cursor:pointer; font-size:14px;">A</button>
-            <button class="font-size-btn" data-size="large" onclick="setFontSize('large')" style="padding:6px 12px; border-radius:10px; border:1px solid var(--neon-cyan); background:rgba(0,0,0,0.3); color:white; cursor:pointer; font-size:18px;">A</button>
+
+        <!-- FONT SIZE -->
+        <div class="custom-group">
+            <div class="custom-group-header">
+                <span class="custom-label"><i class="fas fa-font label-icon"></i> <span data-i18n="customization.font">Font Size</span></span>
+            </div>
+            <div class="font-options">
+                <span class="font-size-label" data-i18n="font.size">ATUR</span>
+                <button class="font-btn small" data-size="small" onclick="setFontSize('small')">A</button>
+                <button class="font-btn medium active" data-size="medium" onclick="setFontSize('medium')">A</button>
+                <button class="font-btn large" data-size="large" onclick="setFontSize('large')">A</button>
+            </div>
         </div>
-    </div>
-    
-    <div class="modal-form-group">
-        <label class="modal-label"><i class="fas fa-language"></i> Language</label>
-        <select class="modal-select" id="languageSelect" onchange="setLanguage(this.value)">
-            <option value="id">🇮🇩 Indonesia</option>
-            <option value="en">🇬🇧 English</option>
-        </select>
-    </div>
-    
-    <div class="action-buttons">
-        <button class="btn btn-primary" onclick="saveCustomization()"><i class="fas fa-save"></i> Simpan</button>
-        <button class="btn btn-secondary" onclick="resetCustomization()"><i class="fas fa-undo"></i> Reset</button>
+
+        <!-- LANGUAGE -->
+        <div class="custom-group">
+            <div class="custom-group-header">
+                <span class="custom-label"><i class="fas fa-globe label-icon"></i> <span data-i18n="customization.language">Language</span></span>
+            </div>
+            <div class="language-select-wrapper">
+                <select class="custom-select" id="languageSelect" onchange="setLanguage(this.value)">
+                    <option value="id">🇮🇩 Indonesia</option>
+                    <option value="en">🇬🇧 English</option>
+                    <option value="ar">🇸🇦 العربية</option>
+                    <option value="zh">🇨🇳 中文</option>
+                    <option value="es">🇪🇸 Español</option>
+                    <option value="fr">🇫🇷 Français</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- BUTTONS -->
+        <div class="custom-actions">
+            <button class="btn btn-save" onclick="saveCustomization()"><i class="fas fa-save"></i> <span data-i18n="customization.save">Simpan</span></button>
+            <button class="btn btn-reset" onclick="resetCustomization()"><i class="fas fa-undo"></i> <span data-i18n="customization.reset">Reset</span></button>
+        </div>
     </div>
 </div>
 
@@ -9813,6 +9938,541 @@
                 document.getElementById('maintenanceProgressText').innerHTML = `Progress: ${progress.toFixed(1)}%`;
             }
         }).catch(() => {});
+    }
+    
+    // ============================================================
+    // MULTI-BAHASA (5 BAHASA INTERNASIONAL + INDONESIA)
+    // ============================================================
+    
+    const translations = {
+        id: {
+            // Customization
+            'customization.title': 'Kustomisasi',
+            'customization.theme': 'Tema',
+            'customization.font': 'Ukuran Font',
+            'customization.language': 'Bahasa',
+            'customization.save': 'Simpan',
+            'customization.reset': 'Reset',
+            'theme.dark': 'Gelap',
+            'theme.light': 'Terang',
+            'theme.neon': 'Neon',
+            'font.size': 'ATUR',
+            
+            // Navigation
+            'nav.home': 'Beranda',
+            'nav.account': 'Akun',
+            'nav.chat': 'Chat',
+            
+            // Common
+            'common.loading': 'Memuat...',
+            'common.success': 'Berhasil',
+            'common.error': 'Gagal',
+            'common.save': 'Simpan',
+            'common.cancel': 'Batal',
+            'common.delete': 'Hapus',
+            'common.edit': 'Edit',
+            'common.close': 'Tutup',
+            'common.back': 'Kembali',
+            'common.next': 'Lanjut',
+            'common.confirm': 'Konfirmasi',
+            'common.yes': 'Ya',
+            'common.no': 'Tidak',
+            
+            // Profile
+            'profile.title': 'PROFIL',
+            'profile.uid': 'UID',
+            'profile.saldo': 'Saldo',
+            'profile.deposit': 'Deposit',
+            'profile.vip': 'VIP Status',
+            
+            // VIP
+            'vip.buy': 'Beli VIP',
+            'vip.active': 'Aktif',
+            'vip.expired': 'Kadaluarsa',
+            'vip.permanent': 'Seumur Hidup',
+            'vip.quota': 'Kuota',
+            'vip.duration': 'Durasi',
+            
+            // Chat
+            'chat.title': 'CHAT ADMIN',
+            'chat.type': 'Ketik pesan untuk admin...',
+            'chat.send': 'Kirim',
+            'chat.support': 'Chat Support',
+            'chat.public': 'Chat Publik',
+            
+            // Deposit
+            'deposit.title': 'DEPOSIT',
+            'deposit.min': 'Minimal Rp 20.000',
+            'deposit.name': 'Nama Pengirim',
+            'deposit.ewallet': 'No. E-Wallet',
+            'deposit.amount': 'Jumlah',
+            'deposit.method': 'Metode Pembayaran',
+            'deposit.proof': 'Upload Bukti Transfer',
+            'deposit.send': 'KIRIM',
+            
+            // Leaderboard
+            'leaderboard.title': 'LEADERBOARD',
+            'leaderboard.top': 'Top 5 Depositors',
+            'leaderboard.no': 'Belum ada data',
+            
+            // Updates
+            'updates.free': 'UPDATE GRATIS',
+            'updates.vip': 'UPDATE VIP',
+            'updates.download': 'Download',
+            'updates.no': 'Belum ada update',
+            
+            // Rating
+            'rating.title': 'Rate & Review',
+            'rating.rate': 'Berikan Rating',
+            'rating.review': 'Tulis review Anda...',
+            'rating.submit': 'Kirim Review',
+            'rating.total': 'Dari {total} ulasan',
+            'rating.average': 'Rating Rata-rata',
+            
+            // Notification
+            'notif.announcement': 'PENGUMUMAN',
+            'notif.info': 'INFO',
+            'notif.success': 'SUKSES',
+            'notif.warning': 'PERINGATAN',
+            'notif.error': 'ERROR'
+        },
+        en: {
+            'customization.title': 'Customization',
+            'customization.theme': 'Theme',
+            'customization.font': 'Font Size',
+            'customization.language': 'Language',
+            'customization.save': 'Save',
+            'customization.reset': 'Reset',
+            'theme.dark': 'Dark',
+            'theme.light': 'Light',
+            'theme.neon': 'Neon',
+            'font.size': 'SIZE',
+            
+            'nav.home': 'Home',
+            'nav.account': 'Account',
+            'nav.chat': 'Chat',
+            
+            'common.loading': 'Loading...',
+            'common.success': 'Success',
+            'common.error': 'Error',
+            'common.save': 'Save',
+            'common.cancel': 'Cancel',
+            'common.delete': 'Delete',
+            'common.edit': 'Edit',
+            'common.close': 'Close',
+            'common.back': 'Back',
+            'common.next': 'Next',
+            'common.confirm': 'Confirm',
+            'common.yes': 'Yes',
+            'common.no': 'No',
+            
+            'profile.title': 'PROFILE',
+            'profile.uid': 'UID',
+            'profile.saldo': 'Balance',
+            'profile.deposit': 'Deposit',
+            'profile.vip': 'VIP Status',
+            
+            'vip.buy': 'Buy VIP',
+            'vip.active': 'Active',
+            'vip.expired': 'Expired',
+            'vip.permanent': 'Lifetime',
+            'vip.quota': 'Quota',
+            'vip.duration': 'Duration',
+            
+            'chat.title': 'CHAT ADMIN',
+            'chat.type': 'Type message for admin...',
+            'chat.send': 'Send',
+            'chat.support': 'Chat Support',
+            'chat.public': 'Public Chat',
+            
+            'deposit.title': 'DEPOSIT',
+            'deposit.min': 'Minimum Rp 20,000',
+            'deposit.name': 'Sender Name',
+            'deposit.ewallet': 'E-Wallet No.',
+            'deposit.amount': 'Amount',
+            'deposit.method': 'Payment Method',
+            'deposit.proof': 'Upload Transfer Proof',
+            'deposit.send': 'SEND',
+            
+            'leaderboard.title': 'LEADERBOARD',
+            'leaderboard.top': 'Top 5 Depositors',
+            'leaderboard.no': 'No data yet',
+            
+            'updates.free': 'FREE UPDATE',
+            'updates.vip': 'VIP UPDATE',
+            'updates.download': 'Download',
+            'updates.no': 'No updates yet',
+            
+            'rating.title': 'Rate & Review',
+            'rating.rate': 'Give Rating',
+            'rating.review': 'Write your review...',
+            'rating.submit': 'Submit Review',
+            'rating.total': 'From {total} reviews',
+            'rating.average': 'Average Rating',
+            
+            'notif.announcement': 'ANNOUNCEMENT',
+            'notif.info': 'INFO',
+            'notif.success': 'SUCCESS',
+            'notif.warning': 'WARNING',
+            'notif.error': 'ERROR'
+        },
+        ar: {
+            'customization.title': 'التخصيص',
+            'customization.theme': 'المظهر',
+            'customization.font': 'حجم الخط',
+            'customization.language': 'اللغة',
+            'customization.save': 'حفظ',
+            'customization.reset': 'إعادة تعيين',
+            'theme.dark': 'مظلم',
+            'theme.light': 'فاتح',
+            'theme.neon': 'نيون',
+            'font.size': 'الحجم',
+            
+            'nav.home': 'الرئيسية',
+            'nav.account': 'الحساب',
+            'nav.chat': 'الدردشة',
+            
+            'common.loading': 'جاري التحميل...',
+            'common.success': 'نجاح',
+            'common.error': 'خطأ',
+            'common.save': 'حفظ',
+            'common.cancel': 'إلغاء',
+            'common.delete': 'حذف',
+            'common.edit': 'تعديل',
+            'common.close': 'إغلاق',
+            
+            'vip.buy': 'شراء VIP',
+            'vip.active': 'نشط',
+            'vip.permanent': 'مدى الحياة',
+            
+            'chat.title': 'دردشة المشرف',
+            'chat.type': 'اكتب رسالة للمشرف...',
+            'chat.send': 'إرسال',
+            'chat.support': 'دعم الدردشة',
+            
+            'deposit.title': 'إيداع',
+            'deposit.min': 'الحد الأدنى 20,000 روبية',
+            'deposit.name': 'اسم المرسل',
+            'deposit.amount': 'المبلغ',
+            'deposit.send': 'إرسال',
+            
+            'leaderboard.title': 'لوحة المتصدرين',
+            'updates.download': 'تحميل'
+        },
+        zh: {
+            'customization.title': '自定义',
+            'customization.theme': '主题',
+            'customization.font': '字体大小',
+            'customization.language': '语言',
+            'customization.save': '保存',
+            'customization.reset': '重置',
+            'theme.dark': '深色',
+            'theme.light': '浅色',
+            'theme.neon': '霓虹',
+            'font.size': '大小',
+            
+            'nav.home': '首页',
+            'nav.account': '账户',
+            'nav.chat': '聊天',
+            
+            'common.loading': '加载中...',
+            'common.success': '成功',
+            'common.error': '错误',
+            'common.save': '保存',
+            'common.cancel': '取消',
+            'common.delete': '删除',
+            'common.edit': '编辑',
+            'common.close': '关闭',
+            
+            'vip.buy': '购买VIP',
+            'vip.active': '激活',
+            'vip.permanent': '永久',
+            
+            'chat.title': '管理员聊天',
+            'chat.type': '给管理员留言...',
+            'chat.send': '发送',
+            'chat.support': '支持聊天',
+            
+            'deposit.title': '存款',
+            'deposit.min': '最低20,000印尼盾',
+            'deposit.name': '汇款人姓名',
+            'deposit.amount': '金额',
+            'deposit.send': '发送',
+            
+            'leaderboard.title': '排行榜',
+            'updates.download': '下载'
+        },
+        es: {
+            'customization.title': 'Personalización',
+            'customization.theme': 'Tema',
+            'customization.font': 'Tamaño de Fuente',
+            'customization.language': 'Idioma',
+            'customization.save': 'Guardar',
+            'customization.reset': 'Restablecer',
+            'theme.dark': 'Oscuro',
+            'theme.light': 'Claro',
+            'theme.neon': 'Neón',
+            'font.size': 'TAMAÑO',
+            
+            'nav.home': 'Inicio',
+            'nav.account': 'Cuenta',
+            'nav.chat': 'Chat',
+            
+            'common.loading': 'Cargando...',
+            'common.success': 'Éxito',
+            'common.error': 'Error',
+            'common.save': 'Guardar',
+            'common.cancel': 'Cancelar',
+            'common.delete': 'Eliminar',
+            'common.edit': 'Editar',
+            'common.close': 'Cerrar',
+            
+            'vip.buy': 'Comprar VIP',
+            'vip.active': 'Activo',
+            'vip.permanent': 'De por vida',
+            
+            'chat.title': 'Chat Admin',
+            'chat.type': 'Escribe mensaje para admin...',
+            'chat.send': 'Enviar',
+            'chat.support': 'Soporte Chat',
+            
+            'deposit.title': 'Depósito',
+            'deposit.min': 'Mínimo Rp 20.000',
+            'deposit.name': 'Nombre del Remitente',
+            'deposit.amount': 'Cantidad',
+            'deposit.send': 'ENVIAR',
+            
+            'leaderboard.title': 'Tabla de Clasificación',
+            'updates.download': 'Descargar'
+        },
+        fr: {
+            'customization.title': 'Personnalisation',
+            'customization.theme': 'Thème',
+            'customization.font': 'Taille de Police',
+            'customization.language': 'Langue',
+            'customization.save': 'Enregistrer',
+            'customization.reset': 'Réinitialiser',
+            'theme.dark': 'Sombre',
+            'theme.light': 'Clair',
+            'theme.neon': 'Néon',
+            'font.size': 'TAILLE',
+            
+            'nav.home': 'Accueil',
+            'nav.account': 'Compte',
+            'nav.chat': 'Chat',
+            
+            'common.loading': 'Chargement...',
+            'common.success': 'Succès',
+            'common.error': 'Erreur',
+            'common.save': 'Enregistrer',
+            'common.cancel': 'Annuler',
+            'common.delete': 'Supprimer',
+            'common.edit': 'Modifier',
+            'common.close': 'Fermer',
+            
+            'vip.buy': 'Acheter VIP',
+            'vip.active': 'Actif',
+            'vip.permanent': 'À vie',
+            
+            'chat.title': 'Chat Admin',
+            'chat.type': 'Écrivez un message à l\'admin...',
+            'chat.send': 'Envoyer',
+            'chat.support': 'Support Chat',
+            
+            'deposit.title': 'Dépôt',
+            'deposit.min': 'Minimum Rp 20.000',
+            'deposit.name': 'Nom de l\'expéditeur',
+            'deposit.amount': 'Montant',
+            'deposit.send': 'ENVOYER',
+            
+            'leaderboard.title': 'Classement',
+            'updates.download': 'Télécharger'
+        }
+    };
+    
+    let currentLanguage = 'id';
+    
+    // ============================================================
+    // FUNGSI TERJEMAHAN
+    // ============================================================
+    function t(key, params = {}) {
+        const lang = currentLanguage || localStorage.getItem('user_language') || 'id';
+        let text = translations[lang]?.[key] || translations['id'][key] || key;
+        
+        // Replace params
+        Object.keys(params).forEach(param => {
+            text = text.replace(`{${param}}`, params[param]);
+        });
+        
+        return text;
+    }
+    
+    function setLanguage(lang) {
+        currentLanguage = lang;
+        localStorage.setItem('user_language', lang);
+        applyTranslations();
+        showNeonToast(`🌐 ${lang === 'id' ? 'Bahasa Indonesia' : lang === 'en' ? 'English' : lang === 'ar' ? 'العربية' : lang === 'zh' ? '中文' : lang === 'es' ? 'Español' : 'Français'}`);
+    }
+    
+    function applyTranslations() {
+        // Ambil semua elemen dengan atribut data-i18n
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            const text = t(key);
+            if (text && text !== key) {
+                // Jika ada child element, ganti hanya text node
+                if (el.children.length > 0) {
+                    // Cari text node pertama
+                    const nodes = el.childNodes;
+                    for (let node of nodes) {
+                        if (node.nodeType === 3) { // Text node
+                            node.textContent = text;
+                            break;
+                        }
+                    }
+                } else {
+                    el.textContent = text;
+                }
+            }
+        });
+        
+        // Update placeholder
+        document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+            const key = el.getAttribute('data-i18n-placeholder');
+            const text = t(key);
+            if (text && text !== key) {
+                el.placeholder = text;
+            }
+        });
+        
+        // Update title
+        document.querySelectorAll('[data-i18n-title]').forEach(el => {
+            const key = el.getAttribute('data-i18n-title');
+            const text = t(key);
+            if (text && text !== key) {
+                el.title = text;
+            }
+        });
+        
+        // Update value untuk select options
+        document.querySelectorAll('[data-i18n-option]').forEach(el => {
+            const key = el.getAttribute('data-i18n-option');
+            const text = t(key);
+            if (text && text !== key) {
+                el.textContent = text;
+            }
+        });
+    }
+    
+    // ============================================================
+    // OVERRIDE FUNGSI EXISTING UNTUK MENDUKUNG BAHASA
+    // ============================================================
+    
+    // Simpan fungsi asli
+    const _originalShowNeonModal = window.showNeonModal;
+    
+    // Override showNeonModal dengan dukungan bahasa
+    window.showNeonModal = function(title, message, type = 'info') {
+        const modal = document.getElementById('neonModal');
+        const iconEl = modal.querySelector('.neon-modal-icon');
+        const titleEl = document.getElementById('neonModalTitle');
+        const messageEl = document.getElementById('neonModalMessage');
+        
+        iconEl.className = 'neon-modal-icon ' + type;
+        titleEl.className = 'neon-modal-title ' + type;
+        
+        if (type === 'error' || type === 'warning') {
+            iconEl.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
+        } else if (type === 'success') {
+            iconEl.innerHTML = '<i class="fas fa-check-circle"></i>';
+        } else {
+            iconEl.innerHTML = '<i class="fas fa-info-circle"></i>';
+        }
+        
+        // Terjemahkan title dan message jika ada
+        const translatedTitle = t(title) || title;
+        const translatedMessage = t(message) || message;
+        
+        titleEl.textContent = translatedTitle;
+        messageEl.innerHTML = translatedMessage;
+        modal.classList.add('active');
+    };
+    
+    // Override showNeonToast
+    const _originalShowNeonToast = window.showNeonToast;
+    window.showNeonToast = function(msg) {
+        const toast = document.getElementById('toastNeon');
+        const translated = t(msg) || msg;
+        toast.textContent = translated;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 3000);
+    };
+    
+    // Fungsi untuk update bahasa pada elemen dinamis
+    function updateDynamicText() {
+        // Update semua elemen dengan data-i18n
+        applyTranslations();
+        
+        // Update select options
+        const langSelect = document.getElementById('languageSelect');
+        if (langSelect) {
+            langSelect.value = currentLanguage || localStorage.getItem('user_language') || 'id';
+        }
+    }
+    
+    // ============================================================
+    // INISIALISASI BAHASA
+    // ============================================================
+    function initLanguage() {
+        const savedLang = localStorage.getItem('user_language') || 'id';
+        currentLanguage = savedLang;
+        
+        // Set select value
+        const langSelect = document.getElementById('languageSelect');
+        if (langSelect) {
+            langSelect.value = savedLang;
+        }
+        
+        applyTranslations();
+        console.log('🌐 Language initialized:', savedLang);
+    }
+    
+    // Panggil saat init
+    initLanguage();
+    
+    // ============================================================
+    // SAVE & RESET CUSTOMIZATION
+    // ============================================================
+    function saveCustomization() {
+        // Simpan semua pengaturan
+        const theme = document.querySelector('.theme-btn.active')?.dataset.theme || 'dark';
+        const fontSize = document.querySelector('.font-btn.active')?.dataset.size || 'medium';
+        const language = document.getElementById('languageSelect')?.value || 'id';
+        
+        localStorage.setItem('user_theme', theme);
+        localStorage.setItem('user_font_size', fontSize);
+        localStorage.setItem('user_language', language);
+        
+        showNeonToast('✅ ' + t('common.save') + ' ' + t('customization.title'));
+    }
+    
+    function resetCustomization() {
+        localStorage.removeItem('user_theme');
+        localStorage.removeItem('user_font_size');
+        localStorage.removeItem('user_language');
+        
+        // Reset UI
+        document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+        document.querySelector('.theme-btn.dark')?.classList.add('active');
+        document.querySelectorAll('.font-btn').forEach(b => b.classList.remove('active'));
+        document.querySelector('.font-btn.medium')?.classList.add('active');
+        document.getElementById('languageSelect').value = 'id';
+        
+        setTheme('dark');
+        setFontSize('medium');
+        setLanguage('id');
+        
+        showNeonToast('🔄 ' + t('customization.reset') + ' ' + t('customization.title'));
     }
 
     // ============================================================
