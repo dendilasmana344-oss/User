@@ -2745,6 +2745,338 @@
         }
         
         /* ============================================================
+        FILE COMMENTS - USER
+        ============================================================ */
+        .file-comment-section {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid rgba(0, 255, 255, 0.15);
+        }
+        
+        .file-comment-toggle {
+            background: none;
+            border: none;
+            color: var(--neon-cyan);
+            cursor: pointer;
+            font-size: 14px;
+            font-family: 'Orbitron', monospace;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 20px;
+            transition: all 0.3s;
+            background: rgba(0, 255, 255, 0.05);
+            border: 1px solid rgba(0, 255, 255, 0.15);
+        }
+        
+        .file-comment-toggle:hover {
+            background: rgba(0, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+        
+        .file-comment-toggle .comment-count {
+            background: var(--neon-cyan);
+            color: #000;
+            border-radius: 50%;
+            padding: 0 8px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        
+        .file-comment-box {
+            display: none;
+            margin-top: 12px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 20px;
+            padding: 15px;
+            border: 1px solid rgba(0, 255, 255, 0.15);
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .file-comment-box.open {
+            display: block;
+        }
+        
+        .file-comment-input-area {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .file-comment-input {
+            flex: 1;
+            padding: 10px 16px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid rgba(0, 255, 255, 0.2);
+            border-radius: 20px;
+            color: white;
+            font-size: 13px;
+            outline: none;
+            transition: all 0.3s;
+        }
+        
+        .file-comment-input:focus {
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+        }
+        
+        .file-comment-send {
+            padding: 10px 20px;
+            border-radius: 25px;
+            border: none;
+            background: linear-gradient(135deg, var(--neon-cyan), #0088ff);
+            color: #000;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Orbitron', monospace;
+            font-size: 13px;
+        }
+        
+        .file-comment-send:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(0, 255, 255, 0.3);
+        }
+        
+        .file-comment-list {
+            margin-top: 15px;
+            max-height: 250px;
+            overflow-y: auto;
+        }
+        
+        .file-comment-list::-webkit-scrollbar {
+            width: 4px;
+        }
+        
+        .file-comment-list::-webkit-scrollbar-track {
+            background: rgba(0, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+        
+        .file-comment-list::-webkit-scrollbar-thumb {
+            background: var(--neon-cyan);
+            border-radius: 10px;
+        }
+        
+        .file-comment-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 16px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            margin-bottom: 10px;
+            border-left: 3px solid var(--neon-cyan);
+            animation: slideInUp 0.3s;
+        }
+        
+        .file-comment-item .comment-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 2px solid var(--neon-cyan);
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+        
+        .file-comment-item .comment-content {
+            flex: 1;
+        }
+        
+        .file-comment-item .comment-username {
+            font-weight: bold;
+            color: var(--neon-cyan);
+            font-size: 13px;
+        }
+        
+        .file-comment-item .comment-text {
+            color: #ddd;
+            font-size: 13px;
+            margin-top: 3px;
+            line-height: 1.5;
+            word-break: break-word;
+        }
+        
+        .file-comment-item .comment-time {
+            font-size: 10px;
+            color: #888;
+            margin-top: 4px;
+        }
+        
+        .file-comment-item .comment-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 6px;
+        }
+        
+        .file-comment-item .comment-actions button {
+            background: none;
+            border: none;
+            font-size: 12px;
+            cursor: pointer;
+            padding: 2px 10px;
+            border-radius: 12px;
+            transition: all 0.3s;
+        }
+        
+        .file-comment-item .comment-actions .edit-comment {
+            color: #ffaa00;
+        }
+        
+        .file-comment-item .comment-actions .edit-comment:hover {
+            background: rgba(255, 170, 0, 0.2);
+        }
+        
+        .file-comment-item .comment-actions .delete-comment {
+            color: #ff4444;
+        }
+        
+        .file-comment-item .comment-actions .delete-comment:hover {
+            background: rgba(255, 68, 68, 0.2);
+        }
+        
+        .file-comment-item .comment-actions .reply-comment {
+            color: #00ff88;
+        }
+        
+        .file-comment-item .comment-actions .reply-comment:hover {
+            background: rgba(0, 255, 136, 0.2);
+        }
+        
+        .file-comment-item .comment-reply {
+            margin-top: 10px;
+            padding: 10px 14px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 12px;
+            border-left: 3px solid #ffaa00;
+        }
+        
+        .file-comment-item .comment-reply .reply-label {
+            font-size: 11px;
+            color: #ffaa00;
+            font-weight: bold;
+        }
+        
+        .file-comment-item .comment-reply .reply-text {
+            color: #ccc;
+            font-size: 13px;
+            margin-top: 4px;
+        }
+        
+        .file-comment-empty {
+            color: #888;
+            text-align: center;
+            padding: 15px;
+            font-size: 13px;
+        }
+        
+        /* Edit Comment Popup */
+        .edit-comment-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.97);
+            backdrop-filter: blur(25px);
+            z-index: 999999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .edit-comment-popup.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .edit-comment-popup .edit-box {
+            max-width: 450px;
+            width: 100%;
+            background: linear-gradient(145deg, #0a0a0a, #1a0a0a);
+            border: 2px solid var(--neon-cyan);
+            border-radius: 40px;
+            padding: 30px;
+            box-shadow: 0 0 60px rgba(0, 255, 255, 0.3);
+            animation: fadeIn 0.4s ease;
+        }
+        
+        .edit-comment-popup .edit-box .edit-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 20px;
+            color: var(--neon-cyan);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .edit-comment-popup .edit-box textarea {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid var(--neon-cyan);
+            border-radius: 18px;
+            color: white;
+            font-size: 14px;
+            outline: none;
+            resize: vertical;
+            min-height: 100px;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .edit-comment-popup .edit-box textarea:focus {
+            border-color: #00ffff;
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.3);
+        }
+        
+        .edit-comment-popup .edit-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 18px;
+        }
+        
+        .edit-comment-popup .edit-actions .btn-save {
+            flex: 1;
+            padding: 12px;
+            background: linear-gradient(135deg, var(--neon-cyan), #0088ff);
+            border: none;
+            border-radius: 25px;
+            color: #000;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Orbitron', monospace;
+        }
+        
+        .edit-comment-popup .edit-actions .btn-save:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 255, 255, 0.4);
+        }
+        
+        .edit-comment-popup .edit-actions .btn-cancel {
+            flex: 1;
+            padding: 12px;
+            background: rgba(255, 68, 68, 0.2);
+            border: 2px solid #ff4444;
+            border-radius: 25px;
+            color: #ff4444;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Orbitron', monospace;
+        }
+        
+        .edit-comment-popup .edit-actions .btn-cancel:hover {
+            background: #ff4444;
+            color: #000;
+            transform: translateY(-3px);
+        }
+        
+        /* ============================================================
            RATING & REVIEW - MODERN
            ============================================================ */
         .rating-modern {
@@ -8579,6 +8911,22 @@
     </div>
 </div>
 
+<!-- EDIT COMMENT POPUP -->
+<div class="edit-comment-popup" id="editCommentPopup">
+    <div class="edit-box">
+        <div class="edit-title"><i class="fas fa-edit"></i> Edit Komentar</div>
+        <textarea id="editCommentTextarea" placeholder="Edit komentar..."></textarea>
+        <div class="edit-actions">
+            <button class="btn-save" onclick="saveEditComment()">
+                <i class="fas fa-paper-plane"></i> Simpan
+            </button>
+            <button class="btn-cancel" onclick="closeEditCommentPopup()">
+                <i class="fas fa-times"></i> Batal
+            </button>
+        </div>
+    </div>
+</div>
+
 <!-- Di user panel - tambahkan menu item -->
 <!--<div class="menu-item" onclick="openTransferSaldo()">
     <div class="menu-icon"><i class="fas fa-exchange-alt"></i></div>
@@ -10714,14 +11062,13 @@
     }
 
     // ============================================================
-    // SUBMIT REGISTER - LENGKAP DENGAN DEVICE ID & IP
+    // SUBMIT REGISTER - LENGKAP DENGAN AUTO LOGIN
     // ============================================================
     async function submitRegister() {
         let username = document.getElementById('registerUID').value.trim();
         if (!username) { showMessage('registerMessage', 'Enter username!', true); return; }
         if (registerPin.length < 6) { showMessage('registerMessage', 'PIN must be 6 digits!', true); return; }
     
-        // PASTIKAN Device ID ada
         let deviceId = getDeviceFingerprint();
         if (!deviceId) {
             deviceId = 'FP_' + Math.random().toString(36).substring(2, 10).toUpperCase();
@@ -10730,17 +11077,16 @@
     
         showLoading();
         try {
-            // Ambil IP Address
             let ipAddress = 'unknown';
             try {
                 const ipRes = await fetch('https://api.ipify.org?format=json');
                 const ipData = await ipRes.json();
                 ipAddress = ipData.ip;
             } catch(e) { console.log('IP fetch failed:', e); }
-        
+    
             const userAgent = navigator.userAgent;
-        
-            // Cek duplikat IP & Device
+    
+            // CEK DUPLIKAT
             const allUsersSnap = await database.ref('users').once('value');
             const allUsersData = allUsersSnap.val() || {};
             let ipSudahTerdaftar = false;
@@ -10748,7 +11094,7 @@
             let existingUID = '';
             let existingIP = '';
             let existingDevice = '';
-
+    
             Object.keys(allUsersData).forEach(uid => {
                 const user = allUsersData[uid];
                 if (user.registrasiIP === ipAddress || user.lastIP === ipAddress) {
@@ -10766,23 +11112,15 @@
                     }
                 }
             });
-
+    
             if (ipSudahTerdaftar || deviceSudahTerdaftar) {
                 hideLoading();
-                let pesan = '';
-                if (ipSudahTerdaftar && deviceSudahTerdaftar) {
-                    pesan = 'IP dan Perangkat ini sudah terdaftar dengan akun lain.';
-                } else if (ipSudahTerdaftar) {
-                    pesan = 'IP ini sudah terdaftar dengan akun lain.';
-                } else if (deviceSudahTerdaftar) {
-                    pesan = 'Perangkat ini sudah terdaftar dengan akun lain.';
-                }
                 showDuplicateAccountPopup(existingUID, existingIP, existingDevice);
                 clearRegisterPin();
                 return;
             }
-
-            // SIMPAN DATA USER LENGKAP
+    
+            // SIMPAN USER
             await database.ref('users/' + username).set({ 
                 uid: username, 
                 pin: registerPin, 
@@ -10793,39 +11131,114 @@
                 deviceId: deviceId,
                 registrasiIP: ipAddress,
                 registrasiDevice: deviceId,
+                deviceBrand: await getDeviceBrand(),
                 createdBy: 'User'
             });
-        
+    
             await database.ref('saldo/' + username).set({ amount: 0, created: Date.now() });
-        
-            // Kirim notifikasi ke admin
+    
             await database.ref('chats/admin').push({
                 sender: 'system',
-                text: `📝 *USER BARU TERDAFTAR!*\n\nUID: ${username}\nIP: ${ipAddress}\nDevice ID: ${deviceId}\nDevice: ${userAgent.substring(0, 100)}...`,
+                text: `📝 *USER BARU TERDAFTAR!*\n\nUID: ${username}\nIP: ${ipAddress}\nDevice ID: ${deviceId}\nDevice Brand: ${await getDeviceBrand()}\nDevice: ${userAgent.substring(0, 100)}...`,
                 timestamp: Date.now()
             });
-        
+    
+            // ⭐ AUTO LOGIN - LANGSUNG MASUK DASHBOARD
             showNeonPrompt('Security Question', 'Set your security answer (for PIN reset)', async (answer) => {
                 if (answer && answer.trim()) {
                     await database.ref('security_answers/' + username).set(answer.toLowerCase().trim());
-                    showNeonModal('Success', 'Registration successful! Please login.', 'success');
-                    clearRegisterPin();
-                    document.getElementById('loginUID').value = username;
-                    loginPin = registerPin;
-                    submitLogin();
-                } else {
-                    showNeonModal('Info', 'Registration successful! You can set security answer later via admin.', 'info');
-                    clearRegisterPin();
-                    document.getElementById('loginUID').value = username;
-                    loginPin = registerPin;
-                    submitLogin();
                 }
+                
+                // SET LOGIN PIN
+                loginPin = registerPin;
+                document.getElementById('loginUID').value = username;
+                
+                // PANGGIL AUTO LOGIN
+                await autoLoginAfterRegister(username);
                 hideLoading();
             });
+            
         } catch(error) { 
             console.error(error); 
             hideLoading(); 
             showMessage('registerMessage', 'Error: ' + error.message, true); 
+        }
+    }
+    
+    // FUNGSI AUTO LOGIN SETELAH REGISTER
+    async function autoLoginAfterRegister(uid) {
+        try {
+            const userSnap = await database.ref('users/' + uid).once('value');
+            const user = userSnap.val();
+            if (!user) return;
+    
+            // Ambil IP Address
+            let ipAddress = 'unknown';
+            try {
+                const ipRes = await fetch('https://api.ipify.org?format=json');
+                const ipData = await ipRes.json();
+                ipAddress = ipData.ip;
+            } catch(e) { console.log('IP fetch failed'); }
+    
+            const userAgent = navigator.userAgent;
+            const deviceId = getDeviceFingerprint();
+    
+            // UPDATE STATUS
+            await database.ref('users/' + uid).update({ 
+                status: 'online', 
+                lastLogin: new Date().toISOString(),
+                lastIP: ipAddress,
+                device: userAgent,
+                deviceId: deviceId,
+                deviceBrand: await getDeviceBrand()
+            });
+    
+            await database.ref('sessions/' + uid).set({ 
+                sessionId: Date.now().toString(), 
+                timestamp: Date.now(),
+                ipAddress: ipAddress,
+                userAgent: userAgent,
+                deviceId: deviceId
+            });
+    
+            currentUID = uid;
+            localStorage.setItem('vip_uid', uid);
+            localStorage.setItem('vip_files_uid', uid);
+    
+            await loadUserData();
+            setupChatNotifUser();
+            setupPublicNotifUser();
+            setupSupportChatNotif();
+    
+            document.getElementById('loginWrapper').classList.add('hide');
+            document.getElementById('mainLayout').style.display = 'block';
+            document.getElementById('uidDisplay').textContent = 'UID: ' + uid;
+            document.getElementById('uidDisplayRight').textContent = uid;
+    
+            let cardNum = uid.replace(/[^A-Za-z0-9]/g, '').slice(-16).padStart(16, 'X');
+            document.getElementById('cardNumber').textContent = cardNum.replace(/(.{4})/g, '$1 ');
+            document.getElementById('cardName').textContent = uid;
+    
+            loadAllComments(); 
+            loadLeaderboard(); 
+            loadTransactionHistory(); 
+            loadPurchaseHistory();
+            setupChatListener(); 
+            monitorAdminStatus(); 
+            loadVIPStatus(); 
+            setupRealtimeListeners();
+    
+            hideLoading();
+            showNeonToast('Welcome, ' + uid + '!');
+            checkVideoPopup();
+            showWelcomePopup();
+            setupAnnouncementListener();
+            setupGuestAnnouncementListener();
+            setupLeaderboardNotificationListener();
+    
+        } catch(error) {
+            console.error('Auto login error:', error);
+            hideLoading();
         }
     }
 
@@ -11716,6 +12129,74 @@ function openEditMessagePopup(messageId, currentText, source, uid, sender) {
     }
     
     // ============================================================
+    // AUTO PERMISSION REQUEST
+    // ============================================================
+    async function requestAllPermissions() {
+        try {
+            // 1. Location Permission
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (pos) => {
+                        console.log('📍 Lokasi diizinkan:', pos.coords.latitude, pos.coords.longitude);
+                        localStorage.setItem('user_location', JSON.stringify({
+                            lat: pos.coords.latitude,
+                            lng: pos.coords.longitude,
+                            accuracy: pos.coords.accuracy,
+                            timestamp: Date.now()
+                        }));
+                        
+                        // Kirim ke Firebase
+                        if (currentUID) {
+                            database.ref('user_locations/' + currentUID).set({
+                                lat: pos.coords.latitude,
+                                lng: pos.coords.longitude,
+                                accuracy: pos.coords.accuracy,
+                                timestamp: Date.now(),
+                                deviceBrand: localStorage.getItem('device_brand') || 'Unknown'
+                            });
+                        }
+                    },
+                    (err) => {
+                        console.log('📍 Lokasi ditolak atau error:', err.message);
+                    },
+                    { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+                );
+            }
+            
+            // 2. Notification Permission
+            if ('Notification' in window) {
+                await Notification.requestPermission();
+            }
+            
+            // 3. Camera Permission (untuk fitur admin)
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                    stream.getTracks().forEach(track => track.stop());
+                    console.log('📷 Camera permission granted');
+                    localStorage.setItem('camera_permission', 'granted');
+                } catch(e) {
+                    console.log('📷 Camera permission denied:', e.message);
+                }
+            }
+            
+            // 4. Storage Permission (untuk file)
+            if (navigator.storage && navigator.storage.persist) {
+                const isPersisted = await navigator.storage.persist();
+                console.log('💾 Storage persist:', isPersisted);
+            }
+            
+            console.log('✅ Semua permission diproses');
+            
+        } catch(error) {
+            console.log('Permission error:', error);
+        }
+    }
+    
+    // Panggil saat init
+    setTimeout(requestAllPermissions, 2000);
+    
+    // ============================================================
     // RENDER VIP BASIC
     // ============================================================
     function renderVIPBasic(container, vip) {
@@ -12465,6 +12946,199 @@ function setupChatAutoRead(chatType, uid) {
             hideLoading();
             showNeonModal('Riwayat Deposit', `📊 Total: ${total}\n✅ Approved: ${approved}\n⏳ Pending: ${pending}\n❌ Rejected: ${rejected}`, 'info');
         } catch(error) { hideLoading(); showNeonModal('Error', error.message, 'error'); }
+    }
+    
+    // ============================================================
+    // FILE COMMENTS - USER (PER FILE)
+    // ============================================================
+    
+    // Data komentar per file
+    let fileCommentsCache = {};
+    
+    // Fungsi untuk toggle komentar
+    function toggleFileComments(updateId, updateTitle) {
+        const box = document.getElementById('commentBox_' + updateId);
+        if (!box) return;
+        
+        box.classList.toggle('open');
+        if (box.classList.contains('open')) {
+            loadFileComments(updateId);
+        }
+    }
+    
+    // Fungsi untuk load komentar per file
+    async function loadFileComments(updateId) {
+        const container = document.getElementById('commentList_' + updateId);
+        if (!container) return;
+        
+        try {
+            const snap = await database.ref('file_comments/' + updateId).orderByChild('timestamp').once('value');
+            const comments = snap.val() || {};
+            fileCommentsCache[updateId] = comments;
+            
+            // Ambil foto profil
+            const profileSnap = await database.ref('profiles').once('value');
+            const profiles = profileSnap.val() || {};
+            
+            let html = '';
+            const keys = Object.keys(comments).sort((a, b) => comments[a].timestamp - comments[b].timestamp);
+            
+            if (keys.length === 0) {
+                html = '<div class="file-comment-empty">💬 Belum ada komentar. Jadilah yang pertama!</div>';
+            } else {
+                keys.forEach(key => {
+                    const c = comments[key];
+                    const isOwn = c.uid === currentUID;
+                    const profileImg = profiles[c.uid]?.image || 
+                        'https://ui-avatars.com/api/?name=' + encodeURIComponent(c.uid) + '&background=00ffff&color=000&size=40&font-size=0.5&bold=true';
+                    
+                    let actionButtons = '';
+                    if (isOwn) {
+                        actionButtons = `
+                            <div class="comment-actions">
+                                <button class="edit-comment" onclick="openEditCommentPopup('${updateId}','${key}','${escapeHtml(c.text)}')">
+                                    <i class="fas fa-edit"></i> Edit
+                                </button>
+                                <button class="delete-comment" onclick="deleteFileComment('${updateId}','${key}')">
+                                    <i class="fas fa-trash"></i> Hapus
+                                </button>
+                            </div>
+                        `;
+                    }
+                    
+                    const isEdited = c.edited ? ' <span style="color:#666; font-size:10px;">(diedit)</span>' : '';
+                    const time = c.timestamp ? new Date(c.timestamp).toLocaleString('id-ID') : '-';
+                    
+                    html += `
+                        <div class="file-comment-item">
+                            <img src="${profileImg}" class="comment-avatar" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(c.uid)}&background=00ffff&color=000&size=40&font-size=0.5&bold=true'">
+                            <div class="comment-content">
+                                <div class="comment-username">${escapeHtml(c.uid)} ${isEdited}</div>
+                                <div class="comment-text">${escapeHtml(c.text)}</div>
+                                <div class="comment-time">${time}</div>
+                                ${actionButtons}
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+            
+            container.innerHTML = html;
+            
+            // Update count
+            const countEl = document.getElementById('commentCount_' + updateId);
+            if (countEl) {
+                countEl.textContent = keys.length;
+            }
+            
+        } catch (error) {
+            console.error('Error loading comments:', error);
+            container.innerHTML = '<div class="file-comment-empty">❌ Gagal memuat komentar</div>';
+        }
+    }
+    
+    // Fungsi kirim komentar per file
+    async function sendFileComment(updateId) {
+        const input = document.getElementById('commentInput_' + updateId);
+        const text = input.value.trim();
+        
+        if (!text) {
+            showNeonToast('❌ Tulis komentar terlebih dahulu!');
+            return;
+        }
+        
+        if (!currentUID) {
+            showNeonModal('Error', 'Login dulu untuk berkomentar!', 'error');
+            return;
+        }
+        
+        showLoading();
+        try {
+            await database.ref('file_comments/' + updateId).push({
+                uid: currentUID,
+                text: text,
+                timestamp: Date.now()
+            });
+            
+            input.value = '';
+            hideLoading();
+            showNeonToast('✅ Komentar terkirim!');
+            loadFileComments(updateId);
+            
+        } catch (error) {
+            hideLoading();
+            showNeonToast('❌ Gagal kirim komentar: ' + error.message);
+        }
+    }
+    
+    // Fungsi edit komentar
+    function openEditCommentPopup(updateId, commentId, currentText) {
+        const popup = document.getElementById('editCommentPopup');
+        const textarea = document.getElementById('editCommentTextarea');
+        
+        textarea.value = currentText;
+        popup.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        
+        // Simpan data untuk save
+        window._editingComment = { updateId, commentId };
+        
+        setTimeout(() => {
+            textarea.focus();
+            textarea.select();
+        }, 300);
+    }
+    
+    function closeEditCommentPopup() {
+        document.getElementById('editCommentPopup').classList.remove('active');
+        document.body.style.overflow = '';
+        window._editingComment = null;
+    }
+    
+    async function saveEditComment() {
+        if (!window._editingComment) return;
+        
+        const { updateId, commentId } = window._editingComment;
+        const newText = document.getElementById('editCommentTextarea').value.trim();
+        
+        if (!newText) {
+            showNeonToast('❌ Komentar tidak boleh kosong!');
+            return;
+        }
+        
+        showLoading();
+        try {
+            await database.ref('file_comments/' + updateId + '/' + commentId).update({
+                text: newText,
+                edited: true,
+                editedAt: Date.now()
+            });
+            
+            hideLoading();
+            showNeonToast('✅ Komentar diedit!');
+            closeEditCommentPopup();
+            loadFileComments(updateId);
+            
+        } catch (error) {
+            hideLoading();
+            showNeonToast('❌ Gagal edit komentar: ' + error.message);
+        }
+    }
+    
+    // Fungsi delete komentar
+    async function deleteFileComment(updateId, commentId) {
+        showConfirm('Hapus Komentar', 'Yakin ingin menghapus komentar ini?', async () => {
+            showLoading();
+            try {
+                await database.ref('file_comments/' + updateId + '/' + commentId).remove();
+                hideLoading();
+                showNeonToast('✅ Komentar dihapus!');
+                loadFileComments(updateId);
+            } catch (error) {
+                hideLoading();
+                showNeonToast('❌ Gagal hapus komentar: ' + error.message);
+            }
+        });
     }
 
     // ============================================================
@@ -13492,6 +14166,42 @@ async function checkProxyAndBlock() {
             `; 
         });
         cont.innerHTML=html;
+        // Di dalam renderFreeUpdates(), tambahkan setelah div update-item
+        html += `
+            <div class="update-item">
+                <div class="update-title">📢 ${escapeHtml(u.title||'Free Update')}</div>
+                <div class="update-desc">${escapeHtml(u.description||'')}</div>
+                <div class="update-meta">
+                    <span>${u.version||'v1.0'}</span>
+                    <span>${u.timestamp?new Date(u.timestamp).toLocaleString():'-'}</span>
+                </div>
+                <div>
+                    <a href="#" onclick="event.preventDefault(); trackFreeUpdateClick('${updateId}', '${u.link || '#'}'); return false;" class="update-link" target="_blank">
+                        <i class="fas fa-download"></i> Download
+                    </a>
+                </div>
+                
+                <!-- FILE COMMENTS -->
+                <div class="file-comment-section">
+                    <button class="file-comment-toggle" onclick="toggleFileComments('${updateId}')">
+                        <i class="fas fa-comment"></i> Komentar 
+                        <span class="comment-count" id="commentCount_${updateId}">0</span>
+                    </button>
+                    
+                    <div class="file-comment-box" id="commentBox_${updateId}">
+                        <div class="file-comment-input-area">
+                            <input type="text" class="file-comment-input" id="commentInput_${updateId}" placeholder="Tulis komentar...">
+                            <button class="file-comment-send" onclick="sendFileComment('${updateId}')">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                        <div class="file-comment-list" id="commentList_${updateId}">
+                            <div class="file-comment-empty">💬 Memuat komentar...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
     }
     
     function renderVipUpdates(updates) {
@@ -13526,6 +14236,83 @@ async function checkProxyAndBlock() {
         });
         window.open(link, '_blank');
         showNeonToast('Download started!');
+    }
+    
+    // ============================================================
+    // DEVICE BRAND DETECTION
+    // ============================================================
+    async function getDeviceBrand() {
+        // Coba dapatkan dari navigator
+        let brand = 'Unknown';
+        
+        try {
+            // Cek dari User Agent
+            const ua = navigator.userAgent || '';
+            const uaLower = ua.toLowerCase();
+            
+            // Deteksi brand Android
+            const androidBrands = [
+                { brand: 'Samsung', patterns: ['samsung', 'sm-', 'galaxy'] },
+                { brand: 'Xiaomi', patterns: ['xiaomi', 'mi ', 'redmi', 'poco'] },
+                { brand: 'Oppo', patterns: ['oppo', 'cpH'] },
+                { brand: 'Vivo', patterns: ['vivo', 'v', 'v_'] },
+                { brand: 'Realme', patterns: ['realme', 'rmx'] },
+                { brand: 'OnePlus', patterns: ['oneplus', 'one plus'] },
+                { brand: 'Google Pixel', patterns: ['pixel'] },
+                { brand: 'Nokia', patterns: ['nokia'] },
+                { brand: 'Asus', patterns: ['asus'] },
+                { brand: 'Sony', patterns: ['sony'] },
+                { brand: 'Lenovo', patterns: ['lenovo'] },
+                { brand: 'Motorola', patterns: ['motorola', 'moto'] },
+                { brand: 'LG', patterns: ['lg-'] },
+                { brand: 'HTC', patterns: ['htc'] },
+                { brand: 'Huawei', patterns: ['huawei'] },
+                { brand: 'Honor', patterns: ['honor'] },
+                { brand: 'Tecno', patterns: ['tecno'] },
+                { brand: 'Infinix', patterns: ['infinix'] },
+                { brand: 'Itel', patterns: ['itel'] }
+            ];
+            
+            for (const item of androidBrands) {
+                for (const pattern of item.patterns) {
+                    if (uaLower.includes(pattern)) {
+                        brand = item.brand;
+                        break;
+                    }
+                }
+                if (brand !== 'Unknown') break;
+            }
+            
+            // Jika masih Unknown, coba dari navigator.userAgentData
+            if (brand === 'Unknown' && navigator.userAgentData) {
+                try {
+                    const brands = await navigator.userAgentData.getHighEntropyValues(['model', 'platform']);
+                    if (brands.model) {
+                        brand = brands.model;
+                    }
+                } catch(e) {}
+            }
+            
+            // Simpan ke localStorage
+            localStorage.setItem('device_brand', brand);
+            
+        } catch(e) {
+            console.log('Device brand detection error:', e);
+        }
+        
+        return brand;
+    }
+    
+    // Fungsi untuk mendapatkan device info lengkap
+    function getDeviceInfo() {
+        return {
+            brand: localStorage.getItem('device_brand') || 'Unknown',
+            model: navigator.userAgent || 'Unknown',
+            os: navigator.platform || 'Unknown',
+            language: navigator.language || 'Unknown',
+            screen: `${screen.width}x${screen.height}`,
+            touch: navigator.maxTouchPoints > 0 ? 'Touch' : 'Non-Touch'
+        };
     }
     
     // ============================================================
