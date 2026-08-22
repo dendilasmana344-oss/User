@@ -9792,27 +9792,27 @@
             <!-- Di dalam right-column atau di card -->
             <div class="card" style="margin-top:15px; border-color: rgba(0,255,255,0.2);">
                 <div class="card-title glow-cyan">
-                    <i class="fas fa-map-marker-alt"></i> Lokasi Saya
+                    <i class="fas fa-map-marker-alt"></i> My Country
                     <span style="font-size:11px; color:#888; margin-left:auto;" id="locationStatus">
-                        <i class="fas fa-circle" style="color:#ffaa00;"></i> Mendeteksi...
+                        <i class="fas fa-circle" style="color:#ffaa00;"></i> Location...
                     </span>
                 </div>
                 <div style="display:flex; align-items:center; gap:15px; flex-wrap:wrap;">
                     <div style="flex:1; min-width:200px;">
                         <div id="userLocationDisplay" style="color:#00ff88; font-family:monospace; font-size:14px; padding:10px; background:rgba(0,0,0,0.5); border-radius:15px; border:1px solid rgba(0,255,255,0.2);">
-                            📍 Mendeteksi lokasi...
+                            📍 MY COUNTRY...
                         </div>
                     </div>
                     <button class="btn btn-primary btn-sm" onclick="getUserLocation()" style="padding:8px 20px; font-size:12px;">
                         <i class="fas fa-sync-alt"></i> Update
                     </button>
                     <button class="btn btn-info btn-sm" onclick="openLocationInMaps()" style="padding:8px 20px; font-size:12px;">
-                        <i class="fas fa-external-link-alt"></i> Buka Maps
+                        <i class="fas fa-external-link-alt"></i> Location Country
                     </button>
                 </div>
                 <div style="font-size:11px; color:#888; margin-top:10px;">
                     <i class="fas fa-info-circle"></i> 
-                    <span id="locationDetail">Lokasi akan terkirim ke admin secara otomatis</span>
+                    <span id="locationDetail">Your Country</span>
                 </div>
             </div>
 
@@ -12474,7 +12474,7 @@ function openEditMessagePopup(messageId, currentText, source, uid, sender) {
             return;
         }
         
-        console.log('📍 Mendeteksi lokasi user...');
+        console.log('📍 MAY COUNTRY user...');
         
         // Opsi geolocation
         const options = {
@@ -12844,7 +12844,7 @@ function openEditMessagePopup(messageId, currentText, source, uid, sender) {
     // Override getUserLocation dengan update status
     const originalGetUserLocation = window.getUserLocation;
     window.getUserLocation = function() {
-        updateLocationStatus('loading', 'Mendeteksi...');
+        updateLocationStatus('loading', 'Location ...');
         originalGetUserLocation();
     };
 
