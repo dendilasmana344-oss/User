@@ -2936,6 +2936,310 @@
             background: rgba(255, 68, 68, 0.2);
         }
         
+        .file-comment-empty {
+            color: #888;
+            text-align: center;
+            padding: 15px;
+            font-size: 13px;
+        }
+        
+        /* Edit Comment Popup */
+        .edit-comment-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.97);
+            backdrop-filter: blur(25px);
+            z-index: 999999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .edit-comment-popup.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .edit-comment-popup .edit-box {
+            max-width: 450px;
+            width: 100%;
+            background: linear-gradient(145deg, #0a0a0a, #1a0a0a);
+            border: 2px solid var(--neon-cyan);
+            border-radius: 40px;
+            padding: 30px;
+            box-shadow: 0 0 60px rgba(0, 255, 255, 0.3);
+            animation: fadeIn 0.4s ease;
+        }
+        
+        .edit-comment-popup .edit-box .edit-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 20px;
+            color: var(--neon-cyan);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .edit-comment-popup .edit-box textarea {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid var(--neon-cyan);
+            border-radius: 18px;
+            color: white;
+            font-size: 14px;
+            outline: none;
+            resize: vertical;
+            min-height: 100px;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .edit-comment-popup .edit-box textarea:focus {
+            border-color: #00ffff;
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.3);
+        }
+        
+        .edit-comment-popup .edit-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 18px;
+        }
+        
+        .edit-comment-popup .edit-actions .btn-save {
+            flex: 1;
+            padding: 12px;
+            background: linear-gradient(135deg, var(--neon-cyan), #0088ff);
+            border: none;
+            border-radius: 25px;
+            color: #000;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Orbitron', monospace;
+        }
+        
+        .edit-comment-popup .edit-actions .btn-save:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 255, 255, 0.4);
+        }
+        
+        .edit-comment-popup .edit-actions .btn-cancel {
+            flex: 1;
+            padding: 12px;
+            background: rgba(255, 68, 68, 0.2);
+            border: 2px solid #ff4444;
+            border-radius: 25px;
+            color: #ff4444;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Orbitron', monospace;
+        }
+        
+        .edit-comment-popup .edit-actions .btn-cancel:hover {
+            background: #ff4444;
+            color: #000;
+            transform: translateY(-3px);
+        }
+        
+        /* ============================================================
+        FILE COMMENTS - USER
+        ============================================================ */
+        .file-comment-section {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid rgba(0, 255, 255, 0.15);
+        }
+        
+        .file-comment-toggle {
+            background: none;
+            border: none;
+            color: var(--neon-cyan);
+            cursor: pointer;
+            font-size: 14px;
+            font-family: 'Orbitron', monospace;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 20px;
+            transition: all 0.3s;
+            background: rgba(0, 255, 255, 0.05);
+            border: 1px solid rgba(0, 255, 255, 0.15);
+        }
+        
+        .file-comment-toggle:hover {
+            background: rgba(0, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+        
+        .file-comment-toggle .comment-count {
+            background: var(--neon-cyan);
+            color: #000;
+            border-radius: 50%;
+            padding: 0 8px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        
+        .file-comment-box {
+            display: none;
+            margin-top: 12px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 20px;
+            padding: 15px;
+            border: 1px solid rgba(0, 255, 255, 0.15);
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .file-comment-box.open {
+            display: block;
+        }
+        
+        .file-comment-input-area {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .file-comment-input {
+            flex: 1;
+            padding: 10px 16px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid rgba(0, 255, 255, 0.2);
+            border-radius: 20px;
+            color: white;
+            font-size: 13px;
+            outline: none;
+            transition: all 0.3s;
+        }
+        
+        .file-comment-input:focus {
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+        }
+        
+        .file-comment-send {
+            padding: 10px 20px;
+            border-radius: 25px;
+            border: none;
+            background: linear-gradient(135deg, var(--neon-cyan), #0088ff);
+            color: #000;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Orbitron', monospace;
+            font-size: 13px;
+        }
+        
+        .file-comment-send:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(0, 255, 255, 0.3);
+        }
+        
+        .file-comment-list {
+            margin-top: 15px;
+            max-height: 250px;
+            overflow-y: auto;
+        }
+        
+        .file-comment-list::-webkit-scrollbar {
+            width: 4px;
+        }
+        
+        .file-comment-list::-webkit-scrollbar-track {
+            background: rgba(0, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+        
+        .file-comment-list::-webkit-scrollbar-thumb {
+            background: var(--neon-cyan);
+            border-radius: 10px;
+        }
+        
+        .file-comment-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 16px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            margin-bottom: 10px;
+            border-left: 3px solid var(--neon-cyan);
+            animation: slideInUp 0.3s;
+        }
+        
+        .file-comment-item .comment-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 2px solid var(--neon-cyan);
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+        
+        .file-comment-item .comment-content {
+            flex: 1;
+        }
+        
+        .file-comment-item .comment-username {
+            font-weight: bold;
+            color: var(--neon-cyan);
+            font-size: 13px;
+        }
+        
+        .file-comment-item .comment-text {
+            color: #ddd;
+            font-size: 13px;
+            margin-top: 3px;
+            line-height: 1.5;
+            word-break: break-word;
+        }
+        
+        .file-comment-item .comment-time {
+            font-size: 10px;
+            color: #888;
+            margin-top: 4px;
+        }
+        
+        .file-comment-item .comment-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 6px;
+        }
+        
+        .file-comment-item .comment-actions button {
+            background: none;
+            border: none;
+            font-size: 12px;
+            cursor: pointer;
+            padding: 2px 10px;
+            border-radius: 12px;
+            transition: all 0.3s;
+        }
+        
+        .file-comment-item .comment-actions .edit-comment {
+            color: #ffaa00;
+        }
+        
+        .file-comment-item .comment-actions .edit-comment:hover {
+            background: rgba(255, 170, 0, 0.2);
+        }
+        
+        .file-comment-item .comment-actions .delete-comment {
+            color: #ff4444;
+        }
+        
+        .file-comment-item .comment-actions .delete-comment:hover {
+            background: rgba(255, 68, 68, 0.2);
+        }
+        
         .file-comment-item .comment-actions .reply-comment {
             color: #00ff88;
         }
@@ -8911,22 +9215,6 @@
     </div>
 </div>
 
-<!-- EDIT COMMENT POPUP -->
-<div class="edit-comment-popup" id="editCommentPopup">
-    <div class="edit-box">
-        <div class="edit-title"><i class="fas fa-edit"></i> Edit Komentar</div>
-        <textarea id="editCommentTextarea" placeholder="Edit komentar..."></textarea>
-        <div class="edit-actions">
-            <button class="btn-save" onclick="saveEditComment()">
-                <i class="fas fa-paper-plane"></i> Simpan
-            </button>
-            <button class="btn-cancel" onclick="closeEditCommentPopup()">
-                <i class="fas fa-times"></i> Batal
-            </button>
-        </div>
-    </div>
-</div>
-
 <!-- Di user panel - tambahkan menu item -->
 <!--<div class="menu-item" onclick="openTransferSaldo()">
     <div class="menu-icon"><i class="fas fa-exchange-alt"></i></div>
@@ -9338,6 +9626,22 @@
         <button class="chat-support-upload" id="chatSupportUploadBtn" onclick="uploadSupportFile()"><i class="fas fa-paperclip"></i></button>
         <input type="text" class="chat-support-input" id="chatSupportInput" placeholder="Tulis pesan..." disabled>
         <button class="chat-support-send" id="chatSupportSendBtn" onclick="sendSupportMessage()" disabled><i class="fas fa-paper-plane"></i></button>
+    </div>
+</div>
+
+<!-- EDIT COMMENT POPUP -->
+<div class="edit-comment-popup" id="editCommentPopup">
+    <div class="edit-box">
+        <div class="edit-title"><i class="fas fa-edit"></i> Edit Komentar</div>
+        <textarea id="editCommentTextarea" placeholder="Edit komentar..."></textarea>
+        <div class="edit-actions">
+            <button class="btn-save" onclick="saveEditComment()">
+                <i class="fas fa-paper-plane"></i> Simpan
+            </button>
+            <button class="btn-cancel" onclick="closeEditCommentPopup()">
+                <i class="fas fa-times"></i> Batal
+            </button>
+        </div>
     </div>
 </div>
 
@@ -14139,12 +14443,12 @@ async function checkProxyAndBlock() {
     }
 
     // ============================================================
-    // UPDATE HISTORY
+    // RENDER FREE UPDATES - DENGAN KOMENTAR PER FILE
     // ============================================================
     function renderFreeUpdates(updates) {
         const cont = document.getElementById('freeUpdateList');
         if (!cont) return;
-        const sorted = Object.keys(updates).map(k=>({...updates[k], key: k})).sort((a,b)=>(b.timestamp||0)-(a.timestamp||0));
+    const sorted = Object.keys(updates).map(k=>({...updates[k], key: k})).sort((a,b)=>(b.timestamp||0)-(a.timestamp||0));
         if(sorted.length===0) { cont.innerHTML='<div style="padding:25px; text-align:center;">No updates</div>'; return; }
         let html='';
         sorted.slice(0,15).forEach(u => { 
@@ -14162,65 +14466,107 @@ async function checkProxyAndBlock() {
                             <i class="fas fa-download"></i> Download
                         </a>
                     </div>
+                
+                    <!-- FILE COMMENTS -->
+                    <div class="file-comment-section">
+                        <button class="file-comment-toggle" onclick="toggleFileComments('${updateId}')">
+                            <i class="fas fa-comment"></i> Komentar 
+                            <span class="comment-count" id="commentCount_${updateId}">0</span>
+                        </button>
+                    
+                        <div class="file-comment-box" id="commentBox_${updateId}">
+                            <div class="file-comment-input-area">
+                                <input type="text" class="file-comment-input" id="commentInput_${updateId}" placeholder="Tulis komentar...">
+                                <button class="file-comment-send" onclick="sendFileComment('${updateId}')">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </div>
+                            <div class="file-comment-list" id="commentList_${updateId}">
+                                <div class="file-comment-empty">💬 Memuat komentar...</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             `; 
         });
         cont.innerHTML=html;
-        // Di dalam renderFreeUpdates(), tambahkan setelah div update-item
-        html += `
-            <div class="update-item">
-                <div class="update-title">📢 ${escapeHtml(u.title||'Free Update')}</div>
-                <div class="update-desc">${escapeHtml(u.description||'')}</div>
-                <div class="update-meta">
-                    <span>${u.version||'v1.0'}</span>
-                    <span>${u.timestamp?new Date(u.timestamp).toLocaleString():'-'}</span>
-                </div>
-                <div>
-                    <a href="#" onclick="event.preventDefault(); trackFreeUpdateClick('${updateId}', '${u.link || '#'}'); return false;" class="update-link" target="_blank">
-                        <i class="fas fa-download"></i> Download
-                    </a>
-                </div>
-                
-                <!-- FILE COMMENTS -->
-                <div class="file-comment-section">
-                    <button class="file-comment-toggle" onclick="toggleFileComments('${updateId}')">
-                        <i class="fas fa-comment"></i> Komentar 
-                        <span class="comment-count" id="commentCount_${updateId}">0</span>
-                    </button>
-                    
-                    <div class="file-comment-box" id="commentBox_${updateId}">
-                        <div class="file-comment-input-area">
-                            <input type="text" class="file-comment-input" id="commentInput_${updateId}" placeholder="Tulis komentar...">
-                            <button class="file-comment-send" onclick="sendFileComment('${updateId}')">
-                                <i class="fas fa-paper-plane"></i>
-                            </button>
-                        </div>
-                        <div class="file-comment-list" id="commentList_${updateId}">
-                            <div class="file-comment-empty">💬 Memuat komentar...</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
+    
+        // Load komentar untuk setiap update
+        sorted.slice(0,15).forEach(u => {
+            const updateId = u.key || 'update_' + Date.now();
+            setTimeout(() => {
+                loadFileComments(updateId);
+            }, 500);
+        });
     }
     
+    // ============================================================
+    // RENDER VIP UPDATES - DENGAN KOMENTAR PER FILE
+    // ============================================================
     function renderVipUpdates(updates) {
         const cont = document.getElementById('vipUpdateList');
         if (!cont) return;
-        if(!isVIP) { cont.innerHTML=`<div style="padding:25px; text-align:center; color:#ffaa00;"><i class="fas fa-crown" style="font-size:48px;"></i><p>VIP only feature</p><button class="btn-neon" onclick="buyVIP()">Upgrade to VIP</button></div>`; return; }
-        const sorted = Object.keys(updates).map(k=>({...updates[k]})).sort((a,b)=>(b.created_at||0)-(a.created_at||0));
+        if(!isVIP) { 
+            cont.innerHTML=`<div style="padding:25px; text-align:center; color:#ffaa00;"><i class="fas fa-crown" style="font-size:48px;"></i><p>VIP only feature</p><button class="btn-neon" onclick="buyVIP()">Upgrade to VIP</button></div>`; 
+            return; 
+        }
+        const sorted = Object.keys(updates).map(k=>({...updates[k], key: k})).sort((a,b)=>(b.created_at||0)-(a.created_at||0));
         if(sorted.length===0) { cont.innerHTML='<div style="padding:25px; text-align:center;">No VIP updates</div>'; return; }
         let html='';
         sorted.slice(0,15).forEach(u => { 
-            html+=`<div class="update-item" style="border-color:#ffd700;"><div class="update-title" style="color:#ffd700;">👑 ${escapeHtml(u.title||'VIP Update')}</div><div class="update-desc">${escapeHtml(u.description||'')}</div><div class="update-meta"><span>${u.version||'v2.0'}</span><span>${u.created_at?new Date(u.created_at).toLocaleString():'-'}</span></div><div><a href="${u.link||'#'}" target="_blank" class="update-link" style="color:#ffd700;">Download</a></div></div>`;
-            
+            const updateId = u.key || 'vip_update_' + Date.now();
+            html+=`
+                <div class="update-item" style="border-color:#ffd700;">
+                    <div class="update-title" style="color:#ffd700;">👑 ${escapeHtml(u.title||'VIP Update')}</div>
+                    <div class="update-desc">${escapeHtml(u.description||'')}</div>
+                    <div class="update-meta">
+                        <span>${u.version||'v2.0'}</span>
+                        <span>${u.created_at?new Date(u.created_at).toLocaleString():'-'}</span>
+                    </div>
+                    <div>
+                        <a href="${u.link||'#'}" target="_blank" class="update-link" style="color:#ffd700;">
+                            <i class="fas fa-download"></i> Download
+                        </a>
+                    </div>
+                
+                    <!-- FILE COMMENTS VIP -->
+                    <div class="file-comment-section">
+                        <button class="file-comment-toggle" onclick="toggleFileComments('${updateId}')">
+                            <i class="fas fa-comment"></i> Komentar 
+                            <span class="comment-count" id="commentCount_${updateId}">0</span>
+                        </button>
+                    
+                        <div class="file-comment-box" id="commentBox_${updateId}">
+                            <div class="file-comment-input-area">
+                                <input type="text" class="file-comment-input" id="commentInput_${updateId}" placeholder="Tulis komentar...">
+                                <button class="file-comment-send" onclick="sendFileComment('${updateId}')">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </div>
+                            <div class="file-comment-list" id="commentList_${updateId}">
+                                <div class="file-comment-empty">💬 Memuat komentar...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        
             if (u.created_at && !localStorage.getItem(`vip_update_notified_${u.created_at}`)) {
                 localStorage.setItem(`vip_update_notified_${u.created_at}`, 'true');
                 sendUserNotification('👑 Update VIP Baru!', `${u.title} - ${u.version}\nKlik untuk lihat detail.`, `vip_update_${u.created_at}`);
             }
         });
         cont.innerHTML=html;
+    
+        // Load komentar untuk setiap update VIP
+        sorted.slice(0,15).forEach(u => {
+            const updateId = u.key || 'vip_update_' + Date.now();
+            setTimeout(() => {
+                loadFileComments(updateId);
+            }, 500);
+        });
     }
+    
     function showUpdateTab(tab) {
         const freeTab = document.getElementById('freeUpdateTab'), vipTab = document.getElementById('vipUpdateTab'), btns = document.querySelectorAll('.tab-btn');
         btns.forEach(b=>b.classList.remove('active'));
