@@ -6592,6 +6592,188 @@
         .vip-danger.show {
             display: flex;
         }
+        
+        /* ============================================================
+        POPUP IKLAN - USER
+        ============================================================ */
+        .ad-popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            z-index: 999999;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .ad-popup-overlay.active {
+            display: flex;
+        }
+        
+        .ad-popup-content {
+            max-width: 600px;
+            width: 100%;
+            background: linear-gradient(145deg, #0a0a0a, #1a0a0a);
+            border: 2px solid var(--neon-orange);
+            border-radius: 30px;
+            padding: 25px 30px;
+            box-shadow: 0 0 60px rgba(255, 170, 0, 0.3);
+            animation: slideInUp 0.4s ease;
+            position: relative;
+        }
+        
+        .ad-popup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(255, 170, 0, 0.2);
+        }
+        
+        .ad-popup-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 18px;
+            color: var(--neon-orange);
+            font-weight: bold;
+        }
+        
+        .ad-popup-timer {
+            font-family: 'Orbitron', monospace;
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--neon-orange);
+            background: rgba(255, 170, 0, 0.15);
+            padding: 4px 16px;
+            border-radius: 20px;
+            border: 2px solid var(--neon-orange);
+            animation: neonPulse 1s infinite;
+        }
+        
+        .ad-popup-body {
+            min-height: 120px;
+            padding: 15px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .ad-popup-body #adContent {
+            width: 100%;
+            text-align: center;
+        }
+        
+        .ad-popup-body #adContent .ad-placeholder {
+            color: #888;
+            font-size: 14px;
+        }
+        
+        .ad-popup-body #adContent .ad-link-btn {
+            display: inline-block;
+            padding: 15px 40px;
+            background: linear-gradient(135deg, var(--neon-orange), #ff8800);
+            border: none;
+            border-radius: 25px;
+            color: #000;
+            font-weight: bold;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            font-family: 'Orbitron', monospace;
+            animation: pulse 1.5s infinite;
+        }
+        
+        .ad-popup-body #adContent .ad-link-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(255, 170, 0, 0.5);
+        }
+        
+        .ad-popup-body #adContent .ad-script-container {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 15px;
+            padding: 20px;
+            border: 2px solid rgba(255, 170, 0, 0.2);
+            min-height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .ad-popup-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid rgba(255, 170, 0, 0.2);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .ad-popup-btn {
+            padding: 10px 30px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Orbitron', monospace;
+            border: none;
+            font-size: 14px;
+        }
+        
+        .ad-popup-btn-close {
+            background: rgba(255, 68, 68, 0.2);
+            color: #ff4444;
+            border: 2px solid #ff4444;
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .ad-popup-btn-close.enabled {
+            opacity: 1;
+            cursor: pointer;
+            background: linear-gradient(135deg, var(--neon-cyan), #0088ff);
+            color: #000;
+            border-color: var(--neon-cyan);
+        }
+        
+        .ad-popup-btn-close.enabled:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 255, 255, 0.4);
+        }
+        
+        #adInfoText {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        @media (max-width: 500px) {
+            .ad-popup-content {
+                padding: 20px;
+            }
+            .ad-popup-title {
+                font-size: 14px;
+            }
+            .ad-popup-timer {
+                font-size: 18px;
+                padding: 2px 12px;
+            }
+            .ad-popup-body #adContent .ad-link-btn {
+                font-size: 14px;
+                padding: 12px 25px;
+            }
+            .ad-popup-footer {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
 
         /* ============================================================
        CHAT AVATAR
@@ -9440,6 +9622,27 @@
     </div>
 </div>
 
+<!-- ============================================================
+     POPUP IKLAN - USER
+     ============================================================ -->
+<div class="ad-popup-overlay" id="adPopup">
+    <div class="ad-popup-content">
+        <div class="ad-popup-header">
+            <span class="ad-popup-title" id="adPopupTitle">📢 Iklan</span>
+            <span class="ad-popup-timer" id="adPopupTimer">10s</span>
+        </div>
+        <div class="ad-popup-body" id="adPopupBody">
+            <div id="adContent"></div>
+        </div>
+        <div class="ad-popup-footer">
+            <button class="ad-popup-btn ad-popup-btn-close" id="adCloseBtn" disabled>
+                <i class="fas fa-times"></i> Tutup Iklan
+            </button>
+            <span style="font-size:11px; color:#666;" id="adInfoText">Klik iklan untuk melanjutkan</span>
+        </div>
+    </div>
+</div>
+
 <!-- Di user panel - tambahkan di free update -->
 <!--<div class="card" style="border-color: #ffaa00;">
     <div class="card-title glow-cyan"><i class="fas fa-star"></i> Rate & Review</div>
@@ -11041,6 +11244,309 @@
                 el.textContent = text;
             }
         });
+    }
+    
+    // ============================================================
+    // POPUP IKLAN - USER
+    // ============================================================
+    
+    let adData = [];
+    let currentAdIndex = 0;
+    let adPopupTimer = null;
+    let adCountdownInterval = null;
+    let adIsClicked = false;
+    let adPopupActive = false;
+    let adHistory = JSON.parse(localStorage.getItem('ad_history') || '[]');
+    let lastAdShowTime = 0;
+    
+    // LOAD IKLAN DARI FIREBASE
+    function loadAdsForUser() {
+        if (typeof db === 'undefined' || !db) return;
+        
+        db.ref('ads').orderByChild('status').equalTo('active').once('value', function(snap) {
+            const data = snap.val() || {};
+            adData = Object.keys(data).map(key => ({ id: key, ...data[key] }));
+            
+            // Filter hanya yang aktif
+            adData = adData.filter(ad => ad.status === 'active');
+            
+            if (adData.length === 0) {
+                console.log('📢 Tidak ada iklan aktif');
+                return;
+            }
+            
+            console.log('📢 Iklan dimuat:', adData.length, 'iklan');
+            
+            // Tampilkan iklan jika waktunya
+            checkAndShowAd();
+            
+        }).catch(function(error) {
+            console.log('❌ Gagal load iklan:', error);
+        });
+    }
+    
+    // CEK DAN TAMPILKAN IKLAN
+    function checkAndShowAd() {
+        if (adData.length === 0) return;
+        if (adPopupActive) return;
+        
+        const now = Date.now();
+        const cooldown = 5 * 60 * 1000; // 5 menit
+        
+        // Cek apakah sudah lewat 5 menit
+        if (now - lastAdShowTime < cooldown) {
+            const remaining = Math.ceil((cooldown - (now - lastAdShowTime)) / 60000);
+            console.log(`⏳ Tunggu ${remaining} menit untuk iklan berikutnya`);
+            return;
+        }
+        
+        // Dapatkan iklan yang belum dilihat atau acak
+        let availableAds = adData.filter(ad => {
+            return !adHistory.includes(ad.id);
+        });
+        
+        // Jika semua sudah dilihat, reset history
+        if (availableAds.length === 0) {
+            adHistory = [];
+            availableAds = adData;
+        }
+        
+        // Pilih iklan acak
+        const randomIndex = Math.floor(Math.random() * availableAds.length);
+        const selectedAd = availableAds[randomIndex];
+        
+        // Tampilkan popup
+        showAdPopup(selectedAd);
+    }
+    
+    // TAMPILKAN POPUP IKLAN
+    function showAdPopup(ad) {
+        adPopupActive = true;
+        adIsClicked = false;
+        lastAdShowTime = Date.now();
+        
+        const overlay = document.getElementById('adPopup');
+        const title = document.getElementById('adPopupTitle');
+        const timer = document.getElementById('adPopupTimer');
+        const content = document.getElementById('adContent');
+        const closeBtn = document.getElementById('adCloseBtn');
+        const infoText = document.getElementById('adInfoText');
+        
+        // Set title
+        title.textContent = `📢 ${ad.title || 'Iklan'}`;
+        
+        // Set content
+        let html = '';
+        const link = ad.link || '';
+        
+        // Deteksi apakah link berupa script atau URL
+        if (link.includes('<script')) {
+            // Script tag - render sebagai script
+            html = `
+                <div class="ad-script-container">
+                    <div style="color:#888; font-size:13px; margin-bottom:10px;">
+                        <i class="fas fa-code"></i> Iklan Script
+                    </div>
+                    <div id="adScriptContainer"></div>
+                </div>
+            `;
+            content.innerHTML = html;
+            
+            // Eksekusi script
+            try {
+                const container = document.getElementById('adScriptContainer');
+                const script = document.createElement('script');
+                script.innerHTML = link;
+                container.appendChild(script);
+            } catch(e) {
+                console.log('Script error:', e);
+                content.innerHTML = `
+                    <div class="ad-placeholder">
+                        <i class="fas fa-exclamation-triangle" style="color:#ffaa00; font-size:30px; display:block; margin-bottom:10px;"></i>
+                        <p>Gagal memuat iklan</p>
+                        <button class="ad-link-btn" onclick="adClicked('${ad.id}')">
+                            <i class="fas fa-external-link-alt"></i> Klik untuk melihat
+                        </button>
+                    </div>
+                `;
+            }
+        } else if (link.startsWith('http://') || link.startsWith('https://')) {
+            // URL biasa
+            html = `
+                <button class="ad-link-btn" onclick="adClicked('${ad.id}')">
+                    <i class="fas fa-external-link-alt"></i> Klik untuk melihat iklan
+                </button>
+                <div style="margin-top:10px; color:#888; font-size:12px;">
+                    ${ad.description || 'Klik tombol di atas untuk melihat iklan'}
+                </div>
+            `;
+            content.innerHTML = html;
+        } else {
+            // Teks biasa
+            html = `
+                <div class="ad-placeholder">
+                    <i class="fas fa-ad" style="font-size:40px; color:#ffaa00; display:block; margin-bottom:10px;"></i>
+                    <p style="font-size:16px; color:#fff;">${escapeHtml(ad.title)}</p>
+                    ${ad.description ? `<p style="font-size:13px; color:#888;">${escapeHtml(ad.description)}</p>` : ''}
+                    <button class="ad-link-btn" onclick="adClicked('${ad.id}')">
+                        <i class="fas fa-external-link-alt"></i> Lihat Iklan
+                    </button>
+                </div>
+            `;
+            content.innerHTML = html;
+        }
+        
+        // Reset timer
+        const duration = ad.duration || 10;
+        let remaining = duration;
+        timer.textContent = remaining + 's';
+        timer.style.color = '#ffaa00';
+        
+        // Disable close button
+        closeBtn.disabled = true;
+        closeBtn.classList.remove('enabled');
+        infoText.textContent = `⏳ Tunggu ${remaining} detik...`;
+        
+        // Hapus countdown lama
+        if (adCountdownInterval) {
+            clearInterval(adCountdownInterval);
+        }
+        
+        // Start countdown
+        adCountdownInterval = setInterval(function() {
+            remaining--;
+            timer.textContent = remaining + 's';
+            
+            if (remaining <= 5) {
+                timer.style.color = '#ff4444';
+            }
+            
+            if (remaining <= 0) {
+                clearInterval(adCountdownInterval);
+                adCountdownInterval = null;
+                
+                // Enable close button
+                closeBtn.disabled = false;
+                closeBtn.classList.add('enabled');
+                infoText.textContent = '✅ Klik "Tutup Iklan" untuk melanjutkan';
+                
+                // Jika sudah di-click, auto close
+                if (adIsClicked) {
+                    closeAdPopup();
+                }
+            }
+        }, 1000);
+        
+        // Setup close button
+        closeBtn.onclick = function() {
+            if (!closeBtn.disabled) {
+                closeAdPopup();
+            }
+        };
+        
+        // Tampilkan popup
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        
+        // Simpan ke history
+        adHistory.push(ad.id);
+        if (adHistory.length > 25) {
+            adHistory.shift();
+        }
+        localStorage.setItem('ad_history', JSON.stringify(adHistory));
+        
+        // Update views
+        updateAdStats(ad.id, 'view');
+    }
+    
+    // FUNGSI KETIKA IKLAN DI-CLICK
+    function adClicked(adId) {
+        adIsClicked = true;
+        
+        // Cari iklan
+        const ad = adData.find(a => a.id === adId);
+        if (!ad) return;
+        
+        // Update clicks
+        updateAdStats(adId, 'click');
+        
+        // Buka link
+        const link = ad.link || '';
+        if (link.startsWith('http://') || link.startsWith('https://')) {
+            window.open(link, '_blank');
+        } else if (link.includes('<script')) {
+            // Script sudah di-render, hanya notifikasi
+            showNeonToast('✅ Iklan telah dilihat!');
+        } else {
+            // Teks biasa, coba buka sebagai link
+            try {
+                window.open(link, '_blank');
+            } catch(e) {
+                showNeonToast('✅ Iklan telah dilihat!');
+            }
+        }
+        
+        // Jika countdown sudah selesai, langsung tutup
+        const closeBtn = document.getElementById('adCloseBtn');
+        if (!closeBtn.disabled) {
+            closeAdPopup();
+        } else {
+            // Tampilkan notifikasi
+            document.getElementById('adInfoText').textContent = '✅ Iklan diklik! Tunggu countdown selesai...';
+        }
+    }
+    
+    // TUTUP POPUP IKLAN
+    function closeAdPopup() {
+        if (adCountdownInterval) {
+            clearInterval(adCountdownInterval);
+            adCountdownInterval = null;
+        }
+        
+        const overlay = document.getElementById('adPopup');
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+        adPopupActive = false;
+        
+        // Reset content
+        document.getElementById('adContent').innerHTML = '';
+        
+        console.log('📢 Popup iklan ditutup');
+    }
+    
+    // UPDATE STATS IKLAN (Views & Clicks)
+    function updateAdStats(adId, type) {
+        if (typeof db === 'undefined' || !db) return;
+        
+        const field = type === 'view' ? 'views' : 'clicks';
+        const ad = allAds ? allAds.find(a => a.id === adId) : null;
+        
+        if (ad) {
+            const current = ad[field] || 0;
+            db.ref('ads/' + adId).update({
+                [field]: current + 1,
+                lastUpdated: Date.now()
+            }).catch(function(error) {
+                console.log('❌ Gagal update stats:', error);
+            });
+        }
+    }
+    
+    // INISIALISASI IKLAN UNTUK USER
+    function initUserAds() {
+        console.log('📢 Inisialisasi iklan user...');
+        
+        // Load iklan setelah login
+        setTimeout(function() {
+            loadAdsForUser();
+        }, 3000);
+        
+        // Cek lagi setiap 60 detik
+        setInterval(function() {
+            if (!adPopupActive) {
+                checkAndShowAd();
+            }
+        }, 60000);
     }
     
     // ============================================================
@@ -16996,6 +17502,7 @@ async function processTransfer() {
             setupUserChatFileUpload();
             await loadGlobalDiscount();
             initAutoBanAndDelete();
+            initUserAds();
             monitorAdminStatus();
             setupAnnouncementListener();
             setupGuestAnnouncementListener();
