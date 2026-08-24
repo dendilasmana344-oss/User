@@ -11247,9 +11247,8 @@
     }
     
     // ============================================================
-    // POPUP IKLAN - USER
+    // POPUP IKLAN - USER (LENGKAP)
     // ============================================================
-    
     let adData = [];
     let currentAdIndex = 0;
     let adPopupTimer = null;
@@ -11261,13 +11260,15 @@
     
     // LOAD IKLAN DARI FIREBASE
     function loadAdsForUser() {
-        if (typeof db === 'undefined' || !db) return;
-        
-        db.ref('ads').orderByChild('status').equalTo('active').once('value', function(snap) {
+        if (typeof database === 'undefined' || !database) {
+            console.log('❌ Database tidak terhubung!');
+            return;
+        }
+    
+        database.ref('ads').orderByChild('status').equalTo('active').once('value', function(snap) {
             const data = snap.val() || {};
             adData = Object.keys(data).map(key => ({ id: key, ...data[key] }));
             
-            // Filter hanya yang aktif
             adData = adData.filter(ad => ad.status === 'active');
             
             if (adData.length === 0) {
@@ -11276,8 +11277,6 @@
             }
             
             console.log('📢 Iklan dimuat:', adData.length, 'iklan');
-            
-            // Tampilkan iklan jika waktunya
             checkAndShowAd();
             
         }).catch(function(error) {
@@ -11293,29 +11292,24 @@
         const now = Date.now();
         const cooldown = 5 * 60 * 1000; // 5 menit
         
-        // Cek apakah sudah lewat 5 menit
         if (now - lastAdShowTime < cooldown) {
             const remaining = Math.ceil((cooldown - (now - lastAdShowTime)) / 60000);
             console.log(`⏳ Tunggu ${remaining} menit untuk iklan berikutnya`);
             return;
         }
         
-        // Dapatkan iklan yang belum dilihat atau acak
         let availableAds = adData.filter(ad => {
             return !adHistory.includes(ad.id);
         });
         
-        // Jika semua sudah dilihat, reset history
         if (availableAds.length === 0) {
             adHistory = [];
             availableAds = adData;
         }
         
-        // Pilih iklan acak
         const randomIndex = Math.floor(Math.random() * availableAds.length);
         const selectedAd = availableAds[randomIndex];
         
-        // Tampilkan popup
         showAdPopup(selectedAd);
     }
     
@@ -11332,16 +11326,12 @@
         const closeBtn = document.getElementById('adCloseBtn');
         const infoText = document.getElementById('adInfoText');
         
-        // Set title
         title.textContent = `📢 ${ad.title || 'Iklan'}`;
         
-        // Set content
         let html = '';
         const link = ad.link || '';
         
-        // Deteksi apakah link berupa script atau URL
         if (link.includes('<script')) {
-            // Script tag - render sebagai script
             html = `
                 <div class="ad-script-container">
                     <div style="color:#888; font-size:13px; margin-bottom:10px;">
@@ -11352,7 +11342,6 @@
             `;
             content.innerHTML = html;
             
-            // Eksekusi script
             try {
                 const container = document.getElementById('adScriptContainer');
                 const script = document.createElement('script');
@@ -11371,7 +11360,6 @@
                 `;
             }
         } else if (link.startsWith('http://') || link.startsWith('https://')) {
-            // URL biasa
             html = `
                 <button class="ad-link-btn" onclick="adClicked('${ad.id}')">
                     <i class="fas fa-external-link-alt"></i> Klik untuk melihat iklan
@@ -11382,7 +11370,6 @@
             `;
             content.innerHTML = html;
         } else {
-            // Teks biasa
             html = `
                 <div class="ad-placeholder">
                     <i class="fas fa-ad" style="font-size:40px; color:#ffaa00; display:block; margin-bottom:10px;"></i>
@@ -11396,23 +11383,19 @@
             content.innerHTML = html;
         }
         
-        // Reset timer
         const duration = ad.duration || 10;
         let remaining = duration;
         timer.textContent = remaining + 's';
         timer.style.color = '#ffaa00';
         
-        // Disable close button
         closeBtn.disabled = true;
         closeBtn.classList.remove('enabled');
         infoText.textContent = `⏳ Tunggu ${remaining} detik...`;
         
-        // Hapus countdown lama
         if (adCountdownInterval) {
             clearInterval(adCountdownInterval);
         }
         
-        // Start countdown
         adCountdownInterval = setInterval(function() {
             remaining--;
             timer.textContent = remaining + 's';
@@ -11425,37 +11408,31 @@
                 clearInterval(adCountdownInterval);
                 adCountdownInterval = null;
                 
-                // Enable close button
                 closeBtn.disabled = false;
                 closeBtn.classList.add('enabled');
                 infoText.textContent = '✅ Klik "Tutup Iklan" untuk melanjutkan';
                 
-                // Jika sudah di-click, auto close
                 if (adIsClicked) {
                     closeAdPopup();
                 }
             }
         }, 1000);
         
-        // Setup close button
         closeBtn.onclick = function() {
             if (!closeBtn.disabled) {
                 closeAdPopup();
             }
         };
         
-        // Tampilkan popup
         overlay.classList.add('active');
         document.body.style.overflow = 'hidden';
         
-        // Simpan ke history
         adHistory.push(ad.id);
         if (adHistory.length > 25) {
             adHistory.shift();
         }
         localStorage.setItem('ad_history', JSON.stringify(adHistory));
         
-        // Update views
         updateAdStats(ad.id, 'view');
     }
     
@@ -11463,22 +11440,17 @@
     function adClicked(adId) {
         adIsClicked = true;
         
-        // Cari iklan
         const ad = adData.find(a => a.id === adId);
         if (!ad) return;
         
-        // Update clicks
         updateAdStats(adId, 'click');
         
-        // Buka link
         const link = ad.link || '';
         if (link.startsWith('http://') || link.startsWith('https://')) {
             window.open(link, '_blank');
         } else if (link.includes('<script')) {
-            // Script sudah di-render, hanya notifikasi
             showNeonToast('✅ Iklan telah dilihat!');
         } else {
-            // Teks biasa, coba buka sebagai link
             try {
                 window.open(link, '_blank');
             } catch(e) {
@@ -11486,12 +11458,10 @@
             }
         }
         
-        // Jika countdown sudah selesai, langsung tutup
         const closeBtn = document.getElementById('adCloseBtn');
         if (!closeBtn.disabled) {
             closeAdPopup();
         } else {
-            // Tampilkan notifikasi
             document.getElementById('adInfoText').textContent = '✅ Iklan diklik! Tunggu countdown selesai...';
         }
     }
@@ -11508,7 +11478,6 @@
         document.body.style.overflow = '';
         adPopupActive = false;
         
-        // Reset content
         document.getElementById('adContent').innerHTML = '';
         
         console.log('📢 Popup iklan ditutup');
@@ -11516,37 +11485,47 @@
     
     // UPDATE STATS IKLAN (Views & Clicks)
     function updateAdStats(adId, type) {
-        if (typeof db === 'undefined' || !db) return;
+        if (typeof database === 'undefined' || !database) return;
         
         const field = type === 'view' ? 'views' : 'clicks';
-        const ad = allAds ? allAds.find(a => a.id === adId) : null;
-        
-        if (ad) {
+        database.ref('ads/' + adId).once('value', function(snap) {
+            const ad = snap.val();
+            if (!ad) return;
             const current = ad[field] || 0;
-            db.ref('ads/' + adId).update({
+            database.ref('ads/' + adId).update({
                 [field]: current + 1,
                 lastUpdated: Date.now()
             }).catch(function(error) {
                 console.log('❌ Gagal update stats:', error);
             });
-        }
+        });
     }
     
     // INISIALISASI IKLAN UNTUK USER
     function initUserAds() {
         console.log('📢 Inisialisasi iklan user...');
         
-        // Load iklan setelah login
         setTimeout(function() {
             loadAdsForUser();
         }, 3000);
         
-        // Cek lagi setiap 60 detik
         setInterval(function() {
             if (!adPopupActive) {
                 checkAndShowAd();
             }
         }, 60000);
+    }
+    
+    // FUNGSI UNTUK MENAMPILKAN IKLAN SEBELUM LOGIN (OPSIONAL)
+    function checkAndShowAdBeforeLogin() {
+        console.log('📢 Mencoba menampilkan iklan sebelum login...');
+        if (!adPopupActive && !currentUID) {
+            if (adData.length === 0) {
+                loadAdsForUser();
+            } else {
+                checkAndShowAd();
+            }
+        }
     }
     
     // ============================================================
@@ -16936,286 +16915,286 @@ async function processTransfer() {
                     sys1.className = 'chat-support-msg system';
                     sys1.textContent = 'Selamat datang di Chat Support!';
                     messagesContainer.appendChild(sys1);
-                    const sys2 = document.createElement('div');
-                    sys2.className = 'chat-support-msg system';
-                    sys2.textContent = 'Silakan pilih keluhan di bawah atau ketik pesan.';
-                    messagesContainer.appendChild(sys2);
-                }
-                
-                sortedKeys.forEach(key => {
-                    const msg = messages[key];
-                    
-                    const wrapper = document.createElement('div');
-                    wrapper.className = 'support-message-wrapper';
-                    wrapper.style.display = 'flex';
-                    wrapper.style.alignItems = 'flex-start';
-                    wrapper.style.gap = '10px';
-                    wrapper.style.marginBottom = '10px';
-                    wrapper.dataset.messageId = key;
-                    
-                    const avatar = document.createElement('img');
-                    avatar.className = 'chat-avatar';
-                    avatar.style.width = '32px';
-                    avatar.style.height = '32px';
-                    avatar.style.borderRadius = '50%';
-                    avatar.style.border = '2px solid var(--neon-cyan)';
-                    avatar.style.objectFit = 'cover';
-                    avatar.style.flexShrink = '0';
-                    
-                    if (msg.sender === 'admin') {
-                        avatar.src = 'https://i.ibb.co.com/4wHZpnFB/IMG-20260610-WA0000.jpg';
-                    } else if (msg.sender === 'user') {
-                        const savedProfile = localStorage.getItem('profile_image_' + (currentUID || 'guest'));
-                        if (savedProfile) {
-                            avatar.src = savedProfile;
-                        } else {
-                            avatar.src = 'https://via.placeholder.com/32/00ffff/000000?text=U';
-                        }
-                    } else {
-                        avatar.src = 'https://via.placeholder.com/32/ffaa00/000000?text=S';
-                    }
-                    avatar.alt = 'Avatar';
-                    avatar.onerror = function() {
-                        this.src = 'https://via.placeholder.com/32/00ffff/000000?text=U';
-                    };
-                    wrapper.appendChild(avatar);
-                    
-                    const contentDiv = document.createElement('div');
-                    contentDiv.style.flex = '1';
-                    contentDiv.style.display = 'flex';
-                    contentDiv.style.flexDirection = 'column';
-                    
-                    const div = document.createElement('div');
-                    div.className = `chat-support-msg ${msg.sender === 'admin' ? 'admin' : 'user'}`;
-                    
-                    const senderName = document.createElement('div');
-                    senderName.style.fontSize = '11px';
-                    senderName.style.fontWeight = 'bold';
-                    senderName.style.marginBottom = '3px';
-                    if (msg.sender === 'admin') {
-                        senderName.textContent = '👑 Admin';
-                        senderName.style.color = '#ff4444';
-                    } else if (msg.sender === 'user') {
-                        senderName.textContent = '👤 ' + (msg.uid || 'User');
-                        senderName.style.color = 'var(--neon-cyan)';
-                    } else {
-                        senderName.textContent = '📢 System';
-                        senderName.style.color = '#ffaa00';
-                    }
-                    contentDiv.appendChild(senderName);
-                    
-                    let content = '';
-                    if (msg.text) {
-                        content = escapeHtml(msg.text);
+                        const sys2 = document.createElement('div');
+                        sys2.className = 'chat-support-msg system';
+                        sys2.textContent = 'Silakan pilih keluhan di bawah atau ketik pesan.';
+                        messagesContainer.appendChild(sys2);
                     }
                     
-                    if (msg.fileData && msg.fileData.url) {
-                        const isImage = msg.fileData.type && msg.fileData.type.startsWith('image/');
-                        if (isImage) {
-                            content += `<div style="margin-top: 8px;">
-                                <img src="${msg.fileData.url}" style="max-width:150px; max-height:150px; border-radius:10px; cursor:pointer;" onclick="window.open('${msg.fileData.url}')">
-                                <div style="font-size:10px; color:#888;">${escapeHtml(msg.fileData.name || 'Image')}</div>
-                            </div>`;
-                        } else {
-                            content += `<div style="margin-top: 8px;">
-                                <a href="${msg.fileData.url}" target="_blank" style="color:#00ff88; text-decoration:none;">
-                                    <i class="fas fa-file"></i> ${escapeHtml(msg.fileData.name || 'File')}
-                                </a>
-                            </div>`;
-                        }
-                    }
-                    
-                    div.innerHTML = content;
-                    
-                    if (msg.sender === 'user' && msg.uid === (supportUID || currentUID || 'Guest')) {
-                        const editIcon = document.createElement('span');
-                        editIcon.className = 'message-edit-icon';
-                        editIcon.innerHTML = '<i class="fas fa-pen"></i>';
-                        editIcon.style.marginLeft = '10px';
-                        editIcon.style.cursor = 'pointer';
-                        editIcon.style.fontSize = '12px';
-                        editIcon.style.color = '#888';
-                        editIcon.onclick = function(e) {
-                            e.stopPropagation();
-                            const msgId = key;
-                            openEditMessagePopup(msgId, msg.text || '', 'support_chat', supportDeviceId);
-                        };
-                        div.appendChild(editIcon);
+                    sortedKeys.forEach(key => {
+                        const msg = messages[key];
                         
-                        const deleteIcon = document.createElement('span');
-                        deleteIcon.className = 'message-delete-icon';
-                        deleteIcon.innerHTML = '<i class="fas fa-trash"></i>';
-                        deleteIcon.onclick = function(e) {
-                            e.stopPropagation();
-                            confirmDeleteMessageUser(key, 'support_chat', supportDeviceId);
+                        const wrapper = document.createElement('div');
+                        wrapper.className = 'support-message-wrapper';
+                        wrapper.style.display = 'flex';
+                        wrapper.style.alignItems = 'flex-start';
+                        wrapper.style.gap = '10px';
+                        wrapper.style.marginBottom = '10px';
+                        wrapper.dataset.messageId = key;
+                        
+                        const avatar = document.createElement('img');
+                        avatar.className = 'chat-avatar';
+                        avatar.style.width = '32px';
+                        avatar.style.height = '32px';
+                        avatar.style.borderRadius = '50%';
+                        avatar.style.border = '2px solid var(--neon-cyan)';
+                        avatar.style.objectFit = 'cover';
+                        avatar.style.flexShrink = '0';
+                        
+                        if (msg.sender === 'admin') {
+                            avatar.src = 'https://i.ibb.co.com/4wHZpnFB/IMG-20260610-WA0000.jpg';
+                        } else if (msg.sender === 'user') {
+                            const savedProfile = localStorage.getItem('profile_image_' + (currentUID || 'guest'));
+                            if (savedProfile) {
+                                avatar.src = savedProfile;
+                            } else {
+                                avatar.src = 'https://via.placeholder.com/32/00ffff/000000?text=U';
+                            }
+                        } else {
+                            avatar.src = 'https://via.placeholder.com/32/ffaa00/000000?text=S';
+                        }
+                        avatar.alt = 'Avatar';
+                        avatar.onerror = function() {
+                            this.src = 'https://via.placeholder.com/32/00ffff/000000?text=U';
                         };
-                        div.appendChild(deleteIcon);
-                    }
+                        wrapper.appendChild(avatar);
+                        
+                        const contentDiv = document.createElement('div');
+                        contentDiv.style.flex = '1';
+                        contentDiv.style.display = 'flex';
+                        contentDiv.style.flexDirection = 'column';
+                        
+                        const div = document.createElement('div');
+                        div.className = `chat-support-msg ${msg.sender === 'admin' ? 'admin' : 'user'}`;
+                        
+                        const senderName = document.createElement('div');
+                        senderName.style.fontSize = '11px';
+                        senderName.style.fontWeight = 'bold';
+                        senderName.style.marginBottom = '3px';
+                        if (msg.sender === 'admin') {
+                            senderName.textContent = '👑 Admin';
+                            senderName.style.color = '#ff4444';
+                        } else if (msg.sender === 'user') {
+                            senderName.textContent = '👤 ' + (msg.uid || 'User');
+                            senderName.style.color = 'var(--neon-cyan)';
+                        } else {
+                            senderName.textContent = '📢 System';
+                            senderName.style.color = '#ffaa00';
+                        }
+                        contentDiv.appendChild(senderName);
+                        
+                        let content = '';
+                        if (msg.text) {
+                            content = escapeHtml(msg.text);
+                        }
+                        
+                        if (msg.fileData && msg.fileData.url) {
+                            const isImage = msg.fileData.type && msg.fileData.type.startsWith('image/');
+                            if (isImage) {
+                                content += `<div style="margin-top: 8px;">
+                                    <img src="${msg.fileData.url}" style="max-width:150px; max-height:150px; border-radius:10px; cursor:pointer;" onclick="window.open('${msg.fileData.url}')">
+                                    <div style="font-size:10px; color:#888;">${escapeHtml(msg.fileData.name || 'Image')}</div>
+                                </div>`;
+                            } else {
+                                content += `<div style="margin-top: 8px;">
+                                    <a href="${msg.fileData.url}" target="_blank" style="color:#00ff88; text-decoration:none;">
+                                        <i class="fas fa-file"></i> ${escapeHtml(msg.fileData.name || 'File')}
+                                    </a>
+                                </div>`;
+                            }
+                        }
+                        
+                        div.innerHTML = content;
+                        
+                        if (msg.sender === 'user' && msg.uid === (supportUID || currentUID || 'Guest')) {
+                            const editIcon = document.createElement('span');
+                            editIcon.className = 'message-edit-icon';
+                            editIcon.innerHTML = '<i class="fas fa-pen"></i>';
+                            editIcon.style.marginLeft = '10px';
+                            editIcon.style.cursor = 'pointer';
+                            editIcon.style.fontSize = '12px';
+                            editIcon.style.color = '#888';
+                            editIcon.onclick = function(e) {
+                                e.stopPropagation();
+                                const msgId = key;
+                                openEditMessagePopup(msgId, msg.text || '', 'support_chat', supportDeviceId);
+                            };
+                            div.appendChild(editIcon);
+                            
+                            const deleteIcon = document.createElement('span');
+                            deleteIcon.className = 'message-delete-icon';
+                            deleteIcon.innerHTML = '<i class="fas fa-trash"></i>';
+                            deleteIcon.onclick = function(e) {
+                                e.stopPropagation();
+                                confirmDeleteMessageUser(key, 'support_chat', supportDeviceId);
+                            };
+                            div.appendChild(deleteIcon);
+                        }
+                        
+                        const time = document.createElement('div');
+                        time.className = 'chat-support-msg-time';
+                        time.textContent = msg.timestamp ? new Date(msg.timestamp).toLocaleString() : '-';
+                        div.appendChild(time);
+                        
+                        contentDiv.appendChild(div);
+                        wrapper.appendChild(contentDiv);
+                        
+                        const systemEls = messagesContainer.querySelectorAll('.chat-support-msg.system');
+                        if (systemEls.length > 0 && sortedKeys.length > 0) {
+                            systemEls.forEach(el => el.remove());
+                        }
+                        
+                        messagesContainer.appendChild(wrapper);
+                    });
                     
-                    const time = document.createElement('div');
-                    time.className = 'chat-support-msg-time';
-                    time.textContent = msg.timestamp ? new Date(msg.timestamp).toLocaleString() : '-';
-                    div.appendChild(time);
-                    
-                    contentDiv.appendChild(div);
-                    wrapper.appendChild(contentDiv);
-                    
-                    const systemEls = messagesContainer.querySelectorAll('.chat-support-msg.system');
-                    if (systemEls.length > 0 && sortedKeys.length > 0) {
-                        systemEls.forEach(el => el.remove());
-                    }
-                    
-                    messagesContainer.appendChild(wrapper);
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
                 });
-                
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
-            });
-    }
-
-    function setupSupportChatNotif() {
-        if (!supportDeviceId) return;
+        }
+    
+        function setupSupportChatNotif() {
+            if (!supportDeviceId) return;
+            
+            database.ref('support_chats/' + supportDeviceId + '/messages')
+                .orderByChild('timestamp')
+                .limitToLast(1)
+                .on('child_added', (snap) => {
+                    const msg = snap.val();
+                    if (!msg || msg.sender !== 'admin') return;
+                    
+                    const popup = document.getElementById('chatSupportPopup');
+                    const isOpen = popup && popup.classList.contains('active');
+                    const lastNotif = localStorage.getItem('last_support_notif_' + supportDeviceId);
+                    
+                    if (!isOpen || Date.now() - parseInt(lastNotif || 0) > 5000) {
+                        localStorage.setItem('last_support_notif_' + supportDeviceId, Date.now().toString());
+                        const text = msg.text ? msg.text.substring(0, 100) + (msg.text.length > 100 ? '...' : '') : 'Ada balasan dari admin';
+                        showNotificationToast('💬 Support Admin', text, 'success');
+                        const badge = document.getElementById('chatSupportBadge');
+                        if (badge) {
+                            const current = parseInt(badge.textContent) || 0;
+                            badge.textContent = current + 1;
+                            badge.classList.add('show');
+                        }
+                    }
+                });
+        }
+    
+        function openCustomComplaint() {
+            const text = prompt('Tulis keluhan Anda:');
+            if (text && text.trim()) {
+                sendSupportMessageText(text.trim());
+            }
+        }
         
-        database.ref('support_chats/' + supportDeviceId + '/messages')
-            .orderByChild('timestamp')
-            .limitToLast(1)
-            .on('child_added', (snap) => {
-                const msg = snap.val();
-                if (!msg || msg.sender !== 'admin') return;
-                
-                const popup = document.getElementById('chatSupportPopup');
-                const isOpen = popup && popup.classList.contains('active');
-                const lastNotif = localStorage.getItem('last_support_notif_' + supportDeviceId);
-                
-                if (!isOpen || Date.now() - parseInt(lastNotif || 0) > 5000) {
-                    localStorage.setItem('last_support_notif_' + supportDeviceId, Date.now().toString());
-                    const text = msg.text ? msg.text.substring(0, 100) + (msg.text.length > 100 ? '...' : '') : 'Ada balasan dari admin';
-                    showNotificationToast('💬 Support Admin', text, 'success');
-                    const badge = document.getElementById('chatSupportBadge');
-                    if (badge) {
-                        const current = parseInt(badge.textContent) || 0;
-                        badge.textContent = current + 1;
-                        badge.classList.add('show');
+        // ============================================================
+        // CHAT SUPPORT - FORMAT PESAN PEMBUKA (1x SEHARI)
+        // ============================================================
+        function getLastSupportMessageDate() {
+            const last = localStorage.getItem('support_last_message_date_' + (currentUID || 'guest'));
+            return last || null;
+        }
+    
+        function setLastSupportMessageDate() {
+            localStorage.setItem('support_last_message_date_' + (currentUID || 'guest'), new Date().toDateString());
+        }
+    
+        function isFirstMessageToday() {
+            const last = getLastSupportMessageDate();
+            const today = new Date().toDateString();
+            return last !== today;
+        }
+    
+        // ============================================================
+        // ADMIN STATUS
+        // ============================================================
+        function monitorAdminStatus() {
+            database.ref('admin_status').on('value', s => {
+                const st = s.val();
+                if (st && st.status === 'online' && (Date.now() - (st.last_seen||0) < 300000)) {
+                    document.getElementById('chatAdminStatus').innerHTML = '🟢 Online';
+                    document.getElementById('publicChatStatus').innerHTML = '● Online';
+                    document.getElementById('chatSupportStatus').innerHTML = '🟢 Online';
+                } else {
+                    document.getElementById('chatAdminStatus').innerHTML = '🔴 Offline';
+                    document.getElementById('publicChatStatus').innerHTML = '○ Offline';
+                    document.getElementById('chatSupportStatus').innerHTML = '🔴 Offline';
+                }
+            });
+        }
+    
+        // ============================================================
+        // NAVIGATION
+        // ============================================================
+        function navigateWithLoading(view) {
+            document.querySelectorAll('.view-container').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            if (view === 'dashboard') { document.getElementById('dashboardView').classList.add('active'); document.querySelectorAll('.nav-item')[0].classList.add('active'); }
+            else if (view === 'account') { document.getElementById('accountView').classList.add('active'); document.querySelectorAll('.nav-item')[1].classList.add('active'); }
+            else if (view === 'chat') { document.getElementById('chatAdminView').classList.add('active'); document.querySelectorAll('.nav-item')[2].classList.add('active'); }
+        }
+    
+        // ============================================================
+        // WELCOME POPUP
+        // ============================================================
+        function openLink(url) {
+            window.open(url, '_blank');
+        }
+    
+        function closeWelcomePopup() {
+            document.getElementById('welcomePopup').classList.remove('active');
+            document.body.style.overflow = '';
+            const today = new Date().toDateString();
+            localStorage.setItem('welcome_popup_last_seen', today);
+        }
+    
+        function showWelcomePopup() {
+            const today = new Date().toDateString();
+            const lastSeen = localStorage.getItem('welcome_popup_last_seen');
+            if (lastSeen !== today) {
+                setTimeout(() => {
+                    document.getElementById('welcomePopup').classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                }, 2000);
+            }
+        }
+    
+        // ============================================================
+        // REALTIME LISTENERS
+        // ============================================================
+        function setupRealtimeListeners() {
+            if(!currentUID) return;
+        
+            database.ref('saldo/' + currentUID).on('value', s => { 
+                if(s.exists()) { 
+                    currentSaldo = s.val().amount || 0; 
+                    updateSaldoDisplay(); 
+                } 
+            });
+        
+            database.ref('vip_members/' + currentUID).on('value', () => { 
+                loadVIPStatus(); 
+            });
+        
+            database.ref('deposits/' + currentUID).on('child_added', () => { 
+                loadTransactionHistory(); 
+            });
+        
+            database.ref('purchases/' + currentUID).on('child_added', () => { 
+                loadPurchaseHistory(); 
+            });
+        
+            database.ref('sessions/' + currentUID).on('value', (snap) => {
+                const session = snap.val();
+                if (isManualLogout) return;
+                if (!session && currentUID) {
+                    forceLogoutCount++;
+                    if (forceLogoutCount <= 3) {
+                        showForceLogoutModal('⚠️ AKUN ANDA SEMENTARA KAMI TANGGUHKAN ⚠️\n\nAkun Anda sementara kami tangguhkan karena ada aktivitas mencurigakan.\nHarap bersabar dan hubungi admin untuk informasi lebih lanjut.\n\nAnda akan diarahkan ke halaman login.', 5);
+                    } else {
+                        showForceLogoutModal('⚠️ AKUN ANDA DIBLOKIR SEMENTARA ⚠️\n\nTerjadi aktivitas mencurigakan berulang kali.\nAkun Anda akan diblokir sementara.\nHubungi admin untuk informasi lebih lanjut.', 5);
                     }
                 }
             });
-    }
-
-    function openCustomComplaint() {
-        const text = prompt('Tulis keluhan Anda:');
-        if (text && text.trim()) {
-            sendSupportMessageText(text.trim());
-        }
-    }
-    
-    // ============================================================
-    // CHAT SUPPORT - FORMAT PESAN PEMBUKA (1x SEHARI)
-    // ============================================================
-    function getLastSupportMessageDate() {
-        const last = localStorage.getItem('support_last_message_date_' + (currentUID || 'guest'));
-        return last || null;
-    }
-
-    function setLastSupportMessageDate() {
-        localStorage.setItem('support_last_message_date_' + (currentUID || 'guest'), new Date().toDateString());
-    }
-
-    function isFirstMessageToday() {
-        const last = getLastSupportMessageDate();
-        const today = new Date().toDateString();
-        return last !== today;
-    }
-
-    // ============================================================
-    // ADMIN STATUS
-    // ============================================================
-    function monitorAdminStatus() {
-        database.ref('admin_status').on('value', s => {
-            const st = s.val();
-            if (st && st.status === 'online' && (Date.now() - (st.last_seen||0) < 300000)) {
-                document.getElementById('chatAdminStatus').innerHTML = '🟢 Online';
-                document.getElementById('publicChatStatus').innerHTML = '● Online';
-                document.getElementById('chatSupportStatus').innerHTML = '🟢 Online';
-            } else {
-                document.getElementById('chatAdminStatus').innerHTML = '🔴 Offline';
-                document.getElementById('publicChatStatus').innerHTML = '○ Offline';
-                document.getElementById('chatSupportStatus').innerHTML = '🔴 Offline';
-            }
-        });
-    }
-
-    // ============================================================
-    // NAVIGATION
-    // ============================================================
-    function navigateWithLoading(view) {
-        document.querySelectorAll('.view-container').forEach(v => v.classList.remove('active'));
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        if (view === 'dashboard') { document.getElementById('dashboardView').classList.add('active'); document.querySelectorAll('.nav-item')[0].classList.add('active'); }
-        else if (view === 'account') { document.getElementById('accountView').classList.add('active'); document.querySelectorAll('.nav-item')[1].classList.add('active'); }
-        else if (view === 'chat') { document.getElementById('chatAdminView').classList.add('active'); document.querySelectorAll('.nav-item')[2].classList.add('active'); }
-    }
-
-    // ============================================================
-    // WELCOME POPUP
-    // ============================================================
-    function openLink(url) {
-        window.open(url, '_blank');
-    }
-
-    function closeWelcomePopup() {
-        document.getElementById('welcomePopup').classList.remove('active');
-        document.body.style.overflow = '';
-        const today = new Date().toDateString();
-        localStorage.setItem('welcome_popup_last_seen', today);
-    }
-
-    function showWelcomePopup() {
-        const today = new Date().toDateString();
-        const lastSeen = localStorage.getItem('welcome_popup_last_seen');
-        if (lastSeen !== today) {
-            setTimeout(() => {
-                document.getElementById('welcomePopup').classList.add('active');
-                document.body.style.overflow = 'hidden';
-            }, 2000);
-        }
-    }
-
-    // ============================================================
-    // REALTIME LISTENERS
-    // ============================================================
-    function setupRealtimeListeners() {
-        if(!currentUID) return;
-    
-        database.ref('saldo/' + currentUID).on('value', s => { 
-            if(s.exists()) { 
-                currentSaldo = s.val().amount || 0; 
-                updateSaldoDisplay(); 
-            } 
-        });
-    
-        database.ref('vip_members/' + currentUID).on('value', () => { 
-            loadVIPStatus(); 
-        });
-    
-        database.ref('deposits/' + currentUID).on('child_added', () => { 
-            loadTransactionHistory(); 
-        });
-    
-        database.ref('purchases/' + currentUID).on('child_added', () => { 
-            loadPurchaseHistory(); 
-        });
-    
-        database.ref('sessions/' + currentUID).on('value', (snap) => {
-            const session = snap.val();
-            if (isManualLogout) return;
-            if (!session && currentUID) {
-                forceLogoutCount++;
-                if (forceLogoutCount <= 3) {
-                    showForceLogoutModal('⚠️ AKUN ANDA SEMENTARA KAMI TANGGUHKAN ⚠️\n\nAkun Anda sementara kami tangguhkan karena ada aktivitas mencurigakan.\nHarap bersabar dan hubungi admin untuk informasi lebih lanjut.\n\nAnda akan diarahkan ke halaman login.', 5);
-                } else {
-                    showForceLogoutModal('⚠️ AKUN ANDA DIBLOKIR SEMENTARA ⚠️\n\nTerjadi aktivitas mencurigakan berulang kali.\nAkun Anda akan diblokir sementara.\nHubungi admin untuk informasi lebih lanjut.', 5);
-                }
-            }
-        });
     
         database.ref('banned_users/' + currentUID).on('value', (snap) => {
             if (snap.exists() && snap.val().status === 'banned' && currentUID) {
