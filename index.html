@@ -6594,6 +6594,120 @@
         }
         
         /* ============================================================
+       IKLAN BANNER - CSS PERBAIKAN
+       ============================================================ */
+        .ad-script-container {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 15px;
+            padding: 20px;
+            border: 2px solid rgba(255, 170, 0, 0.2);
+            min-height: 150px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+
+        .ad-script-container iframe {
+            max-width: 100% !important;
+            border-radius: 10px !important;
+        }
+
+        .ad-script-container img {
+            max-width: 100% !important;
+            border-radius: 10px !important;
+            cursor: pointer !important;
+        }
+
+        .ad-script-container .ad-link-btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, var(--neon-orange), #ff8800);
+            border: none;
+            border-radius: 25px;
+            color: #000;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 16px;
+            font-family: 'Orbitron', monospace;
+            text-decoration: none;
+            transition: all 0.3s;
+            margin-top: 10px;
+            animation: pulse 1.5s infinite;
+        }
+
+        .ad-script-container .ad-link-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(255, 170, 0, 0.5);
+        }
+
+        #adScriptContainer {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        #adScriptContainer iframe {
+            max-width: 100% !important;
+            border: none !important;
+        }
+        
+        /* Responsive untuk iklan */
+        @media (max-width: 768px) {
+            .ad-popup-content {
+                padding: 15px;
+                border-radius: 20px;
+            }
+    
+            .ad-script-container {
+                padding: 10px;
+                min-height: 100px;
+            }
+    
+            .ad-script-container iframe {
+                width: 100% !important;
+                height: auto !important;
+                min-height: 150px !important;
+            }
+    
+            .ad-popup-body #adContent .ad-link-btn {
+                font-size: 14px;
+                padding: 10px 20px;
+            }
+    
+            #adScriptContainer iframe {
+                width: 100% !important;
+                height: auto !important;
+                min-height: 200px !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .ad-popup-content {
+                padding: 10px;
+            }
+    
+            .ad-popup-title {
+                font-size: 14px;
+            }
+    
+            .ad-popup-timer {
+                font-size: 16px;
+                padding: 2px 10px;
+            }
+    
+            .ad-script-container iframe {
+                min-height: 150px !important;
+            }
+    
+            #adScriptContainer iframe {
+                min-height: 150px !important;
+            }
+        }
+        
+        /* ============================================================
         POPUP IKLAN - USER
         ============================================================ */
         .ad-popup-overlay {
@@ -11313,7 +11427,6 @@
         showAdPopup(selectedAd);
     }
     
-    // TAMPILKAN POPUP IKLAN
     function showAdPopup(ad) {
         adPopupActive = true;
         adIsClicked = false;
@@ -11331,51 +11444,76 @@
         let html = '';
         const link = ad.link || '';
         
-        if (link.includes('<script')) {
+        // DETEKSI JENIS IKLAN
+        const isScript = link.includes('<script') || link.includes('invoke.js');
+        const isIframe = link.includes('iframe') || link.includes('highrevenueformat');
+        const isUrl = link.startsWith('http://') || link.startsWith('https://');
+        
+        if (isScript || isIframe) {
+            // IKLAN SCRIPT / BANNER
             html = `
-                <div class="ad-script-container">
-                    <div style="color:#888; font-size:13px; margin-bottom:10px;">
-                        <i class="fas fa-code"></i> Iklan Script
+                <div class="ad-script-container" style="min-height:150px; display:flex; justify-content:center; align-items:center; flex-direction:column; width:100%;">
+                    <div id="adScriptContainer" style="width:100%; display:flex; justify-content:center; align-items:center; flex-direction:column;">
+                        ${link}
                     </div>
-                    <div id="adScriptContainer"></div>
+                    <button class="ad-link-btn" onclick="adClicked('${ad.id}')" style="margin-top:15px; padding:10px 30px; background:linear-gradient(135deg, var(--neon-orange), #ff8800); border:none; border-radius:25px; color:#000; font-weight:bold; cursor:pointer; font-size:16px; font-family:'Orbitron',monospace; transition:all 0.3s;">
+                        <i class="fas fa-external-link-alt"></i> Klik untuk melihat iklan
+                    </button>
                 </div>
             `;
             content.innerHTML = html;
             
+            // EKSEKUSI SCRIPT
             try {
                 const container = document.getElementById('adScriptContainer');
-                const script = document.createElement('script');
-                script.innerHTML = link;
-                container.appendChild(script);
+                // Jika link berisi script, eksekusi
+                if (link.includes('<script')) {
+                    const script = document.createElement('script');
+                    script.innerHTML = link;
+                    container.appendChild(script);
+                } else if (link.includes('invoke.js') || link.includes('highrevenueformat')) {
+                    // Jika link adalah URL script, buat script tag
+                    const script = document.createElement('script');
+                    script.src = link;
+                    script.async = true;
+                    script.setAttribute('data-cfasync', 'false');
+                    container.appendChild(script);
+                } else {
+                    // Tampilkan sebagai konten HTML
+                    container.innerHTML = link;
+                }
             } catch(e) {
                 console.log('Script error:', e);
+                // Fallback: tampilkan tombol
                 content.innerHTML = `
                     <div class="ad-placeholder">
                         <i class="fas fa-exclamation-triangle" style="color:#ffaa00; font-size:30px; display:block; margin-bottom:10px;"></i>
-                        <p>Gagal memuat iklan</p>
-                        <button class="ad-link-btn" onclick="adClicked('${ad.id}')">
-                            <i class="fas fa-external-link-alt"></i> Klik untuk melihat
+                        <p>Klik tombol di bawah untuk melihat iklan</p>
+                        <button class="ad-link-btn" onclick="adClicked('${ad.id}')" style="margin-top:15px; padding:15px 40px; background:linear-gradient(135deg, var(--neon-orange), #ff8800); border:none; border-radius:25px; color:#000; font-weight:bold; cursor:pointer; font-size:18px; font-family:'Orbitron',monospace;">
+                            <i class="fas fa-external-link-alt"></i> Lihat Iklan
                         </button>
                     </div>
                 `;
             }
-        } else if (link.startsWith('http://') || link.startsWith('https://')) {
+        } else if (isUrl) {
+            // URL BIASA
             html = `
-                <button class="ad-link-btn" onclick="adClicked('${ad.id}')">
-                    <i class="fas fa-external-link-alt"></i> Klik untuk melihat iklan
-                </button>
-                <div style="margin-top:10px; color:#888; font-size:12px;">
-                    ${ad.description || 'Klik tombol di atas untuk melihat iklan'}
+                <div style="text-align:center; padding:20px;">
+                    <a href="${link}" target="_blank" onclick="adClicked('${ad.id}')" style="display:inline-block; padding:15px 40px; background:linear-gradient(135deg, var(--neon-orange), #ff8800); border:none; border-radius:25px; color:#000; font-weight:bold; cursor:pointer; font-size:18px; font-family:'Orbitron',monospace; text-decoration:none; animation:pulse 1.5s infinite;">
+                        <i class="fas fa-external-link-alt"></i> Klik untuk melihat iklan
+                    </a>
+                    ${ad.description ? `<div style="margin-top:10px; color:#888; font-size:12px;">${escapeHtml(ad.description)}</div>` : ''}
                 </div>
             `;
             content.innerHTML = html;
         } else {
+            // TEKS BIASA
             html = `
-                <div class="ad-placeholder">
+                <div class="ad-placeholder" style="text-align:center; padding:20px;">
                     <i class="fas fa-ad" style="font-size:40px; color:#ffaa00; display:block; margin-bottom:10px;"></i>
                     <p style="font-size:16px; color:#fff;">${escapeHtml(ad.title)}</p>
                     ${ad.description ? `<p style="font-size:13px; color:#888;">${escapeHtml(ad.description)}</p>` : ''}
-                    <button class="ad-link-btn" onclick="adClicked('${ad.id}')">
+                    <button class="ad-link-btn" onclick="adClicked('${ad.id}')" style="margin-top:15px; padding:15px 40px; background:linear-gradient(135deg, var(--neon-orange), #ff8800); border:none; border-radius:25px; color:#000; font-weight:bold; cursor:pointer; font-size:18px; font-family:'Orbitron',monospace;">
                         <i class="fas fa-external-link-alt"></i> Lihat Iklan
                     </button>
                 </div>
@@ -11383,7 +11521,8 @@
             content.innerHTML = html;
         }
         
-        const duration = ad.duration || 10;
+        // Timer dan close button
+        const duration = ad.duration || 15;
         let remaining = duration;
         timer.textContent = remaining + 's';
         timer.style.color = '#ffaa00';
@@ -11436,7 +11575,7 @@
         updateAdStats(ad.id, 'view');
     }
     
-    // FUNGSI KETIKA IKLAN DI-CLICK
+    // FUNGSI adClicked - PERBAIKAN
     function adClicked(adId) {
         adIsClicked = true;
         
@@ -11446,13 +11585,37 @@
         updateAdStats(adId, 'click');
         
         const link = ad.link || '';
+        
+        // BUKA LINK - PASTIKAN BISA DI-CLICK
         if (link.startsWith('http://') || link.startsWith('https://')) {
             window.open(link, '_blank');
-        } else if (link.includes('<script')) {
-            showNeonToast('✅ Iklan telah dilihat!');
+            showNeonToast('✅ Iklan dibuka di tab baru!');
+        } else if (link.includes('<script') || link.includes('invoke.js')) {
+            // Untuk script, coba eksekusi ulang
+            try {
+                const container = document.getElementById('adScriptContainer');
+                if (container) {
+                    // Coba eksekusi script lagi
+                    const script = document.createElement('script');
+                    script.innerHTML = link;
+                    container.appendChild(script);
+                    showNeonToast('✅ Iklan dimuat!');
+                } else {
+                    // Fallback: buka sebagai URL
+                    const urlMatch = link.match(/https?:\/\/[^\s"']+/);
+                    if (urlMatch) {
+                        window.open(urlMatch[0], '_blank');
+                    } else {
+                        showNeonToast('✅ Iklan telah dilihat!');
+                    }
+                }
+            } catch(e) {
+                showNeonToast('✅ Iklan telah dilihat!');
+            }
         } else {
             try {
                 window.open(link, '_blank');
+                showNeonToast('✅ Iklan dibuka di tab baru!');
             } catch(e) {
                 showNeonToast('✅ Iklan telah dilihat!');
             }
@@ -11527,7 +11690,7 @@
             }
         }
     }
-    
+                    
     // ============================================================
     // OVERRIDE FUNGSI EXISTING UNTUK MENDUKUNG BAHASA
     // ============================================================
@@ -12181,6 +12344,7 @@
         }
     }
 
+    // MODIFIKASI FUNGSI renderPackages di USER
     function renderPackages() {
         const grid = document.getElementById('priceGrid');
         if (!grid) return;
@@ -12197,8 +12361,12 @@
             let discountText = '';
             let badgeHtml = '';
 
-            // HITUNG DISKON TAPI SIMPAN DATA ASLI
-            if (globalDiscount.active && (globalDiscount.minPurchase === 0 || originalPrice >= globalDiscount.minPurchase)) {
+            // CEK DISKON HANYA UNTUK HARGA SPESIFIK
+            if (globalDiscount.active && 
+                globalDiscount.specificPrice && 
+                originalPrice === globalDiscount.specificPrice &&
+                (globalDiscount.minPurchase === 0 || originalPrice >= globalDiscount.minPurchase)) {
+            
                 finalPrice = originalPrice - (originalPrice * globalDiscount.percentage / 100);
                 discountText = `<div style="font-size: 11px; color: #00ff88; margin-top: 6px;">
                     <span style="text-decoration: line-through; color: #888;">Rp ${formatRupiah(originalPrice)}</span>
@@ -12219,7 +12387,6 @@
                 badgeHtml = `<span class="price-badge popular">🔥 POPULAR</span>`;
             }
 
-            // DESKRIPSI - TAMPILKAN TYPE ASLI
             let descText = pkg.description || '';
             if (pkg.type === 'quota' && pkg.quota) {
                 descText = `${pkg.quota}x Update VIP`;
@@ -12242,7 +12409,7 @@
                     <div class="price-desc">${escapeHtml(descText)}</div>
                     ${discountText}
                     ${badgeHtml}
-                
+            
                     <div class="eye-icon" onclick="event.stopPropagation(); openPackageDetail(${idx});" title="Lihat detail package">
                         <i class="fas fa-eye"></i>
                     </div>
