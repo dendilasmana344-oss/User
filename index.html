@@ -5602,318 +5602,57 @@
         }
         
         /* ============================================================
-        IKLAN USER - ANIMASI MENARIK
-        ============================================================ */
+           IKLAN USER - ANIMASI MENARIK
+           ============================================================ */
 
-        /* Iklan Popup dengan Animasi */
-        .ad-popup-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.95);
-            backdrop-filter: blur(20px);
-            z-index: 999999;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            animation: fadeIn 0.3s ease;
+        /* Animasi untuk iklan popup */
+        @keyframes adSlideIn {
+            from { transform: translateY(50px) scale(0.95); opacity: 0; }
+            to { transform: translateY(0) scale(1); opacity: 1; }
         }
-        
-        .ad-popup-overlay.active {
-            display: flex;
+
+        @keyframes adPulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 170, 0, 0.3); }
+            50% { box-shadow: 0 0 50px rgba(255, 170, 0, 0.6), 0 0 80px rgba(255, 170, 0, 0.2); }
         }
-        
+
         .ad-popup-content {
-            max-width: 600px;
-            width: 100%;
-            background: linear-gradient(145deg, #0a0a0a, #1a0a0a);
-            border: 2px solid var(--neon-orange);
-            border-radius: 30px;
-            padding: 25px 30px;
-            box-shadow: 0 0 60px rgba(255, 170, 0, 0.3);
-            animation: slideInUp 0.4s ease;
-            position: relative;
-            overflow: hidden;
+            animation: adSlideIn 0.5s ease, adPulse 2s infinite;
         }
-        
-        /* Animasi Border Glow */
-        .ad-popup-content::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: conic-gradient(from 0deg, transparent, rgba(255, 170, 0, 0.1), transparent, rgba(255, 170, 0, 0.1), transparent);
-            animation: spinBorder 4s linear infinite;
-            z-index: -1;
-        }
-        
-        @keyframes spinBorder {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        .ad-popup-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid rgba(255, 170, 0, 0.2);
-            position: relative;
-            z-index: 1;
-        }
-        
-        .ad-popup-title {
-            font-family: 'Orbitron', monospace;
-            font-size: 18px;
-            color: var(--neon-orange);
-            font-weight: bold;
-            animation: textGlowGold 2s infinite;
-        }
-        
-        .ad-popup-timer {
-            font-family: 'Orbitron', monospace;
-            font-size: 24px;
-            font-weight: bold;
-            color: var(--neon-orange);
-            background: rgba(255, 170, 0, 0.15);
-            padding: 4px 16px;
-            border-radius: 20px;
-            border: 2px solid var(--neon-orange);
-            animation: neonPulse 1s infinite;
-        }
-        
-        .ad-popup-body {
-            min-height: 120px;
-            padding: 15px 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .ad-popup-body #adContent {
-            width: 100%;
-            text-align: center;
-        }
-        
-        /* Tombol Iklan dengan Animasi */
-        .ad-link-btn {
-            display: inline-block;
-            padding: 15px 40px;
-            background: linear-gradient(135deg, var(--neon-orange), #ff8800);
-            border: none;
-            border-radius: 25px;
-            color: #000;
-            font-weight: bold;
-            font-size: 18px;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-decoration: none;
-            font-family: 'Orbitron', monospace;
-            animation: pulse 1.5s infinite;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .ad-link-btn::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
-            transform: rotate(45deg);
-            animation: shimmerBtn 2s infinite;
-        }
-        
-        @keyframes shimmerBtn {
-            0% { transform: translateX(-100%) rotate(45deg); }
-            100% { transform: translateX(100%) rotate(45deg); }
-        }
-        
-        .ad-link-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 10px 30px rgba(255, 170, 0, 0.5);
-        }
-        
-        /* Container Script Iklan */
-        .ad-script-container {
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 15px;
-            padding: 20px;
-            border: 2px solid rgba(255, 170, 0, 0.2);
-            min-height: 150px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .ad-script-container::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255, 170, 0, 0.05) 0%, transparent 70%);
-            animation: spin 20s linear infinite;
-        }
-        
-        .ad-script-container iframe {
-            max-width: 100% !important;
-            border-radius: 10px !important;
-        }
-        
-        .ad-script-container img {
-            max-width: 100% !important;
-            border-radius: 10px !important;
-            cursor: pointer !important;
-        }
-        
-        #adScriptContainer {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            position: relative;
-            z-index: 1;
-        }
-        
-        #adScriptContainer iframe {
-            max-width: 100% !important;
-            border: none !important;
-        }
-        
-        /* Progress Bar Iklan */
+
+        /* Progress bar iklan */
         .ad-progress-bar {
             width: 100%;
-            height: 4px;
+            height: 5px;
             background: rgba(255, 255, 255, 0.1);
-            border-radius: 2px;
+            border-radius: 3px;
             margin-top: 15px;
             overflow: hidden;
             position: relative;
             z-index: 1;
         }
-        
+
         .ad-progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, var(--neon-orange), #ff8800);
+            background: linear-gradient(90deg, #ffaa00, #ff8800, #ffaa00);
+            background-size: 200% 100%;
             width: 100%;
-            border-radius: 2px;
+            border-radius: 3px;
             transition: width 0.1s linear;
-            position: relative;
+            animation: gradientShift 1s ease infinite;
         }
-        
-        .ad-progress-fill::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            animation: shimmer 1.5s infinite;
-        }
-        
-        .ad-popup-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 2px solid rgba(255, 170, 0, 0.2);
-            flex-wrap: wrap;
-            gap: 10px;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .ad-popup-btn {
-            padding: 10px 30px;
-            border-radius: 25px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-family: 'Orbitron', monospace;
-            border: none;
-            font-size: 14px;
-        }
-        
-        .ad-popup-btn-close {
-            background: rgba(255, 68, 68, 0.2);
-            color: #ff4444;
-            border: 2px solid #ff4444;
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        
-        .ad-popup-btn-close.enabled {
-            opacity: 1;
-            cursor: pointer;
-            background: linear-gradient(135deg, var(--neon-cyan), #0088ff);
-            color: #000;
-            border-color: var(--neon-cyan);
-            animation: pulse 1s infinite;
-        }
-        
-        .ad-popup-btn-close.enabled:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(0, 255, 255, 0.4);
-        }
-        
-        #adInfoText {
+
+        /* Badge VIP di iklan */
+        .ad-vip-badge {
+            display: inline-block;
+            padding: 4px 15px;
+            border-radius: 20px;
             font-size: 12px;
-            color: #666;
-            animation: pulse 1.5s infinite;
-        }
-        
-        /* Responsive */
-        @media (max-width: 500px) {
-            .ad-popup-content {
-                padding: 20px;
-            }
-            .ad-popup-title {
-                font-size: 14px;
-            }
-            .ad-popup-timer {
-                font-size: 18px;
-                padding: 2px 12px;
-            }
-            .ad-popup-body #adContent .ad-link-btn {
-                font-size: 14px;
-                padding: 12px 25px;
-            }
-            .ad-popup-footer {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .ad-script-container {
-                padding: 10px;
-                min-height: 100px;
-            }
-            .ad-script-container iframe {
-                width: 100% !important;
-                height: auto !important;
-                min-height: 150px !important;
-            }
-            #adScriptContainer iframe {
-                width: 100% !important;
-                height: auto !important;
-                min-height: 150px !important;
-            }
+            font-weight: bold;
+            background: linear-gradient(135deg, #ffd700, #ffaa00);
+            color: #000;
+            margin-bottom: 10px;
+            animation: textGlowGold 2s infinite;
         }
         
         /* ============================================================
@@ -11715,23 +11454,66 @@
         });
     }
     
-    // CEK APAKAH USER VIP
+    // ============================================================
+    // CEK VIP STATUS - UNTUK SEMUA TIPE (Quota, Season, Permanent)
+    // ============================================================
     function checkUserVIPStatus() {
         return new Promise((resolve) => {
             if (!currentUID) {
+                isUserVIP = false;
                 resolve(false);
                 return;
             }
+            
             database.ref('vip_members/' + currentUID).once('value', function(snap) {
                 const vip = snap.val();
+                
+                // CEK APAKAH USER VIP AKTIF - UNTUK SEMUA TIPE
+                let isVip = false;
+                
                 if (vip && vip.status === 'active') {
-                    isUserVIP = true;
-                    resolve(true);
-                } else {
-                    isUserVIP = false;
-                    resolve(false);
+                    // CEK TYPE QUOTA
+                    if (vip.updateType === 'quota') {
+                        const used = vip.updatesUsed || 0;
+                        const total = vip.updateQuota || 0;
+                        // JIKA QUOTA MASIH TERSISA, DIANGGAP VIP
+                        if (used < total) {
+                            isVip = true;
+                        }
+                    }
+                    // CEK TYPE UNLIMITED / SEASON
+                    else if (vip.updateType === 'unlimited') {
+                        // CEK EXPIRY
+                        if (vip.expiryDate && vip.expiryDate !== 'permanent') {
+                            const expiry = new Date(vip.expiryDate);
+                            if (expiry > new Date()) {
+                                isVip = true;
+                            }
+                        } else if (vip.isPermanent === true) {
+                            // PERMANENT SELALU VIP
+                            isVip = true;
+                        } else {
+                            // FALLBACK: ANGGAP VIP
+                            isVip = true;
+                        }
+                    }
+                    // CEK TYPE LIFETIME / PERMANENT
+                    else if (vip.updateType === 'lifetime' || vip.isPermanent === true) {
+                        isVip = true;
+                    }
+                    // FALLBACK: STATUS ACTIVE
+                    else {
+                        isVip = true;
+                    }
                 }
-            }).catch(function() {
+                
+                isUserVIP = isVip;
+                console.log(`👑 VIP Status for ${currentUID}:`, isVip, vip);
+                resolve(isVip);
+                
+            }).catch(function(error) {
+                console.error('Error checking VIP status:', error);
+                isUserVIP = false;
                 resolve(false);
             });
         });
@@ -11743,11 +11525,21 @@
         checkUserVIPStatus().then(function(isVip) {
             if (isVip) {
                 console.log('👑 User VIP, iklan tidak ditampilkan');
+                // TUTUP IKLAN JIKA SEDANG AKTIF
+                if (adPopupActive) {
+                    closeAdPopup();
+                }
                 return;
             }
             
-            if (adData.length === 0) return;
-            if (adPopupActive) return;
+            if (adData.length === 0) {
+                console.log('📢 Tidak ada iklan aktif');
+                return;
+            }
+            if (adPopupActive) {
+                console.log('⏳ Iklan sedang aktif');
+                return;
+            }
             
             const now = Date.now();
             const cooldown = 5 * 60 * 1000; // 5 menit
@@ -12036,39 +11828,70 @@
     // INISIALISASI IKLAN UNTUK USER
     function initUserAds() {
         console.log('📢 Inisialisasi iklan user...');
-        
+    
+        // CEK VIP STATUS AWAL
         setTimeout(function() {
-            loadAdsForUser();
+            checkUserVIPStatus().then(function(isVip) {
+                if (isVip) {
+                    console.log('👑 User VIP - Iklan dinonaktifkan');
+                    return;
+                }
+                loadAdsForUser();
+            });
         }, 3000);
-        
+    
+        // CEK PERIODIK SETIAP 60 DETIK
         setInterval(function() {
-            if (!adPopupActive) {
-                // CEK VIP STATUS SEBELUM TAMPILKAN IKLAN
-                checkUserVIPStatus().then(function(isVip) {
-                    if (!isVip) {
-                        checkAndShowAd();
+            // CEK VIP STATUS
+            checkUserVIPStatus().then(function(isVip) {
+                if (isVip) {
+                    if (adPopupActive) {
+                        closeAdPopup();
                     }
-                });
-            }
+                    return;
+                }
+                if (!adPopupActive) {
+                    checkAndShowAd();
+                }
+            });
         }, 60000);
     }
     
     // RE-CHECK VIP STATUS SETIAP KALI USER LOGIN
     function setupVIPStatusListener() {
         if (!currentUID) return;
-        
+    
         database.ref('vip_members/' + currentUID).on('value', function(snap) {
             const vip = snap.val();
+            let isVip = false;
+        
+            // CEK SEMUA TIPE VIP
             if (vip && vip.status === 'active') {
-                isUserVIP = true;
-                console.log('👑 User menjadi VIP - Iklan dinonaktifkan');
-                // Jika iklan sedang aktif, tutup
-                if (adPopupActive) {
-                    closeAdPopup();
+                if (vip.updateType === 'quota') {
+                    const used = vip.updatesUsed || 0;
+                    const total = vip.updateQuota || 0;
+                    if (used < total) isVip = true;
+                } else if (vip.updateType === 'unlimited') {
+                    if (vip.expiryDate && vip.expiryDate !== 'permanent') {
+                        const expiry = new Date(vip.expiryDate);
+                        if (expiry > new Date()) isVip = true;
+                    } else if (vip.isPermanent === true) {
+                        isVip = true;
+                    } else {
+                        isVip = true;
+                    }
+                } else if (vip.updateType === 'lifetime' || vip.isPermanent === true) {
+                    isVip = true;
+                } else {
+                    isVip = true;
                 }
-            } else {
-                isUserVIP = false;
-                console.log('🔓 User Free - Iklan diaktifkan');
+            }
+        
+            isUserVIP = isVip;
+            console.log(`👑 VIP Status updated: ${isVip}`);
+        
+            if (isVip && adPopupActive) {
+                closeAdPopup();
             }
         });
     }
@@ -12726,36 +12549,52 @@
         }
     }
 
-    // MODIFIKASI FUNGSI renderPackages di USER
+    // ============================================================
+    // RENDER PACKAGES - DENGAN DISKON SPESIFIK HARGA
+    // ============================================================
     function renderPackages() {
         const grid = document.getElementById('priceGrid');
         if (!grid) return;
-
+    
         if (!packages || packages.length === 0) {
             grid.innerHTML = '<div style="padding:25px; text-align:center; color:#888;">No packages available</div>';
             return;
         }
-
+    
         let html = '';
         packages.forEach((pkg, idx) => {
             let originalPrice = pkg.price;
             let finalPrice = originalPrice;
             let discountText = '';
             let badgeHtml = '';
-
-            // CEK DISKON HANYA UNTUK HARGA SPESIFIK
-            if (globalDiscount.active && 
-                globalDiscount.specificPrice && 
-                originalPrice === globalDiscount.specificPrice &&
-                (globalDiscount.minPurchase === 0 || originalPrice >= globalDiscount.minPurchase)) {
-            
-                finalPrice = originalPrice - (originalPrice * globalDiscount.percentage / 100);
-                discountText = `<div style="font-size: 11px; color: #00ff88; margin-top: 6px;">
-                    <span style="text-decoration: line-through; color: #888;">Rp ${formatRupiah(originalPrice)}</span>
-                    → Rp ${formatRupiah(finalPrice)} <span style="color: #ffaa00;">(${globalDiscount.percentage}% OFF)</span>
-                </div>`;
+    
+            // CEK DISKON - HANYA UNTUK HARGA SPESIFIK YANG SAMA
+            if (globalDiscount && globalDiscount.active === true) {
+                const now = new Date();
+                const expiry = new Date(globalDiscount.expiryDate);
+                
+                // CEK APAKAH DISKON MASIH BERLAKU
+                if (expiry > now) {
+                    // CEK APAKAH HARGA PAKET SAMA DENGAN HARGA SPESIFIK YANG DIDISKON
+                    if (globalDiscount.specificPrice && originalPrice === globalDiscount.specificPrice) {
+                        // CEK MINIMAL PEMBELIAN
+                        if (globalDiscount.minPurchase === 0 || originalPrice >= globalDiscount.minPurchase) {
+                            const discountAmount = originalPrice * (globalDiscount.percentage / 100);
+                            finalPrice = originalPrice - discountAmount;
+                            finalPrice = Math.round(finalPrice);
+                            
+                            discountText = `
+                                <div style="font-size: 11px; color: #00ff88; margin-top: 6px; background: rgba(0,255,136,0.1); padding: 4px 10px; border-radius: 10px; border: 1px solid rgba(0,255,136,0.2);">
+                                    <span style="text-decoration: line-through; color: #888;">Rp ${formatRupiah(originalPrice)}</span>
+                                    → <span style="color: #ffaa00; font-weight:bold;">Rp ${formatRupiah(finalPrice)}</span>
+                                    <span style="color: #ffaa00; background: rgba(255,170,0,0.2); padding: 0 8px; border-radius: 10px;">${globalDiscount.percentage}% OFF</span>
+                                </div>
+                            `;
+                        }
+                    }
+                }
             }
-
+    
             // BADGE
             if (pkg.type === 'lifetime') {
                 badgeHtml = `<span class="price-badge lifetime">👑 LIFETIME</span>`;
@@ -12768,7 +12607,7 @@
             } else if (pkg.type === 'unlimited' && pkg.durationMonths >= 2) {
                 badgeHtml = `<span class="price-badge popular">🔥 POPULAR</span>`;
             }
-
+    
             let descText = pkg.description || '';
             if (pkg.type === 'quota' && pkg.quota) {
                 descText = `${pkg.quota}x Update VIP`;
@@ -12777,7 +12616,7 @@
             } else if (pkg.type === 'lifetime') {
                 descText = '✨ Unlimited Update - Seumur Hidup!';
             }
-
+    
             html += `
                 <div class="price-card" onclick="selectPackage(${idx})" 
                      data-original-price="${originalPrice}" 
@@ -12786,7 +12625,10 @@
                      data-package-quota="${pkg.quota || 0}"
                      data-package-months="${pkg.durationMonths || 0}"
                      style="position: relative;">
-                    <div class="price-amount">Rp ${formatRupiah(finalPrice)}</div>
+                    <div class="price-amount" style="${finalPrice !== originalPrice ? 'color: #ffaa00;' : ''}">
+                        ${finalPrice !== originalPrice ? `<span style="text-decoration: line-through; color: #888; font-size: 14px;">Rp ${formatRupiah(originalPrice)}</span><br>` : ''}
+                        Rp ${formatRupiah(finalPrice)}
+                    </div>
                     <div class="price-type">${escapeHtml(pkg.label)}</div>
                     <div class="price-desc">${escapeHtml(descText)}</div>
                     ${discountText}
@@ -12798,13 +12640,18 @@
                 </div>
             `;
         });
-
+    
         grid.innerHTML = html;
     }
 
+    // ============================================================
+    // SELECT PACKAGE - DENGAN DISKON
+    // ============================================================
     function selectPackage(idx) {
         selectedPackage = packages[idx];
         const priceCard = document.querySelectorAll('.price-card')[idx];
+    
+        // AMBIL HARGA FINAL (SUDAH TERAPAN DISKON)
         let finalPrice = parseInt(priceCard?.getAttribute('data-final-price') || selectedPackage.price);
     
         // SIMPAN DATA ASLI PACKAGE
@@ -13419,9 +13266,8 @@ function openEditMessagePopup(messageId, currentText, source, uid, sender) {
     }
 
     // ============================================================
-    // VIP STATUS
+    // LOAD VIP STATUS - DENGAN DETEKSI SEMUA TIPE
     // ============================================================
-
     async function loadVIPStatus() {
         try {
             const vipSnap = await database.ref('vip_members/' + currentUID).once('value');
@@ -13431,8 +13277,44 @@ function openEditMessagePopup(messageId, currentText, source, uid, sender) {
             
             if (!counterCard || !content) return;
             
+            // CEK APAKAH VIP AKTIF - UNTUK SEMUA TIPE
+            let isActive = false;
+            
             if (vip && vip.status === 'active') {
+                // CEK TYPE QUOTA
+                if (vip.updateType === 'quota') {
+                    const used = vip.updatesUsed || 0;
+                    const total = vip.updateQuota || 0;
+                    if (used < total) {
+                        isActive = true;
+                    }
+                }
+                // CEK TYPE UNLIMITED / SEASON
+                else if (vip.updateType === 'unlimited') {
+                    if (vip.expiryDate && vip.expiryDate !== 'permanent') {
+                        const expiry = new Date(vip.expiryDate);
+                        if (expiry > new Date()) {
+                            isActive = true;
+                        }
+                    } else if (vip.isPermanent === true) {
+                        isActive = true;
+                    } else {
+                        isActive = true;
+                    }
+                }
+                // CEK TYPE LIFETIME
+                else if (vip.updateType === 'lifetime' || vip.isPermanent === true) {
+                    isActive = true;
+                }
+                // FALLBACK
+                else {
+                    isActive = true;
+                }
+            }
+            
+            if (isActive) {
                 isVIP = true;
+                isUserVIP = true;
                 document.getElementById('statusBadge').textContent = 'Premium';
                 document.getElementById('statusBadgeRight').textContent = 'Premium';
                 document.getElementById('vipStatusRight').textContent = 'Premium';
@@ -13442,6 +13324,7 @@ function openEditMessagePopup(messageId, currentText, source, uid, sender) {
                 counterCard.style.display = 'block';
                 currentVIPData = vip;
                 
+                // RENDER SESUAI TIPE
                 if (vip.isPermanent === true || vip.updateType === 'lifetime') {
                     renderVIPPermanent(content);
                 } 
@@ -13450,21 +13333,6 @@ function openEditMessagePopup(messageId, currentText, source, uid, sender) {
                 } 
                 else if ((vip.updateType === 'unlimited' || vip.packageMonths > 0) && vip.expiryDate && vip.expiryDate !== 'permanent') {
                     renderVIPDuration(content, vip);
-                }
-                else if (vip.expiryDate && vip.expiryDate !== 'permanent' && new Date(vip.expiryDate) > new Date()) {
-                    renderVIPDuration(content, vip);
-                }
-                else if (vip.packageMonths && vip.packageMonths > 0) {
-                    const purchaseDate = vip.purchaseDate ? new Date(vip.purchaseDate) : new Date();
-                    const expiryDate = new Date(purchaseDate);
-                    expiryDate.setMonth(expiryDate.getMonth() + vip.packageMonths);
-                    vip.expiryDate = expiryDate.toISOString();
-                    vip.updateType = 'unlimited';
-                    renderVIPDuration(content, vip);
-                    database.ref('vip_members/' + currentUID).update({
-                        expiryDate: expiryDate.toISOString(),
-                        updateType: 'unlimited'
-                    }).catch(e => console.log('Update expiryDate error:', e));
                 }
                 else {
                     renderVIPBasic(content, vip);
@@ -13476,6 +13344,7 @@ function openEditMessagePopup(messageId, currentText, source, uid, sender) {
                 
             } else {
                 isVIP = false;
+                isUserVIP = false;
                 document.getElementById('statusBadge').textContent = 'Free';
                 document.getElementById('statusBadgeRight').textContent = 'Free';
                 document.getElementById('vipStatusRight').textContent = 'Free';
@@ -13490,6 +13359,8 @@ function openEditMessagePopup(messageId, currentText, source, uid, sender) {
             }
         } catch (error) {
             console.error('Error loading VIP status:', error);
+            isVIP = false;
+            isUserVIP = false;
         }
     }
     
