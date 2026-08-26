@@ -12523,7 +12523,16 @@
     // PACKAGES & DISCOUNT
     // ============================================================
     function loadAdminConfig() {
-        database.ref('admin_config/premium_packages').on('value', s => { if(s.exists()) { packages = s.val(); renderPackages(); } });
+        // Load packages
+        database.ref('admin_config/premium_packages').on('value', async function(s) { 
+            if(s.exists()) { 
+                packages = s.val(); 
+                // LOAD DISKON SETELAH PACKAGES LOAD
+                await loadGlobalDiscount();
+                renderPackages(); 
+            } 
+        });
+    
         database.ref('admin_config/loading_logo_url').on('value', s => { if(s.exists()) loadingLogoUrl = s.val(); });
         database.ref('free_updates/all').orderByChild('timestamp').limitToLast(20).on('value', s => renderFreeUpdates(s.val() || {}));
         if (isVIP || currentUID) database.ref('global_updates').orderByChild('created_at').limitToLast(20).on('value', s => renderVipUpdates(s.val() || {}));
@@ -12533,19 +12542,42 @@
         try {
             const snap = await database.ref('global_discount').once('value');
             const discount = snap.val();
-            if (discount && discount.active === true && new Date(discount.expiryDate) > new Date()) {
-                globalDiscount = {
-                    active: true,
-                    percentage: discount.percentage,
-                    minPurchase: discount.minPurchase || 0
-                };
-                console.log(`🎫 Diskon global aktif: ${globalDiscount.percentage}%`);
+        
+            console.log('📦 Data diskon dari Firebase:', discount);
+        
+            if (discount && discount.active === true) {
+                // CEK EXPIRY
+                const now = new Date();
+                const expiry = new Date(discount.expiryDate);
+            
+                if (expiry > now) {
+                    globalDiscount = {
+                        active: true,
+                        percentage: discount.percentage || 0,
+                        minPurchase: discount.minPurchase || 0,
+                        specificPrice: discount.specificPrice || 0, // <-- HARGA SPESIFIK
+                        expiryDate: discount.expiryDate,
+                        packageLabel: discount.packageLabel || 'Paket'
+                    };
+                    console.log(`🎫 Diskon aktif: ${globalDiscount.percentage}% untuk harga Rp ${formatRupiah(globalDiscount.specificPrice)}`);
+                } else {
+                    globalDiscount = { active: false, percentage: 0, minPurchase: 0, specificPrice: 0 };
+                    console.log('⏳ Diskon sudah kadaluarsa');
+                    // AUTO NONAKTIFKAN
+                    await database.ref('global_discount').update({ active: false });
+                }
             } else {
-                globalDiscount = { active: false, percentage: 0, minPurchase: 0 };
+                globalDiscount = { active: false, percentage: 0, minPurchase: 0, specificPrice: 0 };
+                console.log('❌ Tidak ada diskon aktif');
             }
+        
+            // RENDER ULANG PACKAGES
             renderPackages();
+        
         } catch (error) {
             console.error('Error loading discount:', error);
+            globalDiscount = { active: false, percentage: 0, minPurchase: 0, specificPrice: 0 };
+            renderPackages();
         }
     }
 
@@ -12555,34 +12587,40 @@
     function renderPackages() {
         const grid = document.getElementById('priceGrid');
         if (!grid) return;
-    
+
         if (!packages || packages.length === 0) {
             grid.innerHTML = '<div style="padding:25px; text-align:center; color:#888;">No packages available</div>';
             return;
         }
-    
+
+        console.log('📦 Global Discount:', globalDiscount);
+        console.log('📦 Packages:', packages);
+
         let html = '';
         packages.forEach((pkg, idx) => {
             let originalPrice = pkg.price;
             let finalPrice = originalPrice;
             let discountText = '';
             let badgeHtml = '';
-    
+
             // CEK DISKON - HANYA UNTUK HARGA SPESIFIK YANG SAMA
             if (globalDiscount && globalDiscount.active === true) {
                 const now = new Date();
                 const expiry = new Date(globalDiscount.expiryDate);
-                
+            
+                console.log(`🔍 Cek diskon untuk ${pkg.label}: harga ${originalPrice}, diskon harga ${globalDiscount.specificPrice}`);
+            
                 // CEK APAKAH DISKON MASIH BERLAKU
                 if (expiry > now) {
                     // CEK APAKAH HARGA PAKET SAMA DENGAN HARGA SPESIFIK YANG DIDISKON
                     if (globalDiscount.specificPrice && originalPrice === globalDiscount.specificPrice) {
+                        console.log(`✅ Diskon berlaku untuk ${pkg.label}`);
                         // CEK MINIMAL PEMBELIAN
                         if (globalDiscount.minPurchase === 0 || originalPrice >= globalDiscount.minPurchase) {
                             const discountAmount = originalPrice * (globalDiscount.percentage / 100);
                             finalPrice = originalPrice - discountAmount;
                             finalPrice = Math.round(finalPrice);
-                            
+                        
                             discountText = `
                                 <div style="font-size: 11px; color: #00ff88; margin-top: 6px; background: rgba(0,255,136,0.1); padding: 4px 10px; border-radius: 10px; border: 1px solid rgba(0,255,136,0.2);">
                                     <span style="text-decoration: line-through; color: #888;">Rp ${formatRupiah(originalPrice)}</span>
@@ -12591,10 +12629,14 @@
                                 </div>
                             `;
                         }
+                    } else {
+                        console.log(`❌ Diskon TIDAK berlaku untuk ${pkg.label} (harga ${originalPrice} != ${globalDiscount.specificPrice})`);
                     }
+                } else {
+                    console.log('⏳ Diskon sudah kadaluarsa');
                 }
             }
-    
+
             // BADGE
             if (pkg.type === 'lifetime') {
                 badgeHtml = `<span class="price-badge lifetime">👑 LIFETIME</span>`;
@@ -12607,7 +12649,7 @@
             } else if (pkg.type === 'unlimited' && pkg.durationMonths >= 2) {
                 badgeHtml = `<span class="price-badge popular">🔥 POPULAR</span>`;
             }
-    
+
             let descText = pkg.description || '';
             if (pkg.type === 'quota' && pkg.quota) {
                 descText = `${pkg.quota}x Update VIP`;
@@ -12616,7 +12658,7 @@
             } else if (pkg.type === 'lifetime') {
                 descText = '✨ Unlimited Update - Seumur Hidup!';
             }
-    
+
             html += `
                 <div class="price-card" onclick="selectPackage(${idx})" 
                      data-original-price="${originalPrice}" 
@@ -12633,14 +12675,14 @@
                     <div class="price-desc">${escapeHtml(descText)}</div>
                     ${discountText}
                     ${badgeHtml}
-            
+        
                     <div class="eye-icon" onclick="event.stopPropagation(); openPackageDetail(${idx});" title="Lihat detail package">
                         <i class="fas fa-eye"></i>
                     </div>
                 </div>
             `;
         });
-    
+
         grid.innerHTML = html;
     }
 
@@ -12653,6 +12695,8 @@
     
         // AMBIL HARGA FINAL (SUDAH TERAPAN DISKON)
         let finalPrice = parseInt(priceCard?.getAttribute('data-final-price') || selectedPackage.price);
+    
+        console.log(`📦 Package selected: ${selectedPackage.label}, Final Price: ${finalPrice}`);
     
         // SIMPAN DATA ASLI PACKAGE
         selectedPackage.originalPrice = selectedPackage.price;
